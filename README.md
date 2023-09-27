@@ -1,15 +1,19 @@
 # qgis_cpp_api_apps
 使用QGis C++ API进行二次开发的一些app
-- ll_qgis_demos gis常用功能演示
+- ll_qgis_hello 最简单的qgis应用，获取qgis的发行名称
+- ll_qgis_demos qgis常用功能演示
 - ll_qgis_realtime_uavs 接收无人机经纬度信息，实时显示在地图上
+- 更多应用陆续添加中......
 
 # 项目特性
 - 涵盖了很多实际使用场景
 - Apache 协议开源
 
 # 项目文档
+- 详细文档见[wiki](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/Home)
 
 # 付费社群
+- 这里放上知识星球的图片
 
 ## ll_qgis_demos
 演示QGis C++ API的使用，包括如下功能：
@@ -24,10 +28,14 @@
 9. 地图Canvas的使用包括背景色，中心点，角度的修改，地图工具(Map Pan，Map Zoom)的使用，RubberBand画线画多边形，VertexMarker的使用
 10. 图层树的使用，在图层叶子节点右键菜单的实现
 11. 内置算法的使用(随机生成点、按照参照面裁剪、Buffer)
-
-### 项目运行截图
+### 运行截图
 
 ## ll_qgis_realtime_uavs
 演示从无人机获取数据，在地图上显示实时轨迹
 
-### 项目运行截图
+### 运行截图
+
+## ll_qgis_hello
+1. 最简单的qgis应用，获取qgis的发行名称并显示在界面上
+
+### 运行截图
