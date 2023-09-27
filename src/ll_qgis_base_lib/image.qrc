@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/themes/default/mActionAddGroup.png</file>
+        <file>images/themes/default/mActionCollapseTree.png</file>
+        <file>images/themes/default/mActionExpandTree.png</file>
+        <file>images/themes/default/mActionHideAllLayers.png</file>
+        <file>images/themes/default/mActionHideSelectedLayers.png</file>
+        <file>images/themes/default/mActionShowAllLayers.png</file>
+        <file>images/themes/default/mActionShowSelectedLayers.png</file>
+        <file>images/themes/default/mActionRemoveLayer.png</file>
+        <file>images/themes/default/labelingRuleBased.png</file>
+        <file>images/themes/default/labelingSingle.png</file>
+        <file>images/themes/default/mActionZoomActual.png</file>
+    </qresource>
+</RCC>

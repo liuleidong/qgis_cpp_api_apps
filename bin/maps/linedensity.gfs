@@ -1,0 +1,23 @@
+<GMLFeatureClassList>
+  <GMLFeatureClass>
+    <Name>linedensity</Name>
+    <ElementPath>linedensity</ElementPath>
+    <GeometryName>geometryProperty</GeometryName>
+    <GeometryElementPath>geometryProperty</GeometryElementPath>
+    <!--LINESTRING-->
+    <GeometryType>2</GeometryType>
+    <SRSName>EPSG:4326</SRSName>
+    <DatasetSpecificInfo>
+      <FeatureCount>5</FeatureCount>
+      <ExtentXMin>0.36056</ExtentXMin>
+      <ExtentXMax>9.93099</ExtentXMax>
+      <ExtentYMin>-1.01549</ExtentYMin>
+      <ExtentYMax>5.51268</ExtentYMax>
+    </DatasetSpecificInfo>
+    <PropertyDefn>
+      <Name>weight</Name>
+      <ElementPath>weight</ElementPath>
+      <Type>Real</Type>
+    </PropertyDefn>
+  </GMLFeatureClass>
+</GMLFeatureClassList>

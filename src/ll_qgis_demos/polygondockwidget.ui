@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PolygonDockWidget</class>
+ <widget class="QDockWidget" name="PolygonDockWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>矢量面要素符号化测试</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>-404</y>
+         <width>422</width>
+         <height>651</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,0">
+        <item row="16" column="1">
+         <widget class="QLabel" name="label_16">
+          <property name="text">
+           <string>图层符号设置为Outline: Raster </string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QPushButton" name="pushButton_polygonSvg">
+          <property name="text">
+           <string>Svg fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="pushButton_polygonPointPattern">
+          <property name="text">
+           <string>Point pattern fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>图层符号设置为简单填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineLineburst">
+          <property name="text">
+           <string>Outline: Lineburst</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>图层符号设置为图片填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="17" column="0" colspan="2">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string>反转面要素（Inverted polygons)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="1">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>图层符号设置为Outline:Arrow</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="1">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>图层符号设置为Outline:Lineburst</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="pushButton_polygonRandomMarker">
+          <property name="text">
+           <string>Random Marker fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QLabel" name="label_17">
+          <property name="text">
+           <string>单一符号（Single symbol）</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineArrow">
+          <property name="text">
+           <string>Outline:Arrow</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="1">
+         <widget class="QLabel" name="label_15">
+          <property name="text">
+           <string>图层符号设置为Outline: Marker line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QPushButton" name="pushButton_polygonRasterImage">
+          <property name="text">
+           <string>Raster image fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineMarker">
+          <property name="text">
+           <string>Outline: Marker line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>图层符号设置为仅渲染中心点</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QPushButton" name="pushButton_polygonShapeburst">
+          <property name="text">
+           <string>Shapeburst fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="18" column="0">
+         <widget class="QPushButton" name="pushButton_polygonInvertedRenderer">
+          <property name="text">
+           <string>Inverted polygons</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>图层符号设置为线填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>图层符号设置为Random Marker</string>
+          </property>
+         </widget>
+        </item>
+        <item row="13" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineInterpolated">
+          <property name="text">
+           <string>Outline: Interpolated</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="1">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>图层符号设置为Outline:Hashed Line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>图层符号设置为点填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineHashed">
+          <property name="text">
+           <string>Outline: Hashed Line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="18" column="1">
+         <widget class="QLabel" name="label_19">
+          <property name="text">
+           <string>演示反转面渲染器</string>
+          </property>
+         </widget>
+        </item>
+        <item row="13" column="1">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>图层符号设置为Outline:Interpolated</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>图层符号设置为Svg填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="16" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineRaster">
+          <property name="text">
+           <string>Outline: Raster line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pushButton_polygonLinePattern">
+          <property name="text">
+           <string>Line pattern fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="pushButton_polygonGradient">
+          <property name="text">
+           <string>Gradient fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="19" column="0" colspan="2">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>2.5D</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QPushButton" name="pushButton_polygonOutlineSimple">
+          <property name="text">
+           <string>Outline:Simple line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>图层符号设置为渐变填充</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_polygonSimplefill">
+          <property name="text">
+           <string>Simple fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>图层符号设置为Shapeburst</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>图层符号设置为Outline:Simple line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButton_polygonCentroid">
+          <property name="text">
+           <string>Centroid fill</string>
+          </property>
+         </widget>
+        </item>
+        <item row="20" column="0">
+         <widget class="QPushButton" name="pushButton_polygon25D">
+          <property name="text">
+           <string>2.5D Renderer</string>
+          </property>
+         </widget>
+        </item>
+        <item row="20" column="1">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>演示2.5D渲染器</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
