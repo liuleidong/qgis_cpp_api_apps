@@ -36,7 +36,7 @@ void MainWindow::initialize()
 
     QTimer *timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&MainWindow::mockDevices);
-    timer->start(1000);
+    timer->start(10000);
 
     QString url1 = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
     mApp->addWmsLayer(url1,"gaode satellite");
@@ -46,5 +46,10 @@ void MainWindow::initialize()
 
 void MainWindow::mockDevices()
 {
-
+    if(!mScaleDone)
+    {
+        QgsPointXY pt(11804480,4660807);
+        mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);
+        mScaleDone = true;
+    }
 }

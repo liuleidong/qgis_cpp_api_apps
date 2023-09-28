@@ -24,6 +24,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    bool mScaleDone = false;
 
     ll_qgis_base_lib *mApp = nullptr;
     ParamDockWidget *mParamDockWidget = nullptr;
