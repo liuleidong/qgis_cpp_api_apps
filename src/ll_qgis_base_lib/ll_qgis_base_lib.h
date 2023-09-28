@@ -36,7 +36,9 @@ class QgsAnnotationLayer;
 class QgsSymbolLayer;
 class QgsRasterDataProvider;
 
-
+/**
+ * @brief The ll_qgis_base_lib class
+ */
 class LD_LIB_APP_EXPORT ll_qgis_base_lib : public QObject
 {
     DECLARE_SINGLETON(ll_qgis_base_lib);
@@ -79,13 +81,34 @@ public:
     bool readProjects(const QString &filename,Qgis::ProjectReadFlags flags = Qgis::ProjectReadFlags());
     void setCrs(const QgsCoordinateReferenceSystem &crs, bool adjustEllipsoid);
 
+    /**
+     * @brief addVectorLayer
+     * @param uri
+     * @param baseName
+     * @param provider
+     * @return
+     */
     QgsMapLayer *addVectorLayer(const QString &uri, const QString &baseName, const QString &provider="ogr");
+    /**
+     * @brief addRasterLayer
+     * @param uri
+     * @param baseName
+     * @param provider
+     * @return
+     */
     QgsMapLayer *addRasterLayer(const QString &uri, const QString &baseName, const QString &provider="gdal");
+
+
+    QgsMapLayer *addWmsLayer(const QString &uri,const QString &baseName);
     // copy code from qgisapp
-    QList< QgsMapCanvas * > mapCanvases();  //qgisapp
-    void refreshMapCanvas(bool redrawAllLayers = false);//qgisapp
-    void legendLayerZoomNative();//qgisapp
-    void legendLayerStretchUsingCurrentExtent();//qgisapp
+    QList< QgsMapCanvas * > mapCanvases();
+    void refreshMapCanvas(bool redrawAllLayers = false);
+    void legendLayerZoomNative();
+    /**
+     * @brief legendLayerStretchUsingCurrentExtent
+     * 图层树右键菜单使用该函数
+     */
+    void legendLayerStretchUsingCurrentExtent();
 
 public slots:
     void slot_autoSelectAddedLayer(const QList<QgsMapLayer *> layers);

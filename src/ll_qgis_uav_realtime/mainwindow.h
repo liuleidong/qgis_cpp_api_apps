@@ -19,6 +19,9 @@ public:
     ~MainWindow();
     void initialize();
 
+private slots:
+    void mockDevices();
+
 private:
     Ui::MainWindow *ui;
 

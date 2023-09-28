@@ -240,6 +240,28 @@ QgsMapLayer *ll_qgis_base_lib::addRasterLayer(const QString &uri, const QString 
     return nullptr;
 }
 
+QgsMapLayer *ll_qgis_base_lib::addWmsLayer(const QString &uri, const QString &baseName)
+{
+    QString urlWithParams;
+    QString type = QStringLiteral("xyz");
+    int zMin = 0;
+    int zMax = 18;
+#if 1
+    QgsDataSourceUri urik;
+    urik.setParam( QStringLiteral( "url" ), uri );
+    urik.setParam( QStringLiteral( "type" ), type );
+    urik.setParam( QStringLiteral( "zmin" ), QString::number( zMin ) );
+    urik.setParam( QStringLiteral( "zmax" ), QString::number( zMax ) );
+    urlWithParams = urik.encodedUri();
+#else
+    QString urlEncode = QUrl::toPercentEncoding(url);
+    urlWithParams = QString("type=xyz&url=%1&zmax=18&zmin=0").arg(urlEncode);
+#endif
+    QgsRasterLayer *rlayer = new QgsRasterLayer(urlWithParams,baseName,"wms");
+    QgsProject::instance()->addMapLayer(rlayer);
+    return rlayer;
+}
+
 QList<QgsMapCanvas *> ll_qgis_base_lib::mapCanvases()
 {
     // filter out browser canvases -- they are children of app, but a different
