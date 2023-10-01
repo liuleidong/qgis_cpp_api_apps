@@ -19,14 +19,23 @@ public:
     ~MainWindow();
     void initialize();
 
+    void addOrMovePoint(const SGeometryInfo &geometryInfo,const QString& prefix);
+    void startTimer();
+
 private slots:
     void mockDevices();
 
 private:
     Ui::MainWindow *ui;
-    bool mScaleDone = false;
+    double mPt1X = 11803081;
+    double mPt1Y = 4651028;
+    double mOffsetX = 100;
+    double mOffsetY = 303;
 
     ll_qgis_base_lib *mApp = nullptr;
     ParamDockWidget *mParamDockWidget = nullptr;
+
+    QgsVectorLayer *mDevPointLayer = nullptr;
+    QgsVectorLayer *mDevLineLayer = nullptr;
 };
 #endif // MAINWINDOW_H
