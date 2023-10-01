@@ -20,6 +20,7 @@ public:
     void initialize();
 
     void addOrMovePoint(const SGeometryInfo &geometryInfo,const QString& prefix);
+    void addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryLength=20);
     void startTimer();
 
 private slots:
@@ -37,5 +38,6 @@ private:
 
     QgsVectorLayer *mDevPointLayer = nullptr;
     QgsVectorLayer *mDevLineLayer = nullptr;
+    int mTrajectoryLength = 20;
 };
 #endif // MAINWINDOW_H

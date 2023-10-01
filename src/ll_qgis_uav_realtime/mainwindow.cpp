@@ -47,12 +47,6 @@ void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString
 {
     bool isFeatureExsit = false;
     QgsFeatureRequest r;
-#if 0
-    QgsFields existFields;
-    QStringList l;
-    l << "id";
-    r.setSubsetOfAttributes(l,existFields);
-#endif
     QgsFeatureIterator it = mDevPointLayer->getFeatures(r);
     QgsFeature ff;
     while(it.nextFeature(ff))
@@ -90,8 +84,64 @@ void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString
         dataProvider->addFeature(f);
         mDevPointLayer->commitChanges();
     }
-//    mDevPointLayer->updateFields();
-    //    mDevPointLayer->updateExtents();
+}
+
+void MainWindow::addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryLength)
+{
+    bool isFeatureExsit = false;
+    QgsFeatureRequest r;
+    QgsFeatureIterator it = mDevLineLayer->getFeatures(r);
+    QgsFeature ff;
+    while(it.nextFeature(ff))
+    {
+        int deviceId = ff.attribute("id").toInt();
+        if(deviceId == geometryInfo.deviceId)
+        {
+            isFeatureExsit = true;
+            break;
+        }
+    }
+
+    QgsVectorDataProvider * dataProvider = mDevLineLayer->dataProvider();
+    if(isFeatureExsit)
+    {
+        QgsGeometry geo = ff.geometry();
+        QgsPolylineXY line = geo.asPolyline();
+        QgsPolyline nLine ;
+        //点数小于设置值，直接构建新线段。
+        //点数大于等于，则将旧点抛弃
+        if(line.size() < trajectoryLength)
+        {
+            for(int i = 0;i < line.size();++i)
+            {
+                QgsPointXY p = line.at(i);
+                nLine << QgsPoint(p.x(),p.y());
+            }
+        }
+        else
+        {
+            for(int i = line.size() - trajectoryLength;i < line.size();++i)
+            {
+                QgsPointXY p = line.at(i);
+                nLine << QgsPoint(p.x(),p.y());
+            }
+        }
+
+        nLine << QgsPoint(geometryInfo.longitude,geometryInfo.latitude);
+        QgsGeometry geometry = QgsGeometry::fromPolyline(nLine);
+        mDevLineLayer->startEditing();
+        mDevLineLayer->changeGeometry(ff.id(),geometry);
+        mDevLineLayer->commitChanges();
+    }
+    else
+    {
+        QgsFeature f;
+        QgsPolyline line ;
+        line << QgsPoint(geometryInfo.longitude,geometryInfo.latitude);
+        QgsGeometry geometry = QgsGeometry::fromPolyline(line);
+        f.setGeometry( geometry );
+        dataProvider->addFeature(f);
+    }
 }
 
 void MainWindow::startTimer()
@@ -106,6 +156,7 @@ void MainWindow::startTimer()
                                     "&field=id:integer&field=name:string(20)"
                                     "&index=yes","lines","memory");
     QgsProject::instance()->addMapLayer(mDevLineLayer);
+
     QTimer *timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&MainWindow::mockDevices);
     timer->start(1000);
@@ -123,5 +174,5 @@ void MainWindow::mockDevices()
     mPt1Y = mPt1Y + mOffsetY;
 
     addOrMovePoint(info,"plane");
-
+    addOrMoveLine(info);
 }

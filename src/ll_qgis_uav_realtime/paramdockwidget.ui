@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ParamDockWidget</class>
- <widget name="ParamDockWidget" class="QDockWidget">
+ <widget class="QDockWidget" name="ParamDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,8 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DockWidget</string>
+   <string>参数设置</string>
   </property>
-  <widget name="dockWidgetContents" class="QWidget"/>
+  <widget class="QWidget" name="dockWidgetContents"/>
  </widget>
+ <resources/>
+ <connections/>
 </ui>
