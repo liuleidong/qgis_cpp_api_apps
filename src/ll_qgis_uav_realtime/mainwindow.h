@@ -28,6 +28,7 @@ public:
 
 private slots:
     void mockDevices();
+    void setParamsSlot(SParams params);
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +42,6 @@ private:
 
     QgsVectorLayer *mDevPointLayer = nullptr;
     QgsVectorLayer *mDevLineLayer = nullptr;
-    int mTrajectoryLength = 20;
+    SParams mParams;
 };
 #endif // MAINWINDOW_H

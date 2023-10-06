@@ -41,6 +41,8 @@ void MainWindow::initialize()
     QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
     mApp->addWmsLayer(url,"gaode roads");
 
+    connect(mParamDockWidget,&ParamDockWidget::setParamsSignal,this,&MainWindow::setParamsSlot);
+
     QTimer::singleShot(1000*5,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);startTimer();});
 }
 
@@ -203,7 +205,15 @@ void MainWindow::startTimer()
     mDevLineLayer = new QgsVectorLayer("MultiLineString?crs=epsg:4326"
                                     "&field=id:integer&field=name:string(20)"
                                     "&index=yes","lines","memory");
-    QgsProject::instance()->addMapLayer(mDevLineLayer);
+    QgsProject::instance()->addMapLayer(mDevLineLayer);    
+    //初始化参数
+    mParams.mode = 1;
+    mParams.svgPath = QStringLiteral("resources/plane.svg");
+    mParams.color = "red";
+    mParams.size = 10.0;
+    mParams.showPath = true;
+    mParams.pathLength = 20;
+    setParamsSlot(mParams);
 
     QTimer *timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&MainWindow::mockDevices);
@@ -221,16 +231,30 @@ void MainWindow::mockDevices()
     mPt1X = mPt1X + mOffsetX;
     mPt1Y = mPt1Y + mOffsetY;
 
-//    SMarkerSymbolSimple simpleMarker;
-//    simpleMarker.name = "square";
-//    simpleMarker.color = "red";
-//    simpleMarker.size = "4.0";
-//    setPointLayerSimpleMarker(mDevPointLayer,simpleMarker);
-    SMarkerSymbolSvg svgMarker;
-    svgMarker.name = "resources/plane.svg";
-    svgMarker.color = "red";
-    svgMarker.size = "14.0";
-    setPointLayerSvgMarker(mDevPointLayer,svgMarker);
     addOrMovePoint(info,"plane");
-//    addOrMoveLine(info);
+    if(mParams.showPath)
+    {
+        addOrMoveLine(info,mParams.pathLength);
+    }
+}
+
+void MainWindow::setParamsSlot(SParams params)
+{
+    mParams = params;
+    if(mParams.mode == 0)
+    {
+        SMarkerSymbolSimple simpleMarker;
+        simpleMarker.name = mParams.shape;
+        simpleMarker.color = mParams.color.name();
+        simpleMarker.size = QString("%1").arg(mParams.size);
+        setPointLayerSimpleMarker(mDevPointLayer,simpleMarker);
+    }
+    else if(mParams.mode == 1)
+    {
+        SMarkerSymbolSvg svgMarker;
+        svgMarker.name = mParams.svgPath;
+        svgMarker.color = mParams.color.name();
+        svgMarker.size = QString("%1").arg(mParams.size);
+        setPointLayerSvgMarker(mDevPointLayer,svgMarker);
+    }
 }
