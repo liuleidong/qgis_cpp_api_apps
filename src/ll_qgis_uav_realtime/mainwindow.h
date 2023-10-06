@@ -5,6 +5,7 @@
 
 #include "ll_qgis_base_lib.h"
 #include "paramdockwidget.h"
+#include "ld_symbol_property.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +20,8 @@ public:
     ~MainWindow();
     void initialize();
 
+    void setPointLayerSimpleMarker(QgsVectorLayer *layer,const SMarkerSymbolSimple& simpleMarker);
+    void setPointLayerSvgMarker(QgsVectorLayer *layer,const SMarkerSymbolSvg& svgMarker);
     void addOrMovePoint(const SGeometryInfo &geometryInfo,const QString& prefix);
     void addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryLength=20);
     void startTimer();

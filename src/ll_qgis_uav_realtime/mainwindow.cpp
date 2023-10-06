@@ -6,6 +6,7 @@
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
+#include "qgsmarkersymbollayer.h"
 
 #include "ld_geometry.h"
 //0. 模拟无人机/车 发送经纬度以及设备信息
@@ -41,6 +42,53 @@ void MainWindow::initialize()
     mApp->addWmsLayer(url,"gaode roads");
 
     QTimer::singleShot(1000*5,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);startTimer();});
+}
+
+void MainWindow::setPointLayerSimpleMarker(QgsVectorLayer *layer, const SMarkerSymbolSimple &simpleMarker)
+{
+    if(layer == nullptr)
+        return;
+    layer->startEditing();
+
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    //使用Simple Marker
+    QVariantMap mp;
+    mp[QString("name")] = simpleMarker.name;
+    mp[QString("color")] = simpleMarker.color;
+    mp[QString("size")] = simpleMarker.size;
+    mp[QString("angle")] = simpleMarker.angle;
+    QgsMarkerSymbol *newsym = QgsMarkerSymbol::createSimple(mp);
+    singleRenderer->setSymbol(newsym);
+    layer->setRenderer(singleRenderer);
+
+    layer->commitChanges();
+}
+
+void MainWindow::setPointLayerSvgMarker(QgsVectorLayer *layer, const SMarkerSymbolSvg &svgMarker)
+{
+    if(layer == nullptr)
+        return;
+    layer->startEditing();
+
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    //使用Simple Marker
+    QVariantMap mp;
+    mp[QString("name")] = svgMarker.name;
+    mp[QString("color")] = svgMarker.color;
+    mp[QString("size")] = svgMarker.size;
+    mp[QString("angle")] = svgMarker.angle;
+
+    QgsSvgMarkerSymbolLayer svglayer(svgMarker.name);
+    QgsSymbolLayer* svgsymbol = svglayer.create(mp);
+    auto newsym = QgsMarkerSymbol::createSimple(mp);
+    newsym->changeSymbolLayer(0,svgsymbol);
+    singleRenderer->setSymbol(newsym);
+    layer->setRenderer(singleRenderer);
+
+    layer->commitChanges();
+
 }
 
 void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString &prefix)
@@ -173,6 +221,16 @@ void MainWindow::mockDevices()
     mPt1X = mPt1X + mOffsetX;
     mPt1Y = mPt1Y + mOffsetY;
 
+//    SMarkerSymbolSimple simpleMarker;
+//    simpleMarker.name = "square";
+//    simpleMarker.color = "red";
+//    simpleMarker.size = "4.0";
+//    setPointLayerSimpleMarker(mDevPointLayer,simpleMarker);
+    SMarkerSymbolSvg svgMarker;
+    svgMarker.name = "resources/plane.svg";
+    svgMarker.color = "red";
+    svgMarker.size = "14.0";
+    setPointLayerSvgMarker(mDevPointLayer,svgMarker);
     addOrMovePoint(info,"plane");
-    addOrMoveLine(info);
+//    addOrMoveLine(info);
 }
