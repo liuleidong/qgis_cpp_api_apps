@@ -76,5 +76,6 @@ void ParamDockWidget::on_pushButton_Set_clicked()
     params.size = ui->doubleSpinBox_size->value();
     params.showPath = ui->checkBox_showPath->isChecked();
     params.pathLength = ui->spinBox_size->value();
+    params.centerShow = ui->checkBox_centerShow->isChecked();
     emit setParamsSignal(params);
 }

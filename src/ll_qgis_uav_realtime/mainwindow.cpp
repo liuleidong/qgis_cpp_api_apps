@@ -11,7 +11,9 @@
 #include "ld_geometry.h"
 //0. 模拟无人机/车 发送经纬度以及设备信息
 //1. 根据经纬度，添加设备或者移动设备
-//2. 设置参数：是否显示轨迹，设置设备图标，设备大小,设备是中心点
+//2. 设置参数：是否显示轨迹，设置设备图标，设备大小,设备是中心点，是否闪烁
+//根据两点设置rotation
+//setCenter flashFeatureIds
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -111,7 +113,9 @@ void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString
     QgsVectorDataProvider * dataProvider = mDevPointLayer->dataProvider();
     if(isFeatureExsit)
     {
-        mDevPointLayer->startEditing();
+        mDevPointLayer->startEditing(
+
+                    );
         QgsGeometry geometry = QgsGeometry::fromPointXY(QgsPointXY(geometryInfo.longitude,geometryInfo.latitude));
         mDevPointLayer->changeGeometry(ff.id(),geometry);
         mDevPointLayer->commitChanges();
@@ -134,6 +138,8 @@ void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString
         dataProvider->addFeature(f);
         mDevPointLayer->commitChanges();
     }
+    if(mParams.centerShow)
+        mApp->mapCanvas()->setCenter(QgsPointXY(geometryInfo.longitude,geometryInfo.latitude));
 }
 
 void MainWindow::addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryLength)
@@ -213,6 +219,7 @@ void MainWindow::startTimer()
     mParams.size = 10.0;
     mParams.showPath = true;
     mParams.pathLength = 20;
+    mParams.centerShow = true;
     setParamsSlot(mParams);
 
     QTimer *timer = new QTimer(this);
@@ -235,7 +242,7 @@ void MainWindow::mockDevices()
     if(mParams.showPath)
     {
         addOrMoveLine(info,mParams.pathLength);
-    }
+    }    
 }
 
 void MainWindow::setParamsSlot(SParams params)

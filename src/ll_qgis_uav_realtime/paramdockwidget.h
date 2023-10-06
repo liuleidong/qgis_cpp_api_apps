@@ -16,6 +16,7 @@ typedef struct SParams_
     double size;
     bool showPath;
     int pathLength;
+    bool centerShow;
 }SParams;
 
 class ParamDockWidget : public QDockWidget

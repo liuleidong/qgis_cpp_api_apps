@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>388</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -30,30 +30,23 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-24</y>
-         <width>366</width>
-         <height>288</height>
+         <y>0</y>
+         <width>380</width>
+         <height>349</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,0,0,0">
-        <item row="5" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>轨迹</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>颜色</string>
-          </property>
-         </widget>
-        </item>
         <item row="5" column="1" colspan="2">
          <widget class="QCheckBox" name="checkBox_showPath">
           <property name="text">
            <string>是否显示轨迹线</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QRadioButton" name="radioButton_svg">
+          <property name="text">
+           <string>Svg符号</string>
           </property>
          </widget>
         </item>
@@ -64,6 +57,13 @@
           </property>
          </widget>
         </item>
+        <item row="6" column="1" colspan="2">
+         <widget class="QSpinBox" name="spinBox_size">
+          <property name="value">
+           <number>20</number>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="1">
          <widget class="QLabel" name="label_5">
           <property name="text">
@@ -71,37 +71,10 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lineEdit_svgPath"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_6">
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>符号</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="2">
-         <widget class="QPushButton" name="pushButton_Set">
-          <property name="text">
-           <string>设置参数</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QRadioButton" name="radioButton_simple">
-          <property name="text">
-           <string>简单符号</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QRadioButton" name="radioButton_svg">
-          <property name="text">
-           <string>Svg符号</string>
+           <string>大小</string>
           </property>
          </widget>
         </item>
@@ -154,24 +127,17 @@
           </item>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_3">
+        <item row="3" column="2">
+         <widget class="QPushButton" name="pushButton_selectColor">
           <property name="text">
-           <string>大小</string>
+           <string>选择颜色</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_7">
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>文件</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QPushButton" name="pushButton_selectSvg">
-          <property name="text">
-           <string>浏览...</string>
+           <string>颜色</string>
           </property>
          </widget>
         </item>
@@ -182,10 +148,27 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
-         <widget class="QPushButton" name="pushButton_selectColor">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>选择颜色</string>
+           <string>轨迹</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>文件</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_svgPath"/>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>中心</string>
           </property>
          </widget>
         </item>
@@ -196,10 +179,44 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="1" colspan="2">
-         <widget class="QSpinBox" name="spinBox_size">
-          <property name="value">
-           <number>20</number>
+        <item row="0" column="1">
+         <widget class="QRadioButton" name="radioButton_simple">
+          <property name="text">
+           <string>简单符号</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>符号</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1" colspan="2">
+         <widget class="QCheckBox" name="checkBox_centerShow">
+          <property name="text">
+           <string>设备位于中心显示</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <widget class="QPushButton" name="pushButton_Set">
+          <property name="text">
+           <string>设置参数</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="pushButton_selectSvg">
+          <property name="text">
+           <string>浏览...</string>
           </property>
          </widget>
         </item>
