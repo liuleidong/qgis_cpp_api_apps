@@ -100,10 +100,6 @@ void ll_qgis_base_lib::initialize(QMainWindow *mainWindow)
     mMapCanvas->setCanvasColor(QColor(255,255,255));
     mMapCanvas->setVisible(true);
 
-    QWidget* centralWidget = mMainWindow->centralWidget();
-    QGridLayout* centralLayout = new QGridLayout(centralWidget);
-    centralLayout->addWidget((QWidget*)mMapCanvas,0,0);
-
     initLayerTreeView();
     initMaptools();
 }

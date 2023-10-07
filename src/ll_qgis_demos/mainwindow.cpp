@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "dockwidget.h"
 
+#include <QGridLayout>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -73,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     mApp = ll_qgis_base_lib::Instance();
+    mApp->initialize(this);
     showMaximized();
 }
 
@@ -83,8 +85,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::initialize()
 {
-    mApp->initialize(this);    
+    QGridLayout* centralLayout = new QGridLayout(centralWidget());
+    centralLayout->addWidget((QWidget*)mApp->mapCanvas(),0,0);
     ui->menuViews->addAction(mApp->layerTreeDock()->toggleViewAction());
+
     initDockWidget();
     initMapCanvasDockWidget();
     initSymbolDockWidget();
