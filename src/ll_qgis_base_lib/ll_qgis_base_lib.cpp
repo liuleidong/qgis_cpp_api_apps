@@ -94,7 +94,7 @@ void ll_qgis_base_lib::initialize(QMainWindow *mainWindow)
 {
     mMainWindow = mainWindow;
 
-    mMapCanvas = new QgsMapCanvas(mainWindow);
+    mMapCanvas = new QgsMapCanvas;
     mMapCanvas->enableAntiAliasing(true);
     mMapCanvas->setCachingEnabled(true);
     mMapCanvas->setCanvasColor(QColor(255,255,255));
@@ -107,7 +107,7 @@ void ll_qgis_base_lib::initialize(QMainWindow *mainWindow)
 void ll_qgis_base_lib::initLayerTreeView()
 {
     //添加DockWidget作为图层树的容器
-    mLayerTreeDock = new QgsDockWidget(tr("Layer Tree"),mMainWindow);
+    mLayerTreeDock = new QgsDockWidget(tr("Layer Tree"));
     mLayerTreeDock->setObjectName( QStringLiteral( "Layers" ) );
     mLayerTreeDock->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 
@@ -122,7 +122,7 @@ void ll_qgis_base_lib::initLayerTreeView()
     model->setAutoCollapseLegendNodes( 10 );
 
     //创建View，mLayerTreeView会在库外使用，所以需要添加getter方法，
-    mLayerTreeView = new QgsLayerTreeView(mMainWindow);
+    mLayerTreeView = new QgsLayerTreeView();
     mLayerTreeView->setModel(model);
 
     //Map Canvas和Layer Tree View建立联系，这样通过QgsProject::instance()->addMapLayer添加图层后，会自动添加在图层树以及会在canvas渲染图层
@@ -199,13 +199,13 @@ void ll_qgis_base_lib::initLayerTreeView()
     w->setLayout( vboxLayout );
     mLayerTreeDock->setWidget( w );
 
-    mMainWindow->addDockWidget( Qt::LeftDockWidgetArea, mLayerTreeDock );
-    mMainWindow->setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
-    mMainWindow->setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
-    mMainWindow->setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
-    mMainWindow->setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
-    mLayerTreeDock->show();
-    refreshMapCanvas();
+//    mMainWindow->addDockWidget( Qt::LeftDockWidgetArea, mLayerTreeDock );
+//    mMainWindow->setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
+//    mMainWindow->setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
+//    mMainWindow->setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
+//    mMainWindow->setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+//    mLayerTreeDock->show();
+//    refreshMapCanvas();
 }
 
 void ll_qgis_base_lib::initMaptools()

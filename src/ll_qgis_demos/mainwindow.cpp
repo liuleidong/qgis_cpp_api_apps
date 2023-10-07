@@ -87,6 +87,7 @@ void MainWindow::initialize()
 {
     QGridLayout* centralLayout = new QGridLayout(centralWidget());
     centralLayout->addWidget((QWidget*)mApp->mapCanvas(),0,0);
+    this->addDockWidget(Qt::LeftDockWidgetArea,mApp->layerTreeDock());
     ui->menuViews->addAction(mApp->layerTreeDock()->toggleViewAction());
 
     initDockWidget();
