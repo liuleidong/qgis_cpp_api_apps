@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include <QTimer>
+#include <QRandomGenerator>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
@@ -220,11 +221,19 @@ void MainWindow::startTimer()
     mParams.showPath = true;
     mParams.pathLength = 20;
     mParams.centerShow = true;
+    mParams.angle = 0;
     setParamsSlot(mParams);
 
     QTimer *timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&MainWindow::mockDevices);
     timer->start(1000);
+}
+
+QgsMarkerSymbol *MainWindow::getLayerSymbol(QgsVectorLayer *layer)
+{
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    return (QgsMarkerSymbol *)singleRenderer->symbol();
 }
 
 //模拟接收外部经纬度信号
@@ -235,14 +244,27 @@ void MainWindow::mockDevices()
     info.deviceType = 0;
     info.longitude = mPt1X;
     info.latitude = mPt1Y;
-    mPt1X = mPt1X + mOffsetX;
-    mPt1Y = mPt1Y + mOffsetY;
 
     addOrMovePoint(info,"plane");
     if(mParams.showPath)
     {
         addOrMoveLine(info,mParams.pathLength);
     }    
+
+    quint32 biasX = QRandomGenerator::global()->generate() % 100;
+    quint32 biasY = QRandomGenerator::global()->generate() % 100;
+
+    auto d = new QgsDistanceArea();
+    double r = d->bearing(QgsPointXY(mPt1X,mPt1Y),QgsPointXY(mPt1X + mOffsetX + biasX,mPt1Y + mOffsetY + biasY));
+    double angle = r * 180 / M_PI;
+    if(angle != mParams.angle)
+    {
+        mParams.angle = angle;
+        setParamsSlot(mParams);
+    }
+
+    mPt1X = mPt1X + mOffsetX + biasX;
+    mPt1Y = mPt1Y + mOffsetY + biasY;
 }
 
 void MainWindow::setParamsSlot(SParams params)
@@ -262,6 +284,7 @@ void MainWindow::setParamsSlot(SParams params)
         svgMarker.name = mParams.svgPath;
         svgMarker.color = mParams.color.name();
         svgMarker.size = QString("%1").arg(mParams.size);
+        svgMarker.angle = QString("%1").arg(mParams.angle);
         setPointLayerSvgMarker(mDevPointLayer,svgMarker);
     }
 }

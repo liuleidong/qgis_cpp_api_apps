@@ -25,6 +25,7 @@ public:
     void addOrMovePoint(const SGeometryInfo &geometryInfo,const QString& prefix);
     void addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryLength=20);
     void startTimer();
+    QgsMarkerSymbol* getLayerSymbol(QgsVectorLayer *layer);
 
 private slots:
     void mockDevices();

@@ -10,8 +10,9 @@ ParamDockWidget::ParamDockWidget(QWidget *parent) :
     ui(new Ui::ParamDockWidget)
 {
     ui->setupUi(this);
-    simpleOrSvgVisible(true);
+    simpleOrSvgVisible(false);
     ui->label_5->setText(mColor.name());
+    mMode = 1;
 }
 
 ParamDockWidget::~ParamDockWidget()

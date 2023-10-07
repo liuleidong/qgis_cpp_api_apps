@@ -41,12 +41,18 @@
           <property name="text">
            <string>是否显示轨迹线</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="0" column="2">
          <widget class="QRadioButton" name="radioButton_svg">
           <property name="text">
            <string>Svg符号</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -67,7 +73,7 @@
         <item row="3" column="1">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>color</string>
+           <string>#</string>
           </property>
          </widget>
         </item>
@@ -189,7 +195,7 @@
            <string>简单符号</string>
           </property>
           <property name="checked">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
