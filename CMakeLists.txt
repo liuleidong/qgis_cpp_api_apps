@@ -25,5 +25,6 @@ link_directories(${PROJECT_SOURCE_DIR}/bin) # 指定库搜索路径
  # 指定 编译子目录
 add_subdirectory(./src/ll_qgis_base_lib)
 add_subdirectory(./src/ll_qgis_hello)
+add_subdirectory(./src/ll_qgis_code_examples)
 add_subdirectory(./src/ll_qgis_demos)
 add_subdirectory(./src/ll_qgis_uav_realtime)
