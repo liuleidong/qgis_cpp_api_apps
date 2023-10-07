@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_panel">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -117,6 +117,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page_canvas">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <widget class="QLabel" name="label_2">
         <property name="geometry">
          <rect>

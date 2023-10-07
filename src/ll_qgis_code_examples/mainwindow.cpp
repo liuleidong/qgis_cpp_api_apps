@@ -26,7 +26,6 @@ void MainWindow::initialize()
     gridLayout->addWidget((QWidget*)mApp->mapCanvas());
     ui->page_canvas->setLayout(gridLayout);
     ui->stackedWidget->setCurrentIndex(0);
-
     initPanels();
 }
 
@@ -60,7 +59,15 @@ void MainWindow::init_groupBox_maps()
 
 void MainWindow::addPanelItem(QGridLayout *layout, const QString &title, int row, int column)
 {
+    QString objectName = QString("widget_%1_%2").arg(row).arg(column);
     auto p = new PanelItem;
     p->setTitleText(title);
+    p->setObjectName(objectName);
+//    p->setStyleSheet(QString("QWidget#%1{border-image:url(qrc:/res/l_tiledMapLayer4326.png);}").arg(objectName));
+//    p->setStyleSheet(QString("QWidget{background-color: skyblue;}"));
+    p->setStyleSheet("color: blue;"
+                    "background-color: yellow;"
+                    "selection-color: yellow;"
+                    "selection-background-color: blue;");
     layout->addWidget(p,row,column);
 }
