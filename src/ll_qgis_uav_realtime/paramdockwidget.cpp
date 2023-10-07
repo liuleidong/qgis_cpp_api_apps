@@ -59,14 +59,14 @@ void ParamDockWidget::on_pushButton_Set_clicked()
     if(mMode == 1 && ui->lineEdit_svgPath->text().length() == 0)
     {
         QMessageBox msgBox;
-        msgBox.setText("svg文件路径未设置");
+        msgBox.setText("svg not set");
         msgBox.exec();
     }
     QFileInfo ff(ui->lineEdit_svgPath->text());
     if(mMode == 1 && !ff.isFile())
     {
         QMessageBox msgBox;
-        msgBox.setText("svg文件无效");
+        msgBox.setText("invaild svg file");
         msgBox.exec();
     }
     SParams params;

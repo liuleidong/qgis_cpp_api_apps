@@ -39,8 +39,8 @@ void MainWindow::initialize()
     this->addDockWidget(Qt::LeftDockWidgetArea,mParamDockWidget);
     ui->menuParams->addAction(mParamDockWidget->toggleViewAction());
 
-    QString url1 = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
-    mApp->addWmsLayer(url1,"gaode satellite");
+//    QString url1 = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
+//    mApp->addWmsLayer(url1,"gaode satellite");
     QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
     mApp->addWmsLayer(url,"gaode roads");
 
