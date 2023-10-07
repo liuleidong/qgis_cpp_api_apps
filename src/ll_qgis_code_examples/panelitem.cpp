@@ -198,7 +198,7 @@ QSize PanelItem::sizeHint() const
 
 QSize PanelItem::minimumSizeHint() const
 {
-    return QSize(30, 20);
+    return QSize(250, 200);
 }
 
 void PanelItem::checkAlarm()

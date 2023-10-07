@@ -9,6 +9,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+class QGridLayout;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -18,9 +20,16 @@ public:
     ~MainWindow();
 
     void initialize();
+    void initPanels();
+    void init_groupBox_maps();
+
+private:
+    void addPanelItem(QGridLayout *layout,const QString &title,int row,int column);
 
 private:
     ll_qgis_base_lib *mApp = nullptr;
     Ui::MainWindow *ui;
+
+
 };
 #endif // MAINWINDOW_H

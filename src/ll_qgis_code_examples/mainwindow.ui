@@ -14,26 +14,107 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="page_panel">
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>180</x>
-          <y>190</y>
-          <width>53</width>
-          <height>15</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>1</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>762</width>
+             <height>521</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="7" column="0">
+             <widget class="QGroupBox" name="groupBox_diagram">
+              <property name="title">
+               <string>图表(Diagram)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QGroupBox" name="groupBox_features">
+              <property name="title">
+               <string>矢量图层数据(Features)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupBox_canvas">
+              <property name="title">
+               <string>Map Canvas</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout"/>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QGroupBox" name="groupBox_vector_polygon_symbol">
+              <property name="title">
+               <string>矢量图层-面-符号化(Symbology)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QGroupBox" name="groupBox_vector_line_symbol">
+              <property name="title">
+               <string>矢量图层-线-符号化(Symbology)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QGroupBox" name="groupBox_tiff_symbol">
+              <property name="title">
+               <string>栅格图层-符号化(Symbology)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QGroupBox" name="groupBox_vector_point_symbol">
+              <property name="title">
+               <string>矢量图层-点-符号化(Symbology)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_4"/>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QGroupBox" name="groupBox_annotations">
+              <property name="title">
+               <string>标注(Label)和注记(Annotation)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_maps">
+              <property name="title">
+               <string>图层添加</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_3"/>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QGroupBox" name="groupBox_processing">
+              <property name="title">
+               <string>数据处理(Processing)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="page_canvas">
        <widget class="QLabel" name="label_2">
