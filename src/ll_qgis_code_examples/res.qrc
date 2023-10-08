@@ -13,5 +13,11 @@
         <file>res/images/addDxfSlot.png</file>
         <file>res/images/addCoverageSlot.png</file>
         <file>res/images/addGpx1Slot.png</file>
+        <file>res/images/addCsvSlot.png</file>
+        <file>res/images/addSpatiaLiteSlot.png</file>
+        <file>res/images/addMemorySlot.png</file>
+        <file>res/images/addWfsSlot.png</file>
+        <file>res/images/addGpkg1Slot.png</file>
+        <file>res/images/addRasterSlot.png</file>
     </qresource>
 </RCC>

@@ -163,6 +163,38 @@ void MainWindow::init_groupBox_maps()
     layout->addWidget(label_gpx,row,0);
     ++row;column = -1;
     addPanelItem(layout,"addGpx1Slot","添加gpx文件",":/res/images/addGpx1Slot.png",row,++column);
+    ++row;
+    QLabel *label_delimitedtext = new QLabel("Delimited text file provider(delimitedtext)");
+    layout->addWidget(label_delimitedtext,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addCsvSlot","添加csv文件",":/res/images/addGpx1Slot.png",row,++column);
+    ++row;
+    QLabel *label_spatiaLite = new QLabel("SpatiaLite data provider(spatialite)");
+    layout->addWidget(label_spatiaLite,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addSpatiaLiteSlot","spatialite db添加图层",":/res/images/addSpatiaLiteSlot.png",row,++column);
+    ++row;
+    QLabel *label_memory = new QLabel("Memory data provider(memory)");
+    layout->addWidget(label_memory,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addMemorySlot","添加memory类型图层",":/res/images/addMemorySlot.png",row,++column);
+    ++row;
+    QLabel *label_wfs = new QLabel("WFS(web feature service) data provider(wfs)");
+    layout->addWidget(label_wfs,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addWfsSlot","添加wfs类型图层",":/res/images/addWfsSlot.png",row,++column);
+    ++row;
+    QLabel *label_gdal = new QLabel("GDAL data provider(gdal)");
+    layout->addWidget(label_gdal,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addRasterSlot","添加tiff文件",":/res/images/addRasterSlot.png",row,++column);
+    addPanelItem(layout,"addGpkg1Slot","添加多图层tiff文件",":/res/images/addGpkg1Slot.png",row,++column);
+    ++row;
+    QLabel *label_wms = new QLabel("WMS data provider(wms)");
+    layout->addWidget(label_wms,row,0);
+    ++row;column = -1;
+    addPanelItem(layout,"addWmsSlot","添加在线高德影像",":/res/images/addRasterSlot.png",row,++column);
+    addPanelItem(layout,"addGdalOfflineSlot","添加离线高德影像",":/res/images/addGpkg1Slot.png",row,++column);
 }
 
 
@@ -313,7 +345,7 @@ void MainWindow::addCsvSlot()
 {
     QString filename = QStringLiteral("maps/jilin_maincity.csv");
     QFileInfo ff(filename);
-    QString uri = QString("file://%1/%2%3").arg(QCoreApplication::applicationDirPath()).arg(filename).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
+    QString uri = QString("file:///%1/%2%3").arg(QCoreApplication::applicationDirPath()).arg(filename).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
     QgsVectorLayer* vecLayer = new QgsVectorLayer(uri,ff.baseName(),"delimitedtext");
     if(!vecLayer->isValid())
     {
@@ -420,7 +452,8 @@ void MainWindow::addGpkg1Slot()
 void MainWindow::addWmsSlot()
 {
     QString urlWithParams;
-    QString url = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
+//    QString url = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
+    QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
     QString type = QStringLiteral("xyz");
     int zMin = 0;
     int zMax = 18;
@@ -441,7 +474,11 @@ void MainWindow::addWmsSlot()
 
 void MainWindow::addGdalOfflineSlot()
 {
+#ifdef Q_OS_WINDOWS
+    QString filename = QStringLiteral("maps/gaode20230630/tms_win.xml");
+#else
     QString filename = QStringLiteral("maps/gaode20230630/tms.xml");
+#endif
     QFileInfo ff(filename);
     QgsRasterLayer* layer = new QgsRasterLayer(filename,"gaodeoffline","gdal");
     QgsProject::instance()->addMapLayer(layer);

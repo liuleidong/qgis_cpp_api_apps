@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QDebug>
+#include <QTextCodec>
 
 #include "qgsapplication.h"
 #include "qgsproviderregistry.h"
@@ -13,6 +14,20 @@ int main(int argc, char *argv[])
 {
     QgsApplication a(argc, argv,true);
     QString strAppDir = QCoreApplication::applicationDirPath();
+
+#if (QT_VERSION <= QT_VERSION_CHECK(5,0,0))
+#if _MSC_VER
+    QTextCodec *codec = QTextCodec::codecForName("gbk");
+#else
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+#endif
+    QTextCodec::setCodecForLocale(codec);
+    QTextCodec::setCodecForCStrings(codec);
+    QTextCodec::setCodecForTr(codec);
+#else
+    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    QTextCodec::setCodecForLocale(codec);
+#endif
 
     //proj的配置目录，坐标映射相关 proj.db
     QString strProjDir = strAppDir + QString("/share/proj/");
