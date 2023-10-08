@@ -318,6 +318,50 @@ void MainWindow::addCoverageSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << aaLayer << ARCLayer << CNTLayer << PALLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
+    {
+        QgsRectangle extent;
+        extent.setMinimal();
+
+        if ( !mapLayers.empty() )
+        {
+            for ( int i = 0; i < mapLayers.size(); ++i )
+            {
+                QgsMapLayer *layer = mapLayers.at( i );
+                QgsRectangle layerExtent = layer->extent();
+
+                QgsVectorLayer *vLayer = qobject_cast<QgsVectorLayer *>( layer );
+                if ( vLayer )
+                {
+                    if ( vLayer->geometryType() == QgsWkbTypes::NullGeometry )
+                        continue;
+
+                    if ( layerExtent.isEmpty() )
+                    {
+                        vLayer->updateExtents();
+                        layerExtent = vLayer->extent();
+                    }
+                }
+
+                if ( layerExtent.isNull() )
+                    continue;
+
+                //transform extent
+                layerExtent = mApp->mapCanvas()->mapSettings().layerExtentToOutputExtent( layer, layerExtent );
+
+                extent.combineExtentWith( layerExtent );
+            }
+        }
+
+        if ( extent.isNull() )
+            return;
+
+        // Increase bounding box with 5%, so that layer is a bit inside the borders
+        extent.scale( 1.05 );
+
+        //zoom to bounding box
+        mApp->mapCanvas()->setExtent( extent, true );
+        mApp->mapCanvas()->refresh();
+    }
 }
 
 void MainWindow::addGpx1Slot()
