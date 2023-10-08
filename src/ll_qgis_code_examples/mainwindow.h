@@ -23,8 +23,12 @@ public:
     void initPanels();
     void init_groupBox_maps();
 
+public slots:
+    void panelImageButtonClickedSlot(QString slotName);
+
+    void addShpSlot();
 private:
-    void addPanelItem(QGridLayout *layout,const QString &title,const QString &url,int row,int column);
+    void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
 
 private:
     ll_qgis_base_lib *mApp = nullptr;

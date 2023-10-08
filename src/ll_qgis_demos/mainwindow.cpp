@@ -288,10 +288,7 @@ void MainWindow::initMapTools()
 
 void MainWindow::addShpSlot()
 {
-    QString filename = QFileDialog::getOpenFileName();
-    if(filename.isNull())//如果未选择文件则返回
-        return;
-
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     //创建图层
     QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");

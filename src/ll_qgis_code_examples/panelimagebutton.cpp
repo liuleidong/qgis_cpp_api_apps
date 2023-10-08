@@ -1,11 +1,14 @@
 #include "panelimagebutton.h"
 
 #include <QPainter>
+#include <QEvent>
+#include <QDebug>
 
 PanelImageButton::PanelImageButton(QWidget *parent)
     : QWidget{parent}
 {
-
+    setAttribute(Qt::WA_Hover,true);
+    installEventFilter(this);
 }
 
 QSize PanelImageButton::sizeHint() const
@@ -226,4 +229,23 @@ void PanelImageButton::drawImage(QPainter *painter)
 
     painter->restore();
 
+}
+
+bool PanelImageButton::eventFilter(QObject *obj, QEvent *event)
+{
+    if(event->type() == QEvent::HoverEnter) {
+        setCursor(Qt::PointingHandCursor);
+        return true;
+    }
+    else if(event->type() == QEvent::HoverLeave)
+    {
+        setCursor(Qt::ArrowCursor);
+        return true;
+    }
+    else if(event->type() == QEvent::MouseButtonRelease)
+    {
+        emit panelImageButtonClicked(objectName());
+        return true;
+    }
+    return QWidget::eventFilter(obj,event);
 }

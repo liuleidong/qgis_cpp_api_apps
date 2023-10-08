@@ -54,10 +54,14 @@ public:
     void setBorderColor(const QColor &newBorderColor);
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
     void drawBorder(QPainter *painter);
     void drawTitle(QPainter *painter);
     void drawImage(QPainter *painter);
+    bool eventFilter(QObject *obj, QEvent *ev) override;
+
+signals:
+    void panelImageButtonClicked(QString slotName);
 
 private:
     //标题相关
