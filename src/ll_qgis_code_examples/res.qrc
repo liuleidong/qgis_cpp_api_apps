@@ -2,5 +2,16 @@
     <qresource prefix="/">
         <file>res/l_tiledMapLayer4326.png</file>
         <file>res/big.png</file>
+        <file>res/icons/mActionForward.png</file>
+        <file>res/icons/mActionBackward.png</file>
+        <file>res/images/addShpSlot.png</file>
+        <file>res/images/addGpxSlot.png</file>
+        <file>res/images/addGpkgSlot.png</file>
+        <file>res/images/addGeoJsonSlot.png</file>
+        <file>res/images/addGmlSlot.png</file>
+        <file>res/images/addKmlSlot.png</file>
+        <file>res/images/addDxfSlot.png</file>
+        <file>res/images/addCoverageSlot.png</file>
+        <file>res/images/addGpx1Slot.png</file>
     </qresource>
 </RCC>

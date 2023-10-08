@@ -207,7 +207,7 @@ void PanelImageButton::drawImage(QPainter *painter)
 
     //填充背景
     painter->setPen(Qt::NoPen);
-    painter->setBrush(QColor(192,192,192));
+    painter->setBrush(mImageBackColor);
     QRect rect(offset, offset+mTitleHeight, width() - offset * 2, height()-mTitleHeight);
     painter->drawRect(rect);
 

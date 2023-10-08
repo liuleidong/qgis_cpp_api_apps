@@ -77,7 +77,7 @@ private:
     //边框相关
     int mBorderWidth = 3;
     int mBorderRadius = 5;
-    QColor mBorderColor = QColor(21, 156, 119);
+    QColor mBorderColor = QColor(64, 128, 128);
 };
 
 #endif // PANELIMAGEBUTTON_H
