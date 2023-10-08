@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <QGridLayout>
 #include <QTimer>
 #include <QRandomGenerator>
 
@@ -33,6 +34,11 @@ MainWindow::~MainWindow()
 void MainWindow::initialize()
 {
     mApp->initialize(this);
+    auto gridLayout = new QGridLayout;
+    gridLayout->addWidget((QWidget*)mApp->mapCanvas());
+    centralWidget()->setLayout(gridLayout);
+
+    addDockWidget(Qt::LeftDockWidgetArea,mApp->layerTreeDock());
     ui->menuParams->addAction(mApp->layerTreeDock()->toggleViewAction());
 
     mParamDockWidget = new ParamDockWidget(this);

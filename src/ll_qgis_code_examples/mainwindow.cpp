@@ -158,42 +158,33 @@ void MainWindow::init_groupBox_maps()
     addPanelItem(layout,"addKmlSlot","添加kml文件",":/res/images/addKmlSlot.png",row,++column);
     addPanelItem(layout,"addDxfSlot","添加dxf文件",":/res/images/addDxfSlot.png",row,++column);
     addPanelItem(layout,"addCoverageSlot","添加coverage文件",":/res/images/addCoverageSlot.png",row,++column);
-    ++row;
+    int labelRow = ++row;
     QLabel *label_gpx = new QLabel("GPX data provider(gpx)");
-    layout->addWidget(label_gpx,row,0);
+    layout->addWidget(label_gpx,labelRow,0);
     ++row;column = -1;
     addPanelItem(layout,"addGpx1Slot","添加gpx文件",":/res/images/addGpx1Slot.png",row,++column);
-    ++row;
     QLabel *label_delimitedtext = new QLabel("Delimited text file provider(delimitedtext)");
-    layout->addWidget(label_delimitedtext,row,0);
-    ++row;column = -1;
+    layout->addWidget(label_delimitedtext,labelRow,1);
     addPanelItem(layout,"addCsvSlot","添加csv文件",":/res/images/addGpx1Slot.png",row,++column);
-    ++row;
     QLabel *label_spatiaLite = new QLabel("SpatiaLite data provider(spatialite)");
-    layout->addWidget(label_spatiaLite,row,0);
-    ++row;column = -1;
+    layout->addWidget(label_spatiaLite,labelRow,2);
     addPanelItem(layout,"addSpatiaLiteSlot","spatialite db添加图层",":/res/images/addSpatiaLiteSlot.png",row,++column);
-    ++row;
     QLabel *label_memory = new QLabel("Memory data provider(memory)");
-    layout->addWidget(label_memory,row,0);
-    ++row;column = -1;
+    layout->addWidget(label_memory,labelRow,3);
     addPanelItem(layout,"addMemorySlot","添加memory类型图层",":/res/images/addMemorySlot.png",row,++column);
-    ++row;
     QLabel *label_wfs = new QLabel("WFS(web feature service) data provider(wfs)");
-    layout->addWidget(label_wfs,row,0);
-    ++row;column = -1;
+    layout->addWidget(label_wfs,labelRow,4);
     addPanelItem(layout,"addWfsSlot","添加wfs类型图层",":/res/images/addWfsSlot.png",row,++column);
-    ++row;
+    labelRow = ++row;
     QLabel *label_gdal = new QLabel("GDAL data provider(gdal)");
     layout->addWidget(label_gdal,row,0);
     ++row;column = -1;
     addPanelItem(layout,"addRasterSlot","添加tiff文件",":/res/images/addRasterSlot.png",row,++column);
     addPanelItem(layout,"addGpkg1Slot","添加多图层tiff文件",":/res/images/addGpkg1Slot.png",row,++column);
-    ++row;
+
     QLabel *label_wms = new QLabel("WMS data provider(wms)");
-    layout->addWidget(label_wms,row,0);
-    ++row;column = -1;
-    addPanelItem(layout,"addWmsSlot","添加在线高德影像",":/res/images/addRasterSlot.png",row,++column);
+    layout->addWidget(label_wms,labelRow,2);
+    addPanelItem(layout,"addWmsSlot","添加在线高德路网",":/res/images/addWmsSlot.png",row,++column);
     addPanelItem(layout,"addGdalOfflineSlot","添加离线高德影像",":/res/images/addGpkg1Slot.png",row,++column);
 }
 
@@ -451,25 +442,9 @@ void MainWindow::addGpkg1Slot()
 
 void MainWindow::addWmsSlot()
 {
-    QString urlWithParams;
-//    QString url = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
     QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
-    QString type = QStringLiteral("xyz");
-    int zMin = 0;
-    int zMax = 18;
-#if 1
-    QgsDataSourceUri uri;
-    uri.setParam( QStringLiteral( "url" ), url );
-    uri.setParam( QStringLiteral( "type" ), type );
-    uri.setParam( QStringLiteral( "zmin" ), QString::number( zMin ) );
-    uri.setParam( QStringLiteral( "zmax" ), QString::number( zMax ) );
-    urlWithParams = uri.encodedUri();
-#else
-    QString urlEncode = QUrl::toPercentEncoding(url);
-    urlWithParams = QString("type=xyz&url=%1&zmax=18&zmin=0").arg(urlEncode);
-#endif
-    QgsRasterLayer *rlayer = new QgsRasterLayer(urlWithParams,"gaode","wms");
-    QgsProject::instance()->addMapLayer(rlayer);
+    mApp->addWmsLayer(url,"gaode roads");
+    QTimer::singleShot(1000*3,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);});
 }
 
 void MainWindow::addGdalOfflineSlot()

@@ -19,5 +19,6 @@
         <file>res/images/addWfsSlot.png</file>
         <file>res/images/addGpkg1Slot.png</file>
         <file>res/images/addRasterSlot.png</file>
+        <file>res/images/addWmsSlot.png</file>
     </qresource>
 </RCC>
