@@ -24,7 +24,7 @@ public:
     void init_groupBox_maps();
 
 private:
-    void addPanelItem(QGridLayout *layout,const QString &title,int row,int column);
+    void addPanelItem(QGridLayout *layout,const QString &title,const QString &url,int row,int column);
 
 private:
     ll_qgis_base_lib *mApp = nullptr;

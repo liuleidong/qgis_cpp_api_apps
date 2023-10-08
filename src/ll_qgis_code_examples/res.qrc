@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>res/l_tiledMapLayer4326.png</file>
+        <file>res/big.png</file>
     </qresource>
 </RCC>

@@ -3,7 +3,7 @@
 
 #include <QGridLayout>
 
-#include "panelitem.h"
+#include "panelimagebutton.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,33 +41,28 @@ void MainWindow::init_groupBox_maps()
     QLabel *label_ogr = new QLabel("OGR data provider(ogr)");
     layout->addWidget(label_ogr,row,0);
     ++row;
-    addPanelItem(layout,"添加shapefile文件",row,++column);
-    addPanelItem(layout,"添加gpx文件",row,++column);
-    addPanelItem(layout,"添加gpkg文件",row,++column);
-    addPanelItem(layout,"添加geojson文件",row,++column);
+    addPanelItem(layout,"添加shapefile文件",":/res/big.png",row,++column);
+    addPanelItem(layout,"添加gpx文件",":/res/l_tiledMapLayer4326.png",row,++column);
+    addPanelItem(layout,"添加gpkg文件",":/res/l_tiledMapLayer4326.png",row,++column);
+    addPanelItem(layout,"添加geojson文件",":/res/l_tiledMapLayer4326.png",row,++column);
     ++row;column = -1;
-    addPanelItem(layout,"添加gml文件",row,++column);
-    addPanelItem(layout,"添加kml文件",row,++column);
-    addPanelItem(layout,"添加dxf文件",row,++column);
-    addPanelItem(layout,"添加coverage文件",row,++column);
+    addPanelItem(layout,"添加gml文件",":/res/l_tiledMapLayer4326.png",row,++column);
+    addPanelItem(layout,"添加kml文件",":/res/l_tiledMapLayer4326.png",row,++column);
+    addPanelItem(layout,"添加dxf文件",":/res/l_tiledMapLayer4326.png",row,++column);
+    addPanelItem(layout,"添加coverage文件",":/res/l_tiledMapLayer4326.png",row,++column);
     ++row;
     QLabel *label_gpx = new QLabel("GPX data provider(gpx)");
     layout->addWidget(label_gpx,row,0);
     ++row;column = -1;
-    addPanelItem(layout,"添加gpx文件",row,++column);
+    addPanelItem(layout,"添加gpx文件",":/res/l_tiledMapLayer4326.png",row,++column);
 }
 
-void MainWindow::addPanelItem(QGridLayout *layout, const QString &title, int row, int column)
+void MainWindow::addPanelItem(QGridLayout *layout, const QString &title,const QString &url, int row, int column)
 {
     QString objectName = QString("widget_%1_%2").arg(row).arg(column);
-    auto p = new PanelItem;
-    p->setTitleText(title);
+    auto p = new PanelImageButton;
     p->setObjectName(objectName);
-//    p->setStyleSheet(QString("QWidget#%1{border-image:url(qrc:/res/l_tiledMapLayer4326.png);}").arg(objectName));
-//    p->setStyleSheet(QString("QWidget{background-color: skyblue;}"));
-    p->setStyleSheet("color: blue;"
-                    "background-color: yellow;"
-                    "selection-color: yellow;"
-                    "selection-background-color: blue;");
+    p->setTitleText(title);
+    p->setImageUrl(url);
     layout->addWidget(p,row,column);
 }
