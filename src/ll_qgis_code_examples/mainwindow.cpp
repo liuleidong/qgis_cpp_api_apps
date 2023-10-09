@@ -94,6 +94,7 @@ void MainWindow::initialize()
     initStackwidgetPageCanvas();
     initPanels();
     initGroupboxInPanel();
+    initMapTools();
 }
 
 void MainWindow::initToolbar()
@@ -219,6 +220,11 @@ void MainWindow::init_groupBox_canvas()
     ++row;column = -1;
     addPanelItem(layout,"vertexMarkerSlot",QString::fromLocal8Bit("VertexMarker画点"),":/res/images/vertexMarkerSlot.png",row,++column);
 
+    QLabel *label_mapTool = new QLabel(QString::fromLocal8Bit("Maptool的使用"));
+    layout->addWidget(label_mapTool,labelrow,1);
+    addPanelItem(layout,"mapToolPanSlot",QString::fromLocal8Bit("Maptool Pan"),":/res/images/mapToolPanSlot.png",row,++column);
+    addPanelItem(layout,"mapToolZoomInSlot",QString::fromLocal8Bit("Maptool ZoomIn"),":/res/images/mapToolZoomInSlot.png",row,++column);
+    addPanelItem(layout,"mapToolZoomOutSlot",QString::fromLocal8Bit("Maptool ZoomOut"),":/res/images/mapToolZoomOutSlot.png",row,++column);
 }
 
 
@@ -640,8 +646,12 @@ void MainWindow::vertexMarkerSlot()
 }
 void MainWindow::mapToolPanSlot()
 {
-    statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是ZoomIn,1秒后切换为Pan"));
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    mApp->addVectorLayer(filename,ff.baseName());
+
     mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
+    statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是ZoomIn,1秒后切换为Pan"));
     QTimer::singleShot(1000*1,this,[=]
    {
        statusBar()->showMessage(QString::fromLocal8Bit("Map Tool改为Pan"));

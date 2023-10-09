@@ -26,5 +26,8 @@
         <file>res/images/rubberBandLineSlot.png</file>
         <file>res/images/rubberBandPolygonSlot.png</file>
         <file>res/images/vertexMarkerSlot.png</file>
+        <file>res/images/mapToolPanSlot.png</file>
+        <file>res/images/mapToolZoomInSlot.png</file>
+        <file>res/images/mapToolZoomOutSlot.png</file>
     </qresource>
 </RCC>
