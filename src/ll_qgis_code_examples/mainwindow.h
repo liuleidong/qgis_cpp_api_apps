@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QStatusBar>
 
 #include "ll_qgis_base_lib.h"
 #include "qgsproject.h"
@@ -58,10 +59,11 @@ private:
     template <typename T>
     void zoomToFirstLayer()
     {
+        statusBar()->showMessage(tr("loading data...."));
         auto layer = QgsProject::instance()->layers<T>().first();
         mApp->layerTreeView()->setCurrentLayer(layer);
         QTimer::singleShot(1000*1,this,[=]
-        {mApp->layerTreeView()->defaultActions()->zoomToLayers( mApp->mapCanvas() );});
+        {mApp->layerTreeView()->defaultActions()->zoomToLayers( mApp->mapCanvas() );statusBar()->showMessage(tr("loading data done"));});
     }
 
 private:
