@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -16,6 +16,8 @@ QT_END_NAMESPACE
 
 class QGridLayout;
 class QgsMapToolZoom;
+class QgsRubberBand;
+class QgsVertexMarker;
 
 class MainWindow : public QMainWindow
 {
@@ -82,6 +84,11 @@ private:
 private:
     ll_qgis_base_lib *mApp = nullptr;
     Ui::MainWindow *ui;
+
+    QgsRubberBand *mRubberBandPoint = nullptr;
+    QgsRubberBand *mRubberBandLine = nullptr;
+    QgsRubberBand *mRubberBandPolygon = nullptr;
+    QgsVertexMarker *mVertexMarker = nullptr;
 
     QgsMapToolPan *mMapToolPan = nullptr;
     QgsMapToolZoom *mMapToolZoomOut = nullptr;

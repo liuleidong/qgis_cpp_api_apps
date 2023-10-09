@@ -234,6 +234,29 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
     {
         mApp->layerTreeDock()->hide();
         mApp->mapCanvas()->setMapTool(mMapToolPan);
+        mApp->mapCanvas()->setCanvasColor(QColor("white"));
+        mApp->mapCanvas()->setRotation(0);
+        if(mRubberBandPoint)
+        {
+            mRubberBandPoint->reset(QgsWkbTypes::PointGeometry);
+            mRubberBandPoint = nullptr;
+        }
+        //QgsRubberBand和QgsVertexMarker都是QGraphicsItem的子类
+        //QgsMapCanvas是QGraphicsView的子类
+        //从map canvas删除item用到过两种方式：
+        //一种删除QGraphicsItem的方式
+        if(mRubberBandLine)
+        {
+            mRubberBandLine->reset(QgsWkbTypes::LineGeometry);
+            mRubberBandLine = nullptr;
+        }
+        if(mRubberBandPolygon)
+        {
+            mRubberBandPolygon->reset(QgsWkbTypes::PolygonGeometry);
+            mRubberBandPolygon = nullptr;
+        }
+        //另一种删除QGraphicsItem的方式
+        mApp->mapCanvas()->scene()->removeItem(mVertexMarker);
     }
     else
     {
@@ -553,22 +576,22 @@ void MainWindow::rubberBandLineSlot()
     QgsPointXY startPoint(20.34013,-33.90453);
     QgsPointXY endPoint(20.49744,-33.91126);
     //新建QgsRubberBand，注意类型是LineGeometry
-    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::LineGeometry);
+    mRubberBandLine = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::LineGeometry);
     //将点添加到rubberband中
-    rubberBand->addPoint(startPoint);
-    rubberBand->addPoint(endPoint);
+    mRubberBandLine->addPoint(startPoint);
+    mRubberBandLine->addPoint(endPoint);
     //更改线宽，颜色等属性
-    rubberBand->setWidth(4);
-    rubberBand->setColor(QColor(222,155,67));
+    mRubberBandLine->setWidth(4);
+    mRubberBandLine->setColor(QColor(222,155,67));
     //定义一个点类型的RubberBand
-    QgsRubberBand *rubberBandPoints = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
-    rubberBandPoints->addPoint(startPoint);
-    rubberBandPoints->addPoint(endPoint);
-    rubberBandPoints->setWidth(6);
-    rubberBandPoints->setColor(QColor(222,155,67));
+    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    mRubberBandPoint->addPoint(startPoint);
+    mRubberBandPoint->addPoint(endPoint);
+    mRubberBandPoint->setWidth(6);
+    mRubberBandPoint->setColor(QColor(222,155,67));
     //显示出来
-    rubberBand->show();
-    rubberBandPoints->show();
+    mRubberBandLine->show();
+    mRubberBandPoint->show();
 }
 
 void MainWindow::rubberBandPolygonSlot()
@@ -582,22 +605,22 @@ void MainWindow::rubberBandPolygonSlot()
     QgsPointXY point2(20.49744,-33.91126);
     QgsPointXY point3(20.41396,-33.93079);
     //新建PolygonGeometry类型的RubberBand
-    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
+    mRubberBandPolygon = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
     //添加三个点
-    rubberBand->addPoint(point1);
-    rubberBand->addPoint(point2);
-    rubberBand->addPoint(point3);
+    mRubberBandPolygon->addPoint(point1);
+    mRubberBandPolygon->addPoint(point2);
+    mRubberBandPolygon->addPoint(point3);
     //设置线宽颜色等属性
-    rubberBand->setWidth(4);
-    rubberBand->setColor(QColor(222,155,67));
-    QgsRubberBand *rubberBandPoints = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
-    rubberBandPoints->addPoint(point1);
-    rubberBandPoints->addPoint(point2);
-    rubberBandPoints->addPoint(point3);
-    rubberBandPoints->setWidth(6);
-    rubberBandPoints->setColor(QColor(222,155,67));
-    rubberBand->show();
-    rubberBandPoints->show();
+    mRubberBandPolygon->setWidth(4);
+    mRubberBandPolygon->setColor(QColor(222,155,67));
+    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    mRubberBandPoint->addPoint(point1);
+    mRubberBandPoint->addPoint(point2);
+    mRubberBandPoint->addPoint(point3);
+    mRubberBandPoint->setWidth(6);
+    mRubberBandPoint->setColor(QColor(222,155,67));
+    mRubberBandPolygon->show();
+    mRubberBandPoint->show();
 }
 
 void MainWindow::vertexMarkerSlot()
@@ -607,13 +630,13 @@ void MainWindow::vertexMarkerSlot()
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
     //构造QgsVertexMarker并设置属性
-    QgsVertexMarker *vm = new QgsVertexMarker( mApp->mapCanvas() );
-    vm->setCenter( QgsPointXY(20.33474,-33.91104) );
-    vm->setIconType( QgsVertexMarker::ICON_DOUBLE_TRIANGLE );
-    vm->setPenWidth( 2 );
-    vm->setIconSize(24);
-    vm->setColor( Qt::green );
-    vm->setZValue( vm->zValue() + 1 );
+    mVertexMarker = new QgsVertexMarker( mApp->mapCanvas() );
+    mVertexMarker->setCenter( QgsPointXY(20.33474,-33.91104) );
+    mVertexMarker->setIconType( QgsVertexMarker::ICON_DOUBLE_TRIANGLE );
+    mVertexMarker->setPenWidth( 2 );
+    mVertexMarker->setIconSize(24);
+    mVertexMarker->setColor( Qt::green );
+    mVertexMarker->setZValue( mVertexMarker->zValue() + 1 );
 }
 void MainWindow::mapToolPanSlot()
 {
