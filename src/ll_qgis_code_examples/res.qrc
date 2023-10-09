@@ -29,5 +29,15 @@
         <file>res/images/mapToolPanSlot.png</file>
         <file>res/images/mapToolZoomInSlot.png</file>
         <file>res/images/mapToolZoomOutSlot.png</file>
+        <file>res/images/pointSimpleMarkerSlot.png</file>
+        <file>res/images/pointRasterMarkerSlot.png</file>
+        <file>res/images/pointSvgMarkerSlot.png</file>
+        <file>res/images/pointAnimatedMarkerSlot.png</file>
+        <file>res/images/pointEllipseMarkerSlot.png</file>
+        <file>res/images/pointFilledMarkerSlot.png</file>
+        <file>res/images/pointFontMarkerSlot.png</file>
+        <file>res/images/pointGeometryGeneratorMarkerSlot.png</file>
+        <file>res/images/pointMaskSlot.png</file>
+        <file>res/images/pointVectorFieldMarkerSlot.png</file>
     </qresource>
 </RCC>

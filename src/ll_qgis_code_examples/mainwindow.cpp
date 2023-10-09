@@ -149,6 +149,7 @@ void MainWindow::initGroupboxInPanel()
 {
     init_groupBox_maps();
     init_groupBox_canvas();
+    init_groupBox_vector_point_symbol();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -227,6 +228,27 @@ void MainWindow::init_groupBox_canvas()
     addPanelItem(layout,"mapToolZoomOutSlot",QString::fromLocal8Bit("Maptool ZoomOut"),":/res/images/mapToolZoomOutSlot.png",row,++column);
 }
 
+void MainWindow::init_groupBox_vector_point_symbol()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_vector_point_symbol->layout();
+    int labelrow = row;
+    QLabel *label_SingleSymbolRenderer = new QLabel(QString::fromLocal8Bit("单一符号渲染"));
+    layout->addWidget(label_SingleSymbolRenderer,row,0);
+    ++row;
+    addPanelItem(layout,"pointSimpleMarkerSlot",QString::fromLocal8Bit("点符号-简单标记"),":/res/images/pointSimpleMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointSvgMarkerSlot",QString::fromLocal8Bit("点符号-svg标记"),":/res/images/pointSvgMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointRasterMarkerSlot",QString::fromLocal8Bit("点符号-图片标记"),":/res/images/pointRasterMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointAnimatedMarkerSlot",QString::fromLocal8Bit("点符号-动画标记"),":/res/images/pointAnimatedMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointEllipseMarkerSlot",QString::fromLocal8Bit("点符号-椭圆形标记"),":/res/images/pointEllipseMarkerSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"pointFontMarkerSlot",QString::fromLocal8Bit("点符号-字符标记"),":/res/images/pointFontMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointFilledMarkerSlot",QString::fromLocal8Bit("点符号-填充（圆形）标记"),":/res/images/pointFilledMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointGeometryGeneratorMarkerSlot",QString::fromLocal8Bit("点符号-几何生成器"),":/res/images/pointGeometryGeneratorMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointVectorFieldMarkerSlot",QString::fromLocal8Bit("点符号-矢量字段标记"),":/res/images/pointVectorFieldMarkerSlot.png",row,++column);
+    addPanelItem(layout,"pointMaskSlot",QString::fromLocal8Bit("点符号-掩膜"),":/res/images/pointMaskSlot.png",row,++column);
+}
+
 
 void MainWindow::panelImageButtonClickedSlot(QString slotName)
 {
@@ -262,7 +284,8 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
             mRubberBandPolygon = nullptr;
         }
         //另一种删除QGraphicsItem的方式
-        mApp->mapCanvas()->scene()->removeItem(mVertexMarker);
+        if(mVertexMarker)
+            mApp->mapCanvas()->scene()->removeItem(mVertexMarker);
     }
     else
     {
@@ -684,3 +707,572 @@ void MainWindow::mapToolZoomOutSlot()
        mApp->mapCanvas()->setMapTool(mMapToolZoomOut);
    });
 }
+
+void MainWindow::pointSimpleMarkerSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造简单标记层(Simple Marker SymbolLayer)方法一
+    //作为示例，用到了shape和size两个参数，其他参数使用类似
+    auto markerSymbolLayer = new QgsSimpleMarkerSymbolLayer(Qgis::MarkerShape::Heart,4.0);
+#else
+    //构造简单标记层(Simple Marker SymbolLayer)方法二
+    //作为示例，用到了shape和size两个参数，其他参数使用类似
+    QVariantMap mp;
+    mp[QString("name")] = "heart";
+    mp[QString("color")] = "pink";
+    mp[QString("size")] = "12.0";
+    auto markerSymbolLayer = QgsSimpleMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointSvgMarkerSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Svg标记层(Svg Marker SymbolLayer)方法一
+    //作为示例，用到了path和size两个参数，其他参数使用类似
+    QString path = QStringLiteral("resources/plane.svg");
+    auto markerSymbolLayer = new QgsSvgMarkerSymbolLayer(path,8.0);
+    markerSymbolLayer->setStrokeColor(QColor(255,0,0));
+#else
+    //构造Svg标记层(Svg Marker SymbolLayer)方法二
+    //作为示例，用到了shape size color参数，其他参数使用类似
+    QVariantMap mp;
+    mp[QString("name")] = "resources/plane.svg";
+    mp[QString("outline_color")] = "pink";
+    mp[QString("size")] = "18.0";
+    auto markerSymbolLayer = QgsSvgMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+
+}
+
+void MainWindow::pointRasterMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Raster标记层(Raster Marker SymbolLayer)方法一
+    //作为示例，用到了imageFile和size两个参数，其他参数使用类似
+    QString imageFile = QStringLiteral("resources/cock.jpg");
+    auto markerSymbolLayer = new QgsRasterMarkerSymbolLayer(imageFile,8.0);
+#else
+    //构造Raster标记层(Raster Marker SymbolLayer)方法二
+    //作为示例，用到了imageFile size参数，其他参数使用类似
+    QVariantMap mp;
+    mp[QString("imageFile")] = "resources/cock.jpg";
+    mp[QString("size")] = "18.0";
+    auto markerSymbolLayer = QgsRasterMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointAnimatedMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Animated标记层(Animated Marker SymbolLayer)方法一
+    //作为示例，用到了path和size两个参数，其他参数使用类似
+    QString path = QStringLiteral("resources/fire.gif");
+    auto markerSymbolLayer = new QgsAnimatedMarkerSymbolLayer(path,8.0);
+#else
+    //构造Animated标记层(Animated Marker SymbolLayer)方法二
+    //作为示例，用到了imageFile size参数，其他参数使用类似
+    QVariantMap mp;
+    mp[QString("imageFile")] = "resources/fire.gif";
+    mp[QString("size")] = "18.0";
+    auto markerSymbolLayer = QgsAnimatedMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointEllipseMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Ellipse标记层(Ellipse Marker SymbolLayer)方法一
+    auto markerSymbolLayer = new QgsEllipseSymbolLayer();
+    markerSymbolLayer->setShape(QgsEllipseSymbolLayer::Circle);
+    markerSymbolLayer->setFillColor(QColor("pink"));
+    markerSymbolLayer->setSymbolWidth(6.0);
+    markerSymbolLayer->setSymbolHeight(6.0);
+#else
+    //构造Ellipse标记层(Ellipse Marker SymbolLayer)方法二
+    //作为示例，用到了imageFile size参数，其他参数使用类似
+    QVariantMap mp;
+    mp[QString("symbol_name")] = "circle";
+    mp[QString("color")] = "pink";
+    mp[QString("symbol_width")] = "16.0";
+    mp[QString("symbol_height")] = "6.0";
+    auto markerSymbolLayer = QgsEllipseSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointFontMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Font标记层(Font Marker SymbolLayer)方法一
+    auto markerSymbolLayer = new QgsFontMarkerSymbolLayer(QStringLiteral("Mukti"),QChar('@'),6.0,QColor("pink"));
+#else
+    //构造Font标记层(Font Marker SymbolLayer)方法二
+    QVariantMap mp;
+    mp[QString("font")] = "Mukti";
+    mp[QString("chr")] = "@";
+    mp[QString("size")] = "16.0";
+    mp[QString("color")] = "pink";
+    auto markerSymbolLayer = QgsFontMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointFilledMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    //构造Fill标记层(Fill Marker SymbolLayer)方法一
+    auto markerSymbolLayer = new QgsFilledMarkerSymbolLayer(Qgis::MarkerShape::Trapezoid,6.0);
+    markerSymbolLayer->setColor(QColor("pink"));
+    //上边两行已经能够实现功能，因为在QgsFilledMarkerSymbolLayer构造函数中，默认会创建QgsFillSymbol
+    //这里是为了演示如何使用setSubSymbol和QgsFillSymbol
+    auto fillSymbolLayer = new QgsSimpleFillSymbolLayer(QColor("pink"));
+    QgsSymbolLayerList fillLayerList;
+    fillLayerList << fillSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(fillLayerList);
+    markerSymbolLayer->setSubSymbol(fillSymbol);
+#else
+    //构造Fill标记层(Fill Marker SymbolLayer)方法二
+    QVariantMap mp;
+    mp[QString("name")] = "trapezoid";
+    mp[QString("size")] = "16.0";
+    mp[QString("color")] = "pink";
+    auto markerSymbolLayer = QgsFilledMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+
+}
+
+void MainWindow::pointGeometryGeneratorMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    //构造标记层(Marker SymbolLayer)
+    QVariantMap mp;
+    mp[QString("geometryModifier")] = "buffer($geometry,100)";
+    mp[QString("SymbolType")] = "Marker";
+    auto markerSymbolLayer = QgsGeometryGeneratorSymbolLayer::create(mp);
+
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointVectorFieldMarkerSlot()
+{
+    //添加一个点图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto markerSymbolLayer = new QgsVectorFieldSymbolLayer();
+    markerSymbolLayer->setXAttribute(QStringLiteral("IN_SWD"));
+    markerSymbolLayer->setYAttribute(QStringLiteral("IS_TOWN"));
+    markerSymbolLayer->setScale(10.0);
+#else
+    QVariantMap mp;
+    mp[QString("x_attribute")] = QStringLiteral("IN_SWD");
+    mp[QString("y_attribute")] = QStringLiteral("IS_TOWN");
+    mp[QString("scale")] = QStringLiteral("10.0");
+    auto markerSymbolLayer = QgsVectorFieldSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointMaskSlot()
+{
+    //添加两个图层，用于设置图层符号
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    QString reffilename = QStringLiteral("maps/shapefile/farms_33S.shp");
+    QFileInfo refff(reffilename);
+    QgsVectorLayer* reflayer = (QgsVectorLayer*)mApp->addVectorLayer(reffilename,ff.baseName());
+
+    //获取图层的渲染器renderer
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    //构造QgsSymbolLayerReference
+    QList< QgsSymbolLayerReference > maskedLayers;
+    QgsSymbolLayerId slid("",0);
+    QgsSymbolLayerReference slRef(reflayer->id(),slid);
+    maskedLayers <<  slRef;
+#if 0
+    auto markerSymbolLayer = new QgsMaskMarkerSymbolLayer();
+    markerSymbolLayer->setMasks(maskedLayers);
+#else
+    QVariantMap mp;
+    mp[QString("mask_symbollayers")] = symbolLayerReferenceListToString(maskedLayers);
+    auto markerSymbolLayer = QgsMaskMarkerSymbolLayer::create(mp);
+#endif
+    //QgsMarkerSymbol构造函数中需要传入QgsSymbolLayerList
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsMarkerSymbol并设置renderer
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    singleRenderer->setSymbol(markerSymbol);
+    layer->setRenderer(singleRenderer);
+}
+
+void MainWindow::pointCategorizedSlot()
+{
+    //添加一个点图层，设置图层符号为分类渲染
+    QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取分类渲染器并转换为分类渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsCategorizedSymbolRenderer *categorizedRenderer = QgsCategorizedSymbolRenderer::convertFromRenderer(layerRenderer);
+
+    QString attrName = "IS_TOWN";
+    categorizedRenderer->setClassAttribute(attrName);
+
+    QList<QVariant> uniqueValues;
+    const int idx = layer->fields().lookupField( attrName );
+    uniqueValues = qgis::setToList( layer->uniqueValues( idx ) );
+    QgsSymbol *symbol = QgsSymbol::defaultSymbol( layer->geometryType() );
+    QgsCategoryList cats = QgsCategorizedSymbolRenderer::createCategories( uniqueValues, symbol, layer, attrName );
+    for(int i = 0;i < cats.size();++i)
+    {
+        QgsRendererCategory cat = cats.at(i);
+        categorizedRenderer->addCategory(cat);
+    }
+#if 0
+    //使用渐变颜色指定类别颜色
+    QgsGradientColorRamp *ramp = new QgsGradientColorRamp(QColor( 255, 255, 255 ), QColor( 255, 0, 0 ));
+#else
+    //使用随机颜色设定类别颜色
+    QgsRandomColorRamp *ramp = new QgsRandomColorRamp();
+#endif
+    categorizedRenderer->updateColorRamp(ramp);
+    //设置每个分类的图例Legend
+    categorizedRenderer->updateCategoryLabel(0,"Not Town");
+    categorizedRenderer->updateCategoryLabel(1,"Town");
+    //设置每个分类的符号
+#if 0
+    QVariantMap mp;
+    mp[QString("name")] = "resources/plane.svg";
+    mp[QString("outline_color")] = "pink";
+    mp[QString("size")] = "8.0";
+    auto markerSymbolLayer = QgsSvgMarkerSymbolLayer::create(mp);
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    categorizedRenderer->updateRangeSymbol(0, markerSymbol);
+#endif
+    layer->setRenderer(categorizedRenderer);
+}
+
+void MainWindow::pointGraduatedSlot()
+{
+    //添加一个点图层，设置图层符号为分级渲染
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取分类渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsGraduatedSymbolRenderer *graduatedRenderer = QgsGraduatedSymbolRenderer::convertFromRenderer(layerRenderer);
+    //从图层中选择一个属性进行分类
+    //分类的方法有Quantile EqualInterval Jenks StdDev Pretty Logarithmic Fixed
+    //图层有一个属性叫做RAINFALL，是指该点的降雨量
+    QString attrName = "RAINFALL";
+    int nclasses = 5;   //分为两类
+    const QString methodId = "Quantile";    //设置分类方法
+    QgsClassificationMethod *method = QgsApplication::classificationMethodRegistry()->method( methodId );
+    Q_ASSERT( method );
+    //首先设置一个默认符号
+    QgsSymbol *symbol = QgsSymbol::defaultSymbol( layer->geometryType() );
+    graduatedRenderer->addClass(symbol);
+    //设置用于分类的属性名称
+    graduatedRenderer->setClassAttribute(attrName);
+    //然后设置符号表颜色
+#if 1
+    //渐变色
+    QgsColorRamp *ramp = new QgsGradientColorRamp( QColor( 255, 255, 255 ), QColor( 255, 0, 0 ) );
+#else
+    //完全随机
+    QgsColorRamp *ramp = new QgsRandomColorRamp();
+#endif
+    graduatedRenderer->setSourceColorRamp(ramp);
+    //设置符号大小
+    graduatedRenderer->setSymbolSizes( 1, 8 );
+    //设置分类方法
+    graduatedRenderer->setClassificationMethod( method );
+    //进行分类
+    graduatedRenderer->updateClasses( layer, nclasses );
+    //设置每个分类的图例Legend
+    graduatedRenderer->updateRangeLabel(0,"small");
+    graduatedRenderer->updateRangeLabel(1,"medium");
+    //设置每个分类的符号
+#if 0
+    QVariantMap mp;
+    mp[QString("name")] = "resources/plane.svg";
+    mp[QString("outline_color")] = "pink";
+    mp[QString("size")] = "8.0";
+    auto markerSymbolLayer = QgsSvgMarkerSymbolLayer::create(mp);
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    graduatedRenderer->updateRangeSymbol(0, markerSymbol);
+#endif
+    layer->setRenderer(graduatedRenderer);
+}
+
+void MainWindow::pointRuleBasedSlot()
+{
+    //添加一个点图层，设置图层符号为规则渲染
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsRuleBasedRenderer *ruleBasedRenderer = QgsRuleBasedRenderer::convertFromRenderer(layerRenderer);
+    //QgsRuleBasedRenderer会生成一条规则Rule，这里直接删除，后边直接添加两条新规则
+    //也可以获取生成的规则，然后编辑
+    ruleBasedRenderer->rootRule()->removeChildAt(0);
+
+    //生成一条新规则
+    QgsSymbol *s = QgsSymbol::defaultSymbol( layer->geometryType() );
+    QgsRuleBasedRenderer::Rule *ifrule = new QgsRuleBasedRenderer::Rule( s );
+    //设置表达式
+    QString filter = QStringLiteral(" \"IS_TOWN\" = 1");
+    ifrule->setFilterExpression( filter );
+    //设置图例
+    ifrule->setLabel( QStringLiteral("TOWN") );
+    //使用Simple Marker生成符号，然后为新规则设置符号
+    QVariantMap mp;
+    mp[QString("name")] = QStringLiteral("circle");
+    mp[QString("color")] = QStringLiteral("red");
+    QgsMarkerSymbol *townSymbol = QgsMarkerSymbol::createSimple(mp);
+    ifrule->setSymbol( townSymbol );
+    //将规则添加到renderer中
+    ruleBasedRenderer->rootRule()->appendChild(ifrule);
+
+    //添加新规则
+    QgsSymbol *s1 = QgsSymbol::defaultSymbol( layer->geometryType() );
+    QgsRuleBasedRenderer::Rule *elserule = new QgsRuleBasedRenderer::Rule( s1 );
+    //因为取值只有0 1,所以直接设置IsElse为true
+    elserule->setIsElse(true);
+    elserule->setLabel(QStringLiteral(" Not TOWN"));
+    //为规则设置符号
+    mp[QString("color")] = QStringLiteral("black");
+    QgsMarkerSymbol *nottownSymbol = QgsMarkerSymbol::createSimple(mp);
+    elserule->setSymbol(nottownSymbol);
+    //将规则添加到renderer中
+    ruleBasedRenderer->rootRule()->appendChild(elserule);
+    //图层设置渲染器为Rule Based
+    layer->setRenderer(ruleBasedRenderer);
+}
+
+void MainWindow::pointDisplacementSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsPointDisplacementRenderer *pointDisplacementRenderer = QgsPointDisplacementRenderer::convertFromRenderer(layerRenderer);
+
+    //设置渲染器
+    QVariantMap mp;
+    mp[QString("name")] = QStringLiteral("circle");
+    mp[QString("color")] = QStringLiteral("red");
+    QgsMarkerSymbol *symbol = QgsMarkerSymbol::createSimple(mp);
+    //中心点符号
+    pointDisplacementRenderer->setCenterSymbol(symbol);
+    //中心点的颜色
+    pointDisplacementRenderer->setCircleColor(QColor("black"));
+    //点要素围绕在中心符号的方式
+    pointDisplacementRenderer->setPlacement(QgsPointDisplacementRenderer::Ring);
+    //形成中心符号的距离阈值
+    pointDisplacementRenderer->setTolerance(3.0);
+
+    layer->setRenderer(pointDisplacementRenderer);
+}
+
+void MainWindow::pointClusterSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsPointClusterRenderer *pointClusterRenderer = QgsPointClusterRenderer::convertFromRenderer(layerRenderer);
+    //设置clusterSymbol,其实以下代码都不用写，默认就是这个效果。
+    //这里写出来只是演示
+#if 0
+    auto markerSymbol = new QgsMarkerSymbol();
+    markerSymbol->setSize( 4 );
+    markerSymbol->setColor( QColor( 245, 75, 80 ) );
+
+    QgsFontMarkerSymbolLayer *fm = new QgsFontMarkerSymbolLayer();
+    fm->setFontFamily( QFont().defaultFamily() );
+    fm->setColor( QColor( 255, 255, 255 ) );
+    fm->setSize( 3.2 );
+    fm->setOffset( QPointF( 0, -0.4 ) );
+    fm->setDataDefinedProperty( QgsSymbolLayer::PropertyCharacter, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
+    markerSymbol->insertSymbolLayer( 1, fm );
+    pointClusterRenderer->setClusterSymbol(markerSymbol);
+#else
+    //设置渲染器
+    QVariantMap mp;
+    mp[QString("name")] = QStringLiteral("circle");
+    mp[QString("color")] = QStringLiteral("red");
+    mp[QString("size")] = QStringLiteral("6.0");
+    auto simpleSymbolLayer = QgsSimpleMarkerSymbolLayer::create(mp);
+    QVariantMap mp1;
+    mp1[QString("font")] = QStringLiteral("Mukti");
+    mp1[QString("color")] = QStringLiteral("white");
+    mp1[QString("offset")] = QStringLiteral("0, -0.8");
+    auto fontSymbolLayer = QgsFontMarkerSymbolLayer::create(mp1);
+    fontSymbolLayer->setDataDefinedProperty( QgsSymbolLayer::PropertyCharacter, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
+    QgsSymbolLayerList layerList;
+    layerList << simpleSymbolLayer << fontSymbolLayer;
+    auto markerSymbol = new QgsMarkerSymbol(layerList);
+    pointClusterRenderer->setClusterSymbol(markerSymbol);
+#endif
+    layer->setRenderer(pointClusterRenderer);
+}
+
+void MainWindow::pointHeatmapSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsHeatmapRenderer *heatmapRenderer = QgsHeatmapRenderer::convertFromRenderer(layerRenderer);
+
+    heatmapRenderer->setColorRamp(new QgsGradientColorRamp(QColor(255, 255, 255),QColor(0, 0, 0)));
+    heatmapRenderer->setRadius(10.0);
+    heatmapRenderer->setRenderQuality(1);
+
+    layer->setRenderer(heatmapRenderer);
+}
+

@@ -35,6 +35,7 @@ public:
     void initGroupboxInPanel();
     void init_groupBox_maps();
     void init_groupBox_canvas();
+    void init_groupBox_vector_point_symbol();
 
 public slots:
     void actionToPanelsSlot();
@@ -69,6 +70,24 @@ public slots:
     void mapToolPanSlot();
     void mapToolZoomInSlot();
     void mapToolZoomOutSlot();
+    //
+    void pointSimpleMarkerSlot();
+    void pointSvgMarkerSlot();
+    void pointRasterMarkerSlot();
+    void pointAnimatedMarkerSlot();
+    void pointEllipseMarkerSlot();
+    void pointFontMarkerSlot();
+    void pointFilledMarkerSlot();
+    void pointGeometryGeneratorMarkerSlot();
+    void pointVectorFieldMarkerSlot();
+    void pointMaskSlot();
+    void pointCategorizedSlot();
+    void pointGraduatedSlot();
+    void pointRuleBasedSlot();
+    void pointDisplacementSlot();
+    void pointClusterSlot();
+    void pointHeatmapSlot();
+
 private:
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
     template <typename T>
