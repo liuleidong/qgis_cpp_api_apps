@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 
 #include <QApplication>
 #include <QDir>
@@ -25,7 +25,11 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForCStrings(codec);
     QTextCodec::setCodecForTr(codec);
 #else
+#if _MSC_VER
+    QTextCodec *codec = QTextCodec::codecForName("gbk");
+#else
     QTextCodec *codec = QTextCodec::codecForName("utf-8");
+#endif
     QTextCodec::setCodecForLocale(codec);
 #endif
 

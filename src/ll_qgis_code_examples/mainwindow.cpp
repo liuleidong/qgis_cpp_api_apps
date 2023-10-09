@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
 #include <QGridLayout>
@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     mApp = ll_qgis_base_lib::Instance();
     mApp->initialize(this);
+    mApp->layerTreeDock()->hide();
     connect(ui->stackedWidget,&QStackedWidget::currentChanged,this,&MainWindow::stackWidgetCurentChangedSlot);
     showMaximized();
 }
@@ -157,54 +158,67 @@ void MainWindow::init_groupBox_maps()
     QLabel *label_ogr = new QLabel("OGR data provider(ogr)");
     layout->addWidget(label_ogr,row,0);
     ++row;
-    addPanelItem(layout,"addShpSlot","添加shapefile文件",":/res/images/addShpSlot.png",row,++column);
-    addPanelItem(layout,"addGpxSlot","添加gpx文件",":/res/images/addGpxSlot.png",row,++column);
-    addPanelItem(layout,"addGpkgSlot","添加gpkg文件",":/res/images/addGpkgSlot.png",row,++column);
-    addPanelItem(layout,"addGeoJsonSlot","添加geojson文件",":/res/images/addGeoJsonSlot.png",row,++column);
-    addPanelItem(layout,"addGmlSlot","添加gml文件",":/res/images/addGmlSlot.png",row,++column);
+    addPanelItem(layout,"addShpSlot",QString::fromLocal8Bit("添加shapefile文件"),":/res/images/addShpSlot.png",row,++column);
+    addPanelItem(layout,"addGpxSlot",QString::fromLocal8Bit("添加gpx文件"),":/res/images/addGpxSlot.png",row,++column);
+    addPanelItem(layout,"addGpkgSlot",QString::fromLocal8Bit("添加gpkg文件"),":/res/images/addGpkgSlot.png",row,++column);
+    addPanelItem(layout,"addGeoJsonSlot",QString::fromLocal8Bit("添加geojson文件"),":/res/images/addGeoJsonSlot.png",row,++column);
+    addPanelItem(layout,"addGmlSlot",QString::fromLocal8Bit("添加gml文件"),":/res/images/addGmlSlot.png",row,++column);
     ++row;column = -1;
-    addPanelItem(layout,"addKmlSlot","添加kml文件",":/res/images/addKmlSlot.png",row,++column);
-    addPanelItem(layout,"addDxfSlot","添加dxf文件",":/res/images/addDxfSlot.png",row,++column);
-    addPanelItem(layout,"addCoverageSlot","添加coverage文件",":/res/images/addCoverageSlot.png",row,++column);
+    addPanelItem(layout,"addKmlSlot",QString::fromLocal8Bit("添加kml文件"),":/res/images/addKmlSlot.png",row,++column);
+    addPanelItem(layout,"addDxfSlot",QString::fromLocal8Bit("添加dxf文件"),":/res/images/addDxfSlot.png",row,++column);
+    addPanelItem(layout,"addCoverageSlot",QString::fromLocal8Bit("添加coverage文件"),":/res/images/addCoverageSlot.png",row,++column);
 
     int labelRow = ++row;
     QLabel *label_gpx = new QLabel("GPX data provider(gpx)");
     layout->addWidget(label_gpx,labelRow,0);
     ++row;column = -1;
-    addPanelItem(layout,"addGpx1Slot","添加gpx文件",":/res/images/addGpx1Slot.png",row,++column);
+    addPanelItem(layout,"addGpx1Slot",QString::fromLocal8Bit("添加gpx文件"),":/res/images/addGpx1Slot.png",row,++column);
     QLabel *label_delimitedtext = new QLabel("Delimited text file provider(delimitedtext)");
     layout->addWidget(label_delimitedtext,labelRow,1);
-    addPanelItem(layout,"addCsvSlot","添加csv文件",":/res/images/addGpx1Slot.png",row,++column);
+    addPanelItem(layout,"addCsvSlot",QString::fromLocal8Bit("添加csv文件"),":/res/images/addGpx1Slot.png",row,++column);
     QLabel *label_spatiaLite = new QLabel("SpatiaLite data provider(spatialite)");
     layout->addWidget(label_spatiaLite,labelRow,2);
-    addPanelItem(layout,"addSpatiaLiteSlot","spatialite db添加图层",":/res/images/addSpatiaLiteSlot.png",row,++column);
+    addPanelItem(layout,"addSpatiaLiteSlot",QString::fromLocal8Bit("spatialite db添加图层"),":/res/images/addSpatiaLiteSlot.png",row,++column);
     QLabel *label_memory = new QLabel("Memory data provider(memory)");
     layout->addWidget(label_memory,labelRow,3);
-    addPanelItem(layout,"addMemorySlot","添加memory类型图层",":/res/images/addMemorySlot.png",row,++column);
+    addPanelItem(layout,"addMemorySlot",QString::fromLocal8Bit("添加memory类型图层"),":/res/images/addMemorySlot.png",row,++column);
     QLabel *label_wfs = new QLabel("WFS(web feature service) data provider(wfs)");
     layout->addWidget(label_wfs,labelRow,4);
-    addPanelItem(layout,"addWfsSlot","添加wfs类型图层",":/res/images/addWfsSlot.png",row,++column);
+    addPanelItem(layout,"addWfsSlot",QString::fromLocal8Bit("添加wfs类型图层"),":/res/images/addWfsSlot.png",row,++column);
     labelRow = ++row;
     QLabel *label_gdal = new QLabel("GDAL data provider(gdal)");
     layout->addWidget(label_gdal,row,0);
     ++row;column = -1;
-    addPanelItem(layout,"addRasterSlot","添加tiff文件",":/res/images/addRasterSlot.png",row,++column);
-    addPanelItem(layout,"addGpkg1Slot","添加多图层tiff文件",":/res/images/addGpkg1Slot.png",row,++column);
+    addPanelItem(layout,"addRasterSlot",QString::fromLocal8Bit("添加tiff文件"),":/res/images/addRasterSlot.png",row,++column);
+    addPanelItem(layout,"addGpkg1Slot",QString::fromLocal8Bit("添加多图层tiff文件"),":/res/images/addGpkg1Slot.png",row,++column);
 
     QLabel *label_wms = new QLabel("WMS data provider(wms)");
     layout->addWidget(label_wms,labelRow,2);
-    addPanelItem(layout,"addWmsSlot","添加在线高德路网",":/res/images/addWmsSlot.png",row,++column);
-    addPanelItem(layout,"addGdalOfflineSlot","添加离线高德影像",":/res/images/addGpkg1Slot.png",row,++column);
+    addPanelItem(layout,"addWmsSlot",QString::fromLocal8Bit("添加在线高德路网"),":/res/images/addWmsSlot.png",row,++column);
+    addPanelItem(layout,"addGdalOfflineSlot",QString::fromLocal8Bit("添加离线高德影像"),":/res/images/addGpkg1Slot.png",row,++column);
 }
 
 void MainWindow::init_groupBox_canvas()
 {
     int row = 0,column = -1;
     QGridLayout *layout = (QGridLayout *)ui->groupBox_canvas->layout();
-    QLabel *label_canvasColor = new QLabel("Map Canvas相关");
+    int labelrow = row;
+    QLabel *label_canvasColor = new QLabel(QString::fromLocal8Bit("Map Canvas相关"));
     layout->addWidget(label_canvasColor,row,0);
-    int labelrow = ++row;
-    addPanelItem(layout,"canvasBrSlot","修改map canvas背景色",":/res/images/addRasterSlot.png",row,++column);
+    ++row;
+    addPanelItem(layout,"canvasBrSlot",QString::fromLocal8Bit("map canvas背景色"),":/res/images/canvasBrSlot.png",row,++column);
+    addPanelItem(layout,"canvasCenterSlot",QString::fromLocal8Bit("map canvas中心点"),":/res/images/canvasCenterSlot.png",row,++column);
+    addPanelItem(layout,"canvasRotationSlot",QString::fromLocal8Bit("map canvas角度"),":/res/images/canvasRotationSlot.png",row,++column);
+    QLabel *label_rubberBand = new QLabel(QString::fromLocal8Bit("RubberBand使用"));
+    layout->addWidget(label_rubberBand,labelrow,3);
+    addPanelItem(layout,"rubberBandLineSlot",QString::fromLocal8Bit("RubberBand画线"),":/res/images/rubberBandLineSlot.png",row,++column);
+    addPanelItem(layout,"rubberBandPolygonSlot",QString::fromLocal8Bit("RubberBand画多边形"),":/res/images/rubberBandPolygonSlot.png",row,++column);
+    labelrow = ++row;
+    QLabel *label_vertexMarker = new QLabel(QString::fromLocal8Bit("VertexMarker使用"));
+    layout->addWidget(label_vertexMarker,labelrow,0);
+    ++row;column = -1;
+    addPanelItem(layout,"vertexMarkerSlot",QString::fromLocal8Bit("VertexMarker画点"),":/res/images/vertexMarkerSlot.png",row,++column);
+
 }
 
 
@@ -219,6 +233,7 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
     if(index == 0)
     {
         mApp->layerTreeDock()->hide();
+        mApp->mapCanvas()->setMapTool(mMapToolPan);
     }
     else
     {
@@ -505,12 +520,27 @@ void MainWindow::canvasBrSlot()
 
 void MainWindow::canvasCenterSlot()
 {
-    mApp->mapCanvas()->setCenter(QgsPointXY(131.194,43.265));
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    mApp->addVectorLayer(filename,ff.baseName());
+    QTimer::singleShot(1000*1,this,[=]
+    {
+        statusBar()->showMessage(QString::fromLocal8Bit("修改map canvas中心点"));
+        mApp->mapCanvas()->setCenter(QgsPointXY(20.23960,-33.98442));
+    });
 }
 
 void MainWindow::canvasRotationSlot()
 {
-    mApp->mapCanvas()->setRotation(45.0);
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    mApp->addVectorLayer(filename,ff.baseName());
+    QTimer::singleShot(1000*1,this,[=]
+    {
+       statusBar()->showMessage(QString::fromLocal8Bit("修改map canvas角度"));
+       mApp->mapCanvas()->setRotation(45.0);
+    });
+
 }
 
 void MainWindow::rubberBandLineSlot()
@@ -518,11 +548,10 @@ void MainWindow::rubberBandLineSlot()
     //添加shapefile
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
-    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
-    QgsProject::instance()->addMapLayer(vecLayer);
-    //定义点
-    QgsPointXY startPoint(20.33989,-33.86805);
-    QgsPointXY endPoint(20.47760,-33.86676);
+    mApp->addVectorLayer(filename,ff.baseName());
+    //定义点                            
+    QgsPointXY startPoint(20.34013,-33.90453);
+    QgsPointXY endPoint(20.49744,-33.91126);
     //新建QgsRubberBand，注意类型是LineGeometry
     QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::LineGeometry);
     //将点添加到rubberband中
@@ -547,12 +576,11 @@ void MainWindow::rubberBandPolygonSlot()
     //添加shapefile
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
-    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
-    QgsProject::instance()->addMapLayer(vecLayer);
+    mApp->addVectorLayer(filename,ff.baseName());
     //定义三个点
-    QgsPointXY point1(20.33989,-33.86805);
-    QgsPointXY point2(20.47760,-33.86676);
-    QgsPointXY point3(20.39973,-33.80499);
+    QgsPointXY point1(20.34013,-33.90453);
+    QgsPointXY point2(20.49744,-33.91126);
+    QgsPointXY point3(20.41396,-33.93079);
     //新建PolygonGeometry类型的RubberBand
     QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
     //添加三个点
@@ -577,27 +605,49 @@ void MainWindow::vertexMarkerSlot()
     //添加shapefile
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
-    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
-    QgsProject::instance()->addMapLayer(vecLayer);
+    mApp->addVectorLayer(filename,ff.baseName());
     //构造QgsVertexMarker并设置属性
     QgsVertexMarker *vm = new QgsVertexMarker( mApp->mapCanvas() );
-    vm->setCenter( QgsPointXY(20.33989,-33.86805) );
+    vm->setCenter( QgsPointXY(20.33474,-33.91104) );
     vm->setIconType( QgsVertexMarker::ICON_DOUBLE_TRIANGLE );
     vm->setPenWidth( 2 );
+    vm->setIconSize(24);
     vm->setColor( Qt::green );
     vm->setZValue( vm->zValue() + 1 );
 }
 void MainWindow::mapToolPanSlot()
 {
-    mApp->mapCanvas()->setMapTool(mMapToolPan);
+    statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是ZoomIn,1秒后切换为Pan"));
+    mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
+    QTimer::singleShot(1000*1,this,[=]
+   {
+       statusBar()->showMessage(QString::fromLocal8Bit("Map Tool改为Pan"));
+       mApp->mapCanvas()->setMapTool(mMapToolPan);
+   });
 }
 
 void MainWindow::mapToolZoomInSlot()
 {
-    mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    mApp->addVectorLayer(filename,ff.baseName());
+    statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是Pan,1秒后切换为ZoomIn"));
+    QTimer::singleShot(1000*1,this,[=]
+   {
+       statusBar()->showMessage(QString::fromLocal8Bit("Map Tool改为ZoomIn"));
+       mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
+   });
 }
 
 void MainWindow::mapToolZoomOutSlot()
-{
-    mApp->mapCanvas()->setMapTool(mMapToolZoomOut);
+{    
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    mApp->addVectorLayer(filename,ff.baseName());
+    statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是Pan,1秒后切换为ZoomOut"));
+    QTimer::singleShot(1000*1,this,[=]
+   {
+       statusBar()->showMessage(QString::fromLocal8Bit("Map Tool改为ZoomOut"));
+       mApp->mapCanvas()->setMapTool(mMapToolZoomOut);
+   });
 }

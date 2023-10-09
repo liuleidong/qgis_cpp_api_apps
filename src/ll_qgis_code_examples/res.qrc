@@ -20,5 +20,11 @@
         <file>res/images/addGpkg1Slot.png</file>
         <file>res/images/addRasterSlot.png</file>
         <file>res/images/addWmsSlot.png</file>
+        <file>res/images/canvasBrSlot.png</file>
+        <file>res/images/canvasCenterSlot.png</file>
+        <file>res/images/canvasRotationSlot.png</file>
+        <file>res/images/rubberBandLineSlot.png</file>
+        <file>res/images/rubberBandPolygonSlot.png</file>
+        <file>res/images/vertexMarkerSlot.png</file>
     </qresource>
 </RCC>
