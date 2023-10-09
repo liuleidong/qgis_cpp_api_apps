@@ -136,15 +136,24 @@ void MainWindow::initPanels()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+void MainWindow::initMapTools()
+{
+    mMapToolPan = new QgsMapToolPan(mApp->mapCanvas());
+    mMapToolZoomOut = new QgsMapToolZoom(mApp->mapCanvas(),false);
+    mMapToolZoomIn = new QgsMapToolZoom(mApp->mapCanvas(),true);
+}
+
 void MainWindow::initGroupboxInPanel()
 {
     init_groupBox_maps();
+    init_groupBox_canvas();
 }
 
 void MainWindow::init_groupBox_maps()
 {
     int row = 0,column = -1;
     QGridLayout *layout = (QGridLayout *)ui->groupBox_maps->layout();
+
     QLabel *label_ogr = new QLabel("OGR data provider(ogr)");
     layout->addWidget(label_ogr,row,0);
     ++row;
@@ -157,6 +166,7 @@ void MainWindow::init_groupBox_maps()
     addPanelItem(layout,"addKmlSlot","添加kml文件",":/res/images/addKmlSlot.png",row,++column);
     addPanelItem(layout,"addDxfSlot","添加dxf文件",":/res/images/addDxfSlot.png",row,++column);
     addPanelItem(layout,"addCoverageSlot","添加coverage文件",":/res/images/addCoverageSlot.png",row,++column);
+
     int labelRow = ++row;
     QLabel *label_gpx = new QLabel("GPX data provider(gpx)");
     layout->addWidget(label_gpx,labelRow,0);
@@ -185,6 +195,16 @@ void MainWindow::init_groupBox_maps()
     layout->addWidget(label_wms,labelRow,2);
     addPanelItem(layout,"addWmsSlot","添加在线高德路网",":/res/images/addWmsSlot.png",row,++column);
     addPanelItem(layout,"addGdalOfflineSlot","添加离线高德影像",":/res/images/addGpkg1Slot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_canvas()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_canvas->layout();
+    QLabel *label_canvasColor = new QLabel("Map Canvas相关");
+    layout->addWidget(label_canvasColor,row,0);
+    int labelrow = ++row;
+    addPanelItem(layout,"canvasBrSlot","修改map canvas背景色",":/res/images/addRasterSlot.png",row,++column);
 }
 
 
@@ -472,4 +492,112 @@ void MainWindow::addGdalOfflineSlot()
     QgsRasterLayer* layer = new QgsRasterLayer(filename,"gaodeoffline","gdal");
     QgsProject::instance()->addMapLayer(layer);
     zoomToFirstLayer<QgsRasterLayer*>();
+}
+
+void MainWindow::canvasBrSlot()
+{
+    statusBar()->showMessage(tr("ready to change map canvas color"));
+    QTimer::singleShot(1000*1,this,[=]
+    {mApp->mapCanvas()->setCanvasColor(QColor::fromHsl(rand()%360,rand()%256,rand()%200));
+     statusBar()->showMessage(tr("map canvas color change done"));
+    });
+}
+
+void MainWindow::canvasCenterSlot()
+{
+    mApp->mapCanvas()->setCenter(QgsPointXY(131.194,43.265));
+}
+
+void MainWindow::canvasRotationSlot()
+{
+    mApp->mapCanvas()->setRotation(45.0);
+}
+
+void MainWindow::rubberBandLineSlot()
+{
+    //添加shapefile
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
+    QgsProject::instance()->addMapLayer(vecLayer);
+    //定义点
+    QgsPointXY startPoint(20.33989,-33.86805);
+    QgsPointXY endPoint(20.47760,-33.86676);
+    //新建QgsRubberBand，注意类型是LineGeometry
+    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::LineGeometry);
+    //将点添加到rubberband中
+    rubberBand->addPoint(startPoint);
+    rubberBand->addPoint(endPoint);
+    //更改线宽，颜色等属性
+    rubberBand->setWidth(4);
+    rubberBand->setColor(QColor(222,155,67));
+    //定义一个点类型的RubberBand
+    QgsRubberBand *rubberBandPoints = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    rubberBandPoints->addPoint(startPoint);
+    rubberBandPoints->addPoint(endPoint);
+    rubberBandPoints->setWidth(6);
+    rubberBandPoints->setColor(QColor(222,155,67));
+    //显示出来
+    rubberBand->show();
+    rubberBandPoints->show();
+}
+
+void MainWindow::rubberBandPolygonSlot()
+{
+    //添加shapefile
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
+    QgsProject::instance()->addMapLayer(vecLayer);
+    //定义三个点
+    QgsPointXY point1(20.33989,-33.86805);
+    QgsPointXY point2(20.47760,-33.86676);
+    QgsPointXY point3(20.39973,-33.80499);
+    //新建PolygonGeometry类型的RubberBand
+    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
+    //添加三个点
+    rubberBand->addPoint(point1);
+    rubberBand->addPoint(point2);
+    rubberBand->addPoint(point3);
+    //设置线宽颜色等属性
+    rubberBand->setWidth(4);
+    rubberBand->setColor(QColor(222,155,67));
+    QgsRubberBand *rubberBandPoints = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    rubberBandPoints->addPoint(point1);
+    rubberBandPoints->addPoint(point2);
+    rubberBandPoints->addPoint(point3);
+    rubberBandPoints->setWidth(6);
+    rubberBandPoints->setColor(QColor(222,155,67));
+    rubberBand->show();
+    rubberBandPoints->show();
+}
+
+void MainWindow::vertexMarkerSlot()
+{
+    //添加shapefile
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* vecLayer = new QgsVectorLayer(filename,ff.baseName(),"ogr");
+    QgsProject::instance()->addMapLayer(vecLayer);
+    //构造QgsVertexMarker并设置属性
+    QgsVertexMarker *vm = new QgsVertexMarker( mApp->mapCanvas() );
+    vm->setCenter( QgsPointXY(20.33989,-33.86805) );
+    vm->setIconType( QgsVertexMarker::ICON_DOUBLE_TRIANGLE );
+    vm->setPenWidth( 2 );
+    vm->setColor( Qt::green );
+    vm->setZValue( vm->zValue() + 1 );
+}
+void MainWindow::mapToolPanSlot()
+{
+    mApp->mapCanvas()->setMapTool(mMapToolPan);
+}
+
+void MainWindow::mapToolZoomInSlot()
+{
+    mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
+}
+
+void MainWindow::mapToolZoomOutSlot()
+{
+    mApp->mapCanvas()->setMapTool(mMapToolZoomOut);
 }

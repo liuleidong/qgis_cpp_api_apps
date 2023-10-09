@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_panel">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -32,8 +32,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>217</width>
-             <height>282</height>
+             <width>762</width>
+             <height>512</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -131,7 +131,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>

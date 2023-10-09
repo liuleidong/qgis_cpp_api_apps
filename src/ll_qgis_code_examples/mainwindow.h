@@ -15,6 +15,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class QGridLayout;
+class QgsMapToolZoom;
 
 class MainWindow : public QMainWindow
 {
@@ -28,8 +29,10 @@ public:
     void initToolbar();
     void initStackwidgetPageCanvas();
     void initPanels();
+    void initMapTools();
     void initGroupboxInPanel();
     void init_groupBox_maps();
+    void init_groupBox_canvas();
 
 public slots:
     void actionToPanelsSlot();
@@ -54,6 +57,16 @@ public slots:
     void addGpkg1Slot();
     void addWmsSlot();
     void addGdalOfflineSlot();
+    //
+    void canvasBrSlot();
+    void canvasCenterSlot();
+    void canvasRotationSlot();
+    void rubberBandLineSlot();
+    void rubberBandPolygonSlot();
+    void vertexMarkerSlot();
+    void mapToolPanSlot();
+    void mapToolZoomInSlot();
+    void mapToolZoomOutSlot();
 private:
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
     template <typename T>
@@ -70,6 +83,9 @@ private:
     ll_qgis_base_lib *mApp = nullptr;
     Ui::MainWindow *ui;
 
+    QgsMapToolPan *mMapToolPan = nullptr;
+    QgsMapToolZoom *mMapToolZoomOut = nullptr;
+    QgsMapToolZoom *mMapToolZoomIn = nullptr;
 
 };
 #endif // MAINWINDOW_H
