@@ -71,7 +71,6 @@
 #include "qgsprocessingregistry.h"
 #include "qgsprocessingalgrunnertask.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -229,6 +228,7 @@ void MainWindow::addShpSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(vecLayer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 void MainWindow::addGpxSlot()
 {
@@ -243,6 +243,7 @@ void MainWindow::addGpxSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << route_pointsLayer << routesLayer << tracks_pointsLayer << tracksLayer << waypointsLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 void MainWindow::addGpkgSlot()
 {
@@ -254,6 +255,7 @@ void MainWindow::addGpkgSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << points_gpkgLayer << points_smallLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addGeoJsonSlot()
@@ -267,6 +269,7 @@ void MainWindow::addGeoJsonSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(vecLayer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addGmlSlot()
@@ -280,6 +283,7 @@ void MainWindow::addGmlSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(vecLayer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addKmlSlot()
@@ -293,6 +297,7 @@ void MainWindow::addKmlSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << layer1 << layer2 << layer3;
     QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addDxfSlot()
@@ -305,6 +310,7 @@ void MainWindow::addDxfSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << points_gpkgLayer << points_smallLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addCoverageSlot()
@@ -318,50 +324,7 @@ void MainWindow::addCoverageSlot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << aaLayer << ARCLayer << CNTLayer << PALLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
-    {
-        QgsRectangle extent;
-        extent.setMinimal();
-
-        if ( !mapLayers.empty() )
-        {
-            for ( int i = 0; i < mapLayers.size(); ++i )
-            {
-                QgsMapLayer *layer = mapLayers.at( i );
-                QgsRectangle layerExtent = layer->extent();
-
-                QgsVectorLayer *vLayer = qobject_cast<QgsVectorLayer *>( layer );
-                if ( vLayer )
-                {
-                    if ( vLayer->geometryType() == QgsWkbTypes::NullGeometry )
-                        continue;
-
-                    if ( layerExtent.isEmpty() )
-                    {
-                        vLayer->updateExtents();
-                        layerExtent = vLayer->extent();
-                    }
-                }
-
-                if ( layerExtent.isNull() )
-                    continue;
-
-                //transform extent
-                layerExtent = mApp->mapCanvas()->mapSettings().layerExtentToOutputExtent( layer, layerExtent );
-
-                extent.combineExtentWith( layerExtent );
-            }
-        }
-
-        if ( extent.isNull() )
-            return;
-
-        // Increase bounding box with 5%, so that layer is a bit inside the borders
-        extent.scale( 1.05 );
-
-        //zoom to bounding box
-        mApp->mapCanvas()->setExtent( extent, true );
-        mApp->mapCanvas()->refresh();
-    }
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addGpx1Slot()
@@ -374,6 +337,7 @@ void MainWindow::addGpx1Slot()
     QList<QgsMapLayer *> mapLayers;
     mapLayers << routesLayer << tracksLayer << waypointsLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addCsvSlot()
@@ -388,6 +352,7 @@ void MainWindow::addCsvSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(vecLayer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addSpatiaLiteSlot()
@@ -404,6 +369,7 @@ void MainWindow::addSpatiaLiteSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(vecLayer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addMemorySlot()
@@ -440,6 +406,7 @@ void MainWindow::addMemorySlot()
         //提交改动
         layer->commitChanges();
     }
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addWfsSlot()
@@ -457,6 +424,7 @@ void MainWindow::addWfsSlot()
 #endif
     auto layer = new QgsVectorLayer(uri,"mapserver","WFS");
     QgsProject::instance()->addMapLayer(layer);
+    zoomToFirstLayer<QgsVectorLayer*>();
 }
 
 void MainWindow::addRasterSlot()
@@ -470,6 +438,7 @@ void MainWindow::addRasterSlot()
         return;
     }
     QgsProject::instance()->addMapLayer(rlayer);
+    zoomToFirstLayer<QgsRasterLayer*>();
 }
 
 void MainWindow::addGpkg1Slot()
@@ -482,6 +451,7 @@ void MainWindow::addGpkg1Slot()
     QgsRasterLayer* rlayer2 = new QgsRasterLayer(uri2,"layer02","gdal");
     QgsProject::instance()->addMapLayer(rlayer1);
     QgsProject::instance()->addMapLayer(rlayer2);
+    zoomToFirstLayer<QgsRasterLayer*>();
 }
 
 void MainWindow::addWmsSlot()
@@ -501,4 +471,5 @@ void MainWindow::addGdalOfflineSlot()
     QFileInfo ff(filename);
     QgsRasterLayer* layer = new QgsRasterLayer(filename,"gaodeoffline","gdal");
     QgsProject::instance()->addMapLayer(layer);
+    zoomToFirstLayer<QgsRasterLayer*>();
 }

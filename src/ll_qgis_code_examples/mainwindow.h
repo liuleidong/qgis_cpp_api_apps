@@ -2,8 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 #include "ll_qgis_base_lib.h"
+#include "qgsproject.h"
+#include "qgslayertreeview.h"
+#include "qgslayertreeviewdefaultactions.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,6 +55,14 @@ public slots:
     void addGdalOfflineSlot();
 private:
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
+    template <typename T>
+    void zoomToFirstLayer()
+    {
+        auto layer = QgsProject::instance()->layers<T>().first();
+        mApp->layerTreeView()->setCurrentLayer(layer);
+        QTimer::singleShot(1000*1,this,[=]
+        {mApp->layerTreeView()->defaultActions()->zoomToLayers( mApp->mapCanvas() );});
+    }
 
 private:
     ll_qgis_base_lib *mApp = nullptr;
