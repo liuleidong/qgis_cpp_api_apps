@@ -37,6 +37,7 @@ public:
     void init_groupBox_canvas();
     void init_groupBox_vector_point_symbol();
     void init_groupBox_vector_line_symbol();
+    void init_groupBox_vector_polygon_symbol();
 
 public slots:
     void actionToPanelsSlot();
@@ -96,6 +97,25 @@ public slots:
     void lineMarkerSlot();
     void lineRasterSlot();
     void lineBurstSlot();
+    //
+    void polygonSimplefillSlot();
+    void polygonCentroidSlot();
+    void polygonGradientSlot();
+    void polygonLinePatternSlot();
+    void polygonPointPatternSlot();
+    void polygonRasterImageSlot();
+    void polygonSvgSlot();
+    void polygonRandomMarkerSlot();
+    void polygonShapeburstSlot();
+    void polygonOutlineSimpleSlot();
+    void polygonOutlineArrowSlot();
+    void polygonOutlineHashedSlot();
+    void polygonOutlineInterpolatedSlot();
+    void polygonOutlineLineburstSlot();
+    void polygonOutlineMarkerSlot();
+    void polygonOutlineRasterSlot();
+    void polygonInvertedRendererSlot();
+    void polygon25DSlot();
 private:
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
     template <typename T>

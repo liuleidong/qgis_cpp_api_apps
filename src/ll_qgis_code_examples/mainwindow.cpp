@@ -151,6 +151,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_canvas();
     init_groupBox_vector_point_symbol();
     init_groupBox_vector_line_symbol();
+    init_groupBox_vector_polygon_symbol();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -276,7 +277,6 @@ void MainWindow::init_groupBox_vector_line_symbol()
 {
     int row = 0,column = -1;
     QGridLayout *layout = (QGridLayout *)ui->groupBox_vector_line_symbol->layout();
-    int labelrow = row;
     QLabel *label_SingleSymbolRenderer = new QLabel(QString::fromLocal8Bit("单一符号渲染"));
     layout->addWidget(label_SingleSymbolRenderer,row,0);
     ++row;
@@ -288,6 +288,36 @@ void MainWindow::init_groupBox_vector_line_symbol()
     ++row;column = -1;
     addPanelItem(layout,"lineRasterSlot",QString::fromLocal8Bit("线符号-栅格线"),":/res/images/lineRasterSlot.png",row,++column);
     addPanelItem(layout,"lineBurstSlot",QString::fromLocal8Bit("线符号-爆炸线"),":/res/images/lineBurstSlot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_vector_polygon_symbol()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_vector_polygon_symbol->layout();
+    QLabel *label_SingleSymbolRenderer = new QLabel(QString::fromLocal8Bit("单一符号渲染"));
+    layout->addWidget(label_SingleSymbolRenderer,row,0);
+    ++row;
+    addPanelItem(layout,"polygonSimplefillSlot",QString::fromLocal8Bit("面符号-简单填充"),":/res/images/polygonSimplefillSlot.png",row,++column);
+    addPanelItem(layout,"polygonCentroidSlot",QString::fromLocal8Bit("面符号-仅渲染中心点"),":/res/images/polygonCentroidSlot.png",row,++column);
+    addPanelItem(layout,"polygonGradientSlot",QString::fromLocal8Bit("面符号-渐变填充"),":/res/images/polygonGradientSlot.png",row,++column);
+    addPanelItem(layout,"polygonLinePatternSlot",QString::fromLocal8Bit("面符号-线符号填充"),":/res/images/polygonLinePatternSlot.png",row,++column);
+    addPanelItem(layout,"polygonPointPatternSlot",QString::fromLocal8Bit("面符号-点符号填充"),":/res/images/polygonPointPatternSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"polygonRasterImageSlot",QString::fromLocal8Bit("面符号-栅格数据填充"),":/res/images/polygonRasterImageSlot.png",row,++column);
+    addPanelItem(layout,"polygonSvgSlot",QString::fromLocal8Bit("面符号-SVG填充"),":/res/images/polygonSvgSlot.png",row,++column);
+    addPanelItem(layout,"polygonRandomMarkerSlot",QString::fromLocal8Bit("面符号-随机标记填充"),":/res/images/polygonRandomMarkerSlot.png",row,++column);
+    addPanelItem(layout,"polygonShapeburstSlot",QString::fromLocal8Bit("面符号-形状炸裂填充"),":/res/images/polygonShapeburstSlot.png",row,++column);
+    addPanelItem(layout,"polygonOutlineSimpleSlot",QString::fromLocal8Bit("面符号-简单线渲染边界"),":/res/images/polygonOutlineSimpleSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"polygonOutlineArrowSlot",QString::fromLocal8Bit("面符号-箭头渲染边界"),":/res/images/polygonOutlineArrowSlot.png",row,++column);
+    addPanelItem(layout,"polygonOutlineHashedSlot",QString::fromLocal8Bit("面符号-短划线渲染边界"),":/res/images/polygonOutlineHashedSlot.png",row,++column);
+    addPanelItem(layout,"polygonOutlineInterpolatedSlot",QString::fromLocal8Bit("面符号-插值线渲染边界"),":/res/images/polygonOutlineInterpolatedSlot.png",row,++column);
+    addPanelItem(layout,"polygonOutlineLineburstSlot",QString::fromLocal8Bit("面符号-爆炸线渲染边界"),":/res/images/polygonOutlineLineburstSlot.png",row,++column);
+    addPanelItem(layout,"polygonOutlineMarkerSlot",QString::fromLocal8Bit("面符号-标记符号渲染边界"),":/res/images/polygonOutlineMarkerSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"polygonOutlineRasterSlot",QString::fromLocal8Bit("面符号-栅格线渲染边界"),":/res/images/polygonOutlineRasterSlot.png",row,++column);
+    addPanelItem(layout,"polygonInvertedRendererSlot",QString::fromLocal8Bit("面符号-反转面"),":/res/images/polygonInvertedRendererSlot.png",row,++column);
+    addPanelItem(layout,"polygon25DSlot",QString::fromLocal8Bit("面符号-2.5D"),":/res/images/polygon25DSlot.png",row,++column);
 }
 
 
@@ -1319,7 +1349,7 @@ void MainWindow::pointHeatmapSlot()
 
 void MainWindow::lineSimplelineSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1346,7 +1376,7 @@ void MainWindow::lineSimplelineSlot()
 
 void MainWindow::lineArrowSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1372,7 +1402,7 @@ void MainWindow::lineArrowSlot()
 
 void MainWindow::lineInterpolatedSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1397,7 +1427,7 @@ void MainWindow::lineInterpolatedSlot()
 
 void MainWindow::lineHashedSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1423,7 +1453,7 @@ void MainWindow::lineHashedSlot()
 
 void MainWindow::lineMarkerSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1449,7 +1479,7 @@ void MainWindow::lineMarkerSlot()
 
 void MainWindow::lineRasterSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1476,7 +1506,7 @@ void MainWindow::lineRasterSlot()
 
 void MainWindow::lineBurstSlot()
 {
-    //添加一个线图层
+    //添加测试图层
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
@@ -1512,4 +1542,526 @@ void MainWindow::lineBurstSlot()
     auto lineSymbol = new QgsLineSymbol(layerList);
     singleSymbolRenderer->setSymbol(lineSymbol);
     layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonSimplefillSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/water.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 1
+    auto simplefillSymbolLayer = new QgsSimpleFillSymbolLayer();
+    simplefillSymbolLayer->setFillColor(QColor("red"));
+#else
+    QVariantMap mp;
+    mp["color"] = QStringLiteral("red");
+    auto simplefillSymbolLayer = QgsSimpleFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << simplefillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonCentroidSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/water.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto centroidFillSymbolLayer = new QgsCentroidFillSymbolLayer();
+    centroidFillSymbolLayer->setPointOnSurface(false);
+    centroidFillSymbolLayer->setPointOnAllParts(true);
+    centroidFillSymbolLayer->setClipPoints(false);
+    centroidFillSymbolLayer->setClipOnCurrentPartOnly(false);
+#else
+    QVariantMap mp;
+    mp["point_on_surface"] = QStringLiteral("0");
+    mp["point_on_all_parts"] = QStringLiteral("1");
+    mp["clip_points"] = QStringLiteral("0");
+    mp["clip_on_current_part_only"] = QStringLiteral("0");
+    auto centroidFillSymbolLayer = QgsCentroidFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << centroidFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+
+}
+
+void MainWindow::polygonGradientSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/water.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto gradientFillSymbolLayer = new QgsGradientFillSymbolLayer();
+    //SimpleTwoColor
+//    gradientFillSymbolLayer->setGradientColorType(Qgis::GradientColorSource::SimpleTwoColor);
+//    gradientFillSymbolLayer->setColor(QColor("blue"));
+//    gradientFillSymbolLayer->setColor2(QColor("white"));
+    //Color ramp
+    gradientFillSymbolLayer->setGradientColorType(Qgis::GradientColorSource::ColorRamp);
+    auto colorRamp = new QgsGradientColorRamp(QColor("blue"),QColor("white"));
+    gradientFillSymbolLayer->setColorRamp(colorRamp);
+#else
+    QVariantMap mp;
+    //SimpleTwoColor
+    //    mp["color_type"] = QStringLiteral("0");
+    //    mp["color"] = QStringLiteral("0,0,255");
+    //    mp["gradient_color2"] = QStringLiteral("255,255,255");
+    //Color ramp
+    mp["color_type"] = QStringLiteral("1");
+    mp["color1"] = QStringLiteral("0,0,255");
+    mp["color2"] = QStringLiteral("255,255,255");
+    auto gradientFillSymbolLayer = QgsGradientFillSymbolLayer ::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << gradientFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+
+}
+
+void MainWindow::polygonLinePatternSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/water.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto linePatternFillSymbolLayer = new QgsLinePatternFillSymbolLayer();
+    linePatternFillSymbolLayer->setLineAngle(0.0);
+    linePatternFillSymbolLayer->setColor(QColor(0,0,255));
+#else
+    QVariantMap mp;
+    mp["lineangle"] = QStringLiteral("0.0");
+    mp["line_color"] = QStringLiteral("0,0,255");
+    auto linePatternFillSymbolLayer = QgsLinePatternFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << linePatternFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonPointPatternSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto pointPatternFillSymbolLayer = new QgsPointPatternFillSymbolLayer();
+    pointPatternFillSymbolLayer->setAngle(45.0);
+    pointPatternFillSymbolLayer->setColor(QColor(0,0,255));
+#else
+    QVariantMap mp;
+    mp["angle"] = QStringLiteral("45.0");
+    mp["line_color"] = QStringLiteral("0,0,255");
+    auto pointPatternFillSymbolLayer = QgsPointPatternFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << pointPatternFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonRasterImageSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    QString path = QStringLiteral("resources/eye.png");
+    auto rasterFillSymbolLayer = new QgsRasterFillSymbolLayer(path);
+    rasterFillSymbolLayer->setAngle(0.0);
+#else
+    QVariantMap mp;
+    mp["imageFile"] = QStringLiteral("resources/eye.png");
+    mp["angle"] = QStringLiteral("0.0");
+    auto rasterFillSymbolLayer = QgsRasterFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << rasterFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonSvgSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    QString path = QStringLiteral("resources/plane.svg");
+    auto svgFillSymbolLayer = new QgsSVGFillSymbolLayer(path);
+    svgFillSymbolLayer->setColor(QColor(213,180,60));
+    svgFillSymbolLayer->setPatternWidth(20.0);
+#else
+    QVariantMap mp;
+    mp["svgFile"] = QStringLiteral("resources/plane.svg");
+    mp["color"] = QStringLiteral("213,180,60");
+    mp["width"] = QStringLiteral("20.0");
+    auto svgFillSymbolLayer = QgsSVGFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << svgFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonRandomMarkerSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 1
+    int pointCount = 100;
+    auto randomMarkerFillSymbolLayer = new QgsRandomMarkerFillSymbolLayer(100);
+    randomMarkerFillSymbolLayer->setDensityArea(250.0);
+    randomMarkerFillSymbolLayer->setCountMethod(Qgis::PointCountMethod::Absolute);
+#else
+    QVariantMap mp;
+    mp["point_count"] = QStringLiteral("100");
+    mp["density_area"] = QStringLiteral("250.0");
+    mp["count_method"] = QStringLiteral("0");
+    auto randomMarkerFillSymbolLayer = QgsRandomMarkerFillSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << randomMarkerFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonShapeburstSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto shapeburstFillSymbolLayer = new QgsShapeburstFillSymbolLayer();
+    //SimpleTwoColor
+//    shapeburstFillSymbolLayer->setColorType(Qgis::GradientColorSource::SimpleTwoColor);
+//    shapeburstFillSymbolLayer->setColor(QColor("green"));
+//    shapeburstFillSymbolLayer->setColor2(QColor("white"));
+    //Color ramp
+    shapeburstFillSymbolLayer->setColorType(Qgis::GradientColorSource::ColorRamp);
+    auto colorRamp = new QgsGradientColorRamp(QColor("green"),QColor("white"));
+    shapeburstFillSymbolLayer->setColorRamp(colorRamp);
+#else
+    QVariantMap mp;
+    //SimpleTwoColor
+    //    mp["color_type"] = QStringLiteral("0");
+    //    mp["color"] = QStringLiteral("0,235,0");
+    //    mp["gradient_color2"] = QStringLiteral("255,255,255");
+    //Color ramp
+    mp["color_type"] = QStringLiteral("1");
+    mp["color1"] = QStringLiteral("0,235,0");
+    mp["color2"] = QStringLiteral("255,255,255");
+    auto shapeburstFillSymbolLayer = QgsShapeburstFillSymbolLayer ::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << shapeburstFillSymbolLayer;
+    //构造QgsFillSymbol并设置renderer
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonOutlineSimpleSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+    //构建QgsSimpleLineSymbolLayer
+#if 0
+    auto simpleLineSymbolLayer = new QgsSimpleLineSymbolLayer(QColor("black"));
+#else
+    QVariantMap mp;
+    mp["line_color"] = QStringLiteral("black");
+    auto simpleLineSymbolLayer = QgsSimpleLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << simpleLineSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonOutlineArrowSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto arrowSymbolLayer  = new QgsArrowSymbolLayer();
+#else
+    QVariantMap mp;
+    mp["head_type"] = QStringLiteral("0");
+    mp["arrow_type"] = QStringLiteral("0");
+    auto arrowSymbolLayer  = QgsArrowSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << arrowSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonOutlineHashedSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto hashedSymbolLayer = new QgsHashedLineSymbolLayer(true,3);
+#else
+    QVariantMap mp;
+    mp["rotate"] = QStringLiteral("1");
+    mp["interval"] = QStringLiteral("3");
+    auto hashedSymbolLayer = QgsHashedLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << hashedSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+
+}
+
+void MainWindow::polygonOutlineInterpolatedSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto interpolatedSymbolLayer = new QgsInterpolatedLineSymbolLayer();
+#else
+    QVariantMap mp;
+    mp["single_color"] = QStringLiteral("black");
+    auto interpolatedSymbolLayer = QgsInterpolatedLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << interpolatedSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonOutlineLineburstSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+//    auto lineBurstSymbolLayer = new QgsLineburstSymbolLayer(QColor(35,35,35),Qt::white);
+//    lineBurstSymbolLayer->setGradientColorType(Qgis::GradientColorSource::SimpleTwoColor);
+//    lineBurstSymbolLayer->setWidth(2.0);
+    auto lineBurstSymbolLayer = new QgsLineburstSymbolLayer();
+    lineBurstSymbolLayer->setGradientColorType(Qgis::GradientColorSource::ColorRamp);
+    QgsGradientColorRamp *ramp = new QgsGradientColorRamp(QColor( 0, 255, 0 ), QColor( 0, 20, 0 ));
+    lineBurstSymbolLayer->setColorRamp(ramp);
+    lineBurstSymbolLayer->setWidth(2.0);
+
+#else
+    QVariantMap mp;
+    //    mp["color_type"] = QStringLiteral("0");
+    //    mp["color"] = QStringLiteral("35,35,35");
+    //    mp["gradient_color2"] = QStringLiteral("250,250,250");
+
+    mp["color_type"] = QStringLiteral("1");
+    mp["color1"] = QStringLiteral("0, 255, 0");
+    mp["color2"] = QStringLiteral("0, 20, 0");
+    mp["line_width"] = QStringLiteral("2.0");
+    auto lineBurstSymbolLayer = QgsLineburstSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << lineBurstSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::polygonOutlineMarkerSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 1
+    auto markerSymbolLayer = new QgsMarkerLineSymbolLayer(true,3);
+#else
+    QVariantMap mp;
+    mp["rotate"] = QStringLiteral("1");
+    mp["interval"] = QStringLiteral("3");
+    auto markerSymbolLayer = QgsMarkerLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+
+}
+
+void MainWindow::polygonOutlineRasterSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto rasterSymbolLayer = new QgsRasterLineSymbolLayer(QStringLiteral("resources/cock.jpg"));
+    rasterSymbolLayer->setWidth(2.0);
+#else
+    QVariantMap mp;
+    mp["imageFile"] = QStringLiteral("resources/cock.jpg");
+    mp["line_width"] = QStringLiteral("2.0");
+    auto rasterSymbolLayer = QgsRasterLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << rasterSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+
+}
+
+void MainWindow::polygonInvertedRendererSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //分别获取反转面和单一符号渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsInvertedPolygonRenderer *invertedRenderer = QgsInvertedPolygonRenderer::convertFromRenderer(layerRenderer);
+    QgsSingleSymbolRenderer * singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer( layerRenderer);
+    //创建fill类型的符号
+#if 1
+    auto simplefillSymbolLayer = new QgsSimpleFillSymbolLayer();
+    simplefillSymbolLayer->setFillColor(QColor("red"));
+#else
+    QVariantMap mp;
+    mp["color"] = QStringLiteral("red");
+    auto simplefillSymbolLayer = QgsSimpleFillSymbolLayer::create(mp);
+#endif
+    QgsSymbolLayerList layerList;
+    layerList << simplefillSymbolLayer;
+    auto fillSymbol = new QgsFillSymbol(layerList);
+    //单一符号渲染器设置其符号为fillSymbol
+    singleSymbolRenderer->setSymbol(fillSymbol);
+    //反转面渲染器调用该函数，将单一符号渲染器作为参数传进去
+    invertedRenderer->setEmbeddedRenderer(singleSymbolRenderer);
+    layer->setRenderer(invertedRenderer);
+}
+
+void MainWindow::polygon25DSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/houses.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    Qgs25DRenderer *D25DRenderer = Qgs25DRenderer::convertFromRenderer(layerRenderer);
+
+    //实现2.5D效果的关键点在这里
+    QgsExpressionContextUtils::setLayerVariable( layer, QStringLiteral( "qgis_25d_height" ), 10 );
+    QgsExpressionContextUtils::setLayerVariable( layer, QStringLiteral( "qgis_25d_angle" ), 70 );
+
+    layer->setRenderer(D25DRenderer);
 }

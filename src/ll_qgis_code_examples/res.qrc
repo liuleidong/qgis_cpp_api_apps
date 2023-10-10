@@ -52,5 +52,23 @@
         <file>res/images/lineMarkerSlot.png</file>
         <file>res/images/lineRasterSlot.png</file>
         <file>res/images/lineSimplelineSlot.png</file>
+        <file>res/images/polygon25DSlot.png</file>
+        <file>res/images/polygonCentroidSlot.png</file>
+        <file>res/images/polygonGradientSlot.png</file>
+        <file>res/images/polygonInvertedRendererSlot.png</file>
+        <file>res/images/polygonLinePatternSlot.png</file>
+        <file>res/images/polygonOutlineArrowSlot.png</file>
+        <file>res/images/polygonOutlineHashedSlot.png</file>
+        <file>res/images/polygonOutlineInterpolatedSlot.png</file>
+        <file>res/images/polygonOutlineLineburstSlot.png</file>
+        <file>res/images/polygonOutlineMarkerSlot.png</file>
+        <file>res/images/polygonOutlineRasterSlot.png</file>
+        <file>res/images/polygonOutlineSimpleSlot.png</file>
+        <file>res/images/polygonPointPatternSlot.png</file>
+        <file>res/images/polygonRandomMarkerSlot.png</file>
+        <file>res/images/polygonRasterImageSlot.png</file>
+        <file>res/images/polygonShapeburstSlot.png</file>
+        <file>res/images/polygonSimplefillSlot.png</file>
+        <file>res/images/polygonSvgSlot.png</file>
     </qresource>
 </RCC>
