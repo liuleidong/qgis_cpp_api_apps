@@ -104,13 +104,13 @@ void MainWindow::initToolbar()
 
     QAction *toPanels = new QAction("To Panels");
     toPanels->setToolTip("To Panels");
-    toPanels->setIcon(QIcon(":/res/icons/mActionBackward.png"));
+    toPanels->setIcon(QIcon(":/res/icons/arrow-left.png"));
     toolbar->addAction(toPanels);
     connect(toPanels,&QAction::triggered,this,&MainWindow::actionToPanelsSlot);
 
     QAction *toCanvas = new QAction("To Canvas");
     toCanvas->setToolTip("To Canvas");
-    toCanvas->setIcon(QIcon(":/res/icons/mActionForward.png"));
+    toCanvas->setIcon(QIcon(":/res/icons/arrow-right.png"));
     toolbar->addAction(toCanvas);
     connect(toCanvas,&QAction::triggered,this,&MainWindow::actionToCanvasSlot);
 }

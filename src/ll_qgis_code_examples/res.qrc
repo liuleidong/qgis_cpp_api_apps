@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/l_tiledMapLayer4326.png</file>
-        <file>res/big.png</file>
         <file>res/icons/mActionForward.png</file>
         <file>res/icons/mActionBackward.png</file>
         <file>res/images/addShpSlot.png</file>
@@ -95,5 +93,11 @@
         <file>res/images/spatialIndexSlot.png</file>
         <file>res/images/vectorFileWriterSlot.png</file>
         <file>res/images/addGdalOfflineSlot.png</file>
+        <file>res/icons/arrow-left.png</file>
+        <file>res/icons/arrow-right.png</file>
+        <file>res/icons/left-arrow.png</file>
+        <file>res/icons/page_first.png</file>
+        <file>res/icons/page_last.png</file>
+        <file>res/icons/right-arrow.png</file>
     </qresource>
 </RCC>
