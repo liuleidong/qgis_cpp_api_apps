@@ -36,6 +36,7 @@ public:
     void init_groupBox_maps();
     void init_groupBox_canvas();
     void init_groupBox_vector_point_symbol();
+    void init_groupBox_vector_line_symbol();
 
 public slots:
     void actionToPanelsSlot();

@@ -150,6 +150,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_maps();
     init_groupBox_canvas();
     init_groupBox_vector_point_symbol();
+    init_groupBox_vector_line_symbol();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -269,6 +270,24 @@ void MainWindow::init_groupBox_vector_point_symbol()
     layout->addWidget(label_heatmapSymbolRenderer,labelrow,0);
     ++row;column = -1;
     addPanelItem(layout,"pointHeatmapSlot",QString::fromLocal8Bit("点符号-热力图"),":/res/images/pointHeatmapSlot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_vector_line_symbol()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_vector_line_symbol->layout();
+    int labelrow = row;
+    QLabel *label_SingleSymbolRenderer = new QLabel(QString::fromLocal8Bit("单一符号渲染"));
+    layout->addWidget(label_SingleSymbolRenderer,row,0);
+    ++row;
+    addPanelItem(layout,"lineSimplelineSlot",QString::fromLocal8Bit("线符号-简单标记"),":/res/images/lineSimplelineSlot.png",row,++column);
+    addPanelItem(layout,"lineArrowSlot",QString::fromLocal8Bit("线符号-箭头"),":/res/images/lineArrowSlot.png",row,++column);
+    addPanelItem(layout,"lineInterpolatedSlot",QString::fromLocal8Bit("线符号-插值线"),":/res/images/lineInterpolatedSlot.png",row,++column);
+    addPanelItem(layout,"lineHashedSlot",QString::fromLocal8Bit("线符号-短划线"),":/res/images/lineHashedSlot.png",row,++column);
+    addPanelItem(layout,"lineMarkerSlot",QString::fromLocal8Bit("线符号-标记线"),":/res/images/lineMarkerSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"lineRasterSlot",QString::fromLocal8Bit("线符号-栅格线"),":/res/images/lineRasterSlot.png",row,++column);
+    addPanelItem(layout,"lineBurstSlot",QString::fromLocal8Bit("线符号-爆炸线"),":/res/images/lineBurstSlot.png",row,++column);
 }
 
 

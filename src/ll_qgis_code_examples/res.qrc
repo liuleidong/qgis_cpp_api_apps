@@ -45,5 +45,12 @@
         <file>res/images/pointDisplacementSlot.png</file>
         <file>res/images/pointClusterSlot.png</file>
         <file>res/images/pointHeatmapSlot.png</file>
+        <file>res/images/lineArrowSlot.png</file>
+        <file>res/images/lineBurstSlot.png</file>
+        <file>res/images/lineHashedSlot.png</file>
+        <file>res/images/lineInterpolatedSlot.png</file>
+        <file>res/images/lineMarkerSlot.png</file>
+        <file>res/images/lineRasterSlot.png</file>
+        <file>res/images/lineSimplelineSlot.png</file>
     </qresource>
 </RCC>

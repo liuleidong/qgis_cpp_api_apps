@@ -33,7 +33,7 @@
              <x>0</x>
              <y>0</y>
              <width>762</width>
-             <height>512</height>
+             <height>521</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -42,6 +42,7 @@
               <property name="title">
                <string>图表(Diagram)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_9"/>
              </widget>
             </item>
             <item row="8" column="0">
@@ -49,6 +50,7 @@
               <property name="title">
                <string>矢量图层数据(Features)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_10"/>
              </widget>
             </item>
             <item row="1" column="0">
@@ -64,6 +66,7 @@
               <property name="title">
                <string>矢量图层-面-符号化(Symbology)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_6"/>
              </widget>
             </item>
             <item row="3" column="0">
@@ -71,6 +74,7 @@
               <property name="title">
                <string>矢量图层-线-符号化(Symbology)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_5"/>
              </widget>
             </item>
             <item row="5" column="0">
@@ -78,6 +82,7 @@
               <property name="title">
                <string>栅格图层-符号化(Symbology)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_7"/>
              </widget>
             </item>
             <item row="2" column="0">
@@ -93,6 +98,7 @@
               <property name="title">
                <string>标注(Label)和注记(Annotation)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_8"/>
              </widget>
             </item>
             <item row="0" column="0">
@@ -108,6 +114,7 @@
               <property name="title">
                <string>数据处理(Processing)</string>
               </property>
+              <layout class="QGridLayout" name="gridLayout_11"/>
              </widget>
             </item>
            </layout>
@@ -131,7 +138,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
