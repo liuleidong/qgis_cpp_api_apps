@@ -212,7 +212,7 @@ void MainWindow::init_groupBox_maps()
     QLabel *label_wms = new QLabel("WMS data provider(wms)");
     layout->addWidget(label_wms,labelRow,2);
     addPanelItem(layout,"addWmsSlot",QString::fromLocal8Bit("添加在线高德路网"),":/res/images/addWmsSlot.png",row,++column);
-    addPanelItem(layout,"addGdalOfflineSlot",QString::fromLocal8Bit("添加离线高德影像"),":/res/images/addGpkg1Slot.png",row,++column);
+    addPanelItem(layout,"addGdalOfflineSlot",QString::fromLocal8Bit("添加离线高德影像"),":/res/images/addGdalOfflineSlot.png",row,++column);
 }
 
 void MainWindow::init_groupBox_canvas()

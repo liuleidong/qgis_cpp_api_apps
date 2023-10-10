@@ -94,5 +94,6 @@
         <file>res/images/selectFeaturesSlot.png</file>
         <file>res/images/spatialIndexSlot.png</file>
         <file>res/images/vectorFileWriterSlot.png</file>
+        <file>res/images/addGdalOfflineSlot.png</file>
     </qresource>
 </RCC>

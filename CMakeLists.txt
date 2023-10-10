@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+﻿cmake_minimum_required(VERSION 3.14)
 
 project(qgis_cpp_api_apps VERSION "1.0.0.0")
 project(qgis_cpp_api_apps LANGUAGES CXX)
@@ -26,5 +26,4 @@ link_directories(${PROJECT_SOURCE_DIR}/bin) # 指定库搜索路径
 add_subdirectory(./src/ll_qgis_base_lib)
 add_subdirectory(./src/ll_qgis_hello)
 add_subdirectory(./src/ll_qgis_code_examples)
-add_subdirectory(./src/ll_qgis_demos)
 add_subdirectory(./src/ll_qgis_uav_realtime)
