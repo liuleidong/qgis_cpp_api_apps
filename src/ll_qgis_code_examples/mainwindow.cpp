@@ -364,9 +364,9 @@ void MainWindow::init_groupBox_processing()
 {
     int row = 0,column = -1;
     QGridLayout *layout = (QGridLayout *)ui->groupBox_processing->layout();
-    addPanelItem(layout,"processingClipSlot",QString::fromLocal8Bit("算法-裁剪"),":/res/images/diagramPieSlot.png",row,++column);
-    addPanelItem(layout,"processingRandomPointsSlot",QString::fromLocal8Bit("算法-随机点生成"),":/res/images/diagramTextSlot.png",row,++column);
-    addPanelItem(layout,"processingBufferSlot",QString::fromLocal8Bit("算法-缓冲区"),":/res/images/diagramHistogramSlot.png",row,++column);
+    addPanelItem(layout,"processingClipSlot",QString::fromLocal8Bit("算法-裁剪"),":/res/images/processingClipSlot.png",row,++column);
+    addPanelItem(layout,"processingRandomPointsSlot",QString::fromLocal8Bit("算法-随机点生成"),":/res/images/processingRandomPointsSlot.png",row,++column);
+    addPanelItem(layout,"processingBufferSlot",QString::fromLocal8Bit("算法-缓冲区"),":/res/images/processingBufferSlot.png",row,++column);
 }
 
 

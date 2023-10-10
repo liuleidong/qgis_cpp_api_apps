@@ -85,5 +85,8 @@
         <file>res/images/diagramPieSlot.png</file>
         <file>res/images/diagramStackedBarSlot.png</file>
         <file>res/images/diagramTextSlot.png</file>
+        <file>res/images/processingBufferSlot.png</file>
+        <file>res/images/processingClipSlot.png</file>
+        <file>res/images/processingRandomPointsSlot.png</file>
     </qresource>
 </RCC>
