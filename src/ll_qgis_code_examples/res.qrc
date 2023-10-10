@@ -81,5 +81,9 @@
         <file>res/images/annotationPolygonSlot.png</file>
         <file>res/images/annotationTextSlot.png</file>
         <file>res/images/labelSlot.png</file>
+        <file>res/images/diagramHistogramSlot.png</file>
+        <file>res/images/diagramPieSlot.png</file>
+        <file>res/images/diagramStackedBarSlot.png</file>
+        <file>res/images/diagramTextSlot.png</file>
     </qresource>
 </RCC>

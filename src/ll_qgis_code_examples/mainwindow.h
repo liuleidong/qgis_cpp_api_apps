@@ -40,6 +40,7 @@ public:
     void init_groupBox_vector_polygon_symbol();
     void init_groupBox_raster_symbol();
     void init_groupBox_annotations();
+    void init_groupBox_diagram();
 
 public slots:
     void actionToPanelsSlot();
@@ -131,6 +132,11 @@ public slots:
     void annotationPointSlot();
     void annotationLineSlot();
     void annotationPolygonSlot();
+    //
+    void diagramPieSlot();
+    void diagramTextSlot();
+    void diagramHistogramSlot();
+    void diagramStackedBarSlot();
 private:
     QgsAnnotationLayer* addTestAnnotationLayer();
     bool minMaxValuesForBand( int band, QgsRasterDataProvider *provider, double &minValue, double &maxValue ) const;

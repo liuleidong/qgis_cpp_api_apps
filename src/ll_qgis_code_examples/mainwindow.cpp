@@ -154,6 +154,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_vector_polygon_symbol();
     init_groupBox_raster_symbol();
     init_groupBox_annotations();
+    init_groupBox_diagram();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -345,6 +346,16 @@ void MainWindow::init_groupBox_annotations()
     addPanelItem(layout,"annotationPointSlot",QString::fromLocal8Bit("注记-点"),":/res/images/annotationPointSlot.png",row,++column);
     addPanelItem(layout,"annotationLineSlot",QString::fromLocal8Bit("注记-线"),":/res/images/annotationLineSlot.png",row,++column);
     addPanelItem(layout,"annotationPolygonSlot",QString::fromLocal8Bit("注记-面"),":/res/images/annotationPolygonSlot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_diagram()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_diagram->layout();
+    addPanelItem(layout,"diagramPieSlot",QString::fromLocal8Bit("图表-饼图"),":/res/images/diagramPieSlot.png",row,++column);
+    addPanelItem(layout,"diagramTextSlot",QString::fromLocal8Bit("图表-文字图表"),":/res/images/diagramTextSlot.png",row,++column);
+    addPanelItem(layout,"diagramHistogramSlot",QString::fromLocal8Bit("图表-直方图"),":/res/images/diagramHistogramSlot.png",row,++column);
+    addPanelItem(layout,"diagramStackedBarSlot",QString::fromLocal8Bit("图表-分段条形图"),":/res/images/diagramStackedBarSlot.png",row,++column);
 }
 
 
@@ -2413,4 +2424,171 @@ void MainWindow::annotationPolygonSlot()
     //添加多边形item
     auto annotationPolygonItem = new QgsAnnotationPolygonItem(curvePolygon);
     annotationLayer->addItem(annotationPolygonItem);
+}
+
+void MainWindow::diagramPieSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    QgsDiagramSettings ds;
+    ds.enabled = true;
+    //Attributes选项卡
+    QColor col1 = Qt::red;
+    QColor col2 = Qt::yellow;
+    QColor col3 = Qt::blue;
+    ds.categoryColors = QList<QColor>() << col1 << col2 << col3;
+    ds.categoryAttributes = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    ds.categoryLabels = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    //Rendering选项卡
+    ds.opacity = 1.0;
+    //Size选项卡
+    ds.size = QSizeF( 15, 15 );
+#if 1
+    QgsLinearlyInterpolatedDiagramRenderer *dr = new QgsLinearlyInterpolatedDiagramRenderer();
+    dr->setLowerValue( 0.0 );
+    dr->setLowerSize( QSizeF( 0.0, 0.0 ) );
+    dr->setUpperValue( 100 );
+    dr->setUpperSize( QSizeF( 40, 40 ) );
+    dr->setClassificationField( QStringLiteral( "prec_2020" ) );
+#else
+    QgsSingleCategoryDiagramRenderer *dr = new QgsSingleCategoryDiagramRenderer();
+#endif
+    dr->setDiagram(new QgsPieDiagram());
+    dr->setDiagramSettings(ds);
+
+    QgsDiagramLayerSettings dls = QgsDiagramLayerSettings();
+    dls.setPlacement( QgsDiagramLayerSettings::OverPoint );
+    dls.setShowAllDiagrams( true );
+    layer->setDiagramLayerSettings(dls);
+
+    layer->setDiagramRenderer( dr );
+}
+
+void MainWindow::diagramTextSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    QgsDiagramSettings ds;
+    ds.enabled = true;
+    //Attributes选项卡
+    QColor col1 = Qt::red;
+    QColor col2 = Qt::yellow;
+    QColor col3 = Qt::blue;
+    ds.categoryColors = QList<QColor>() << col1 << col2 << col3;
+    ds.categoryAttributes = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    ds.categoryLabels = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    //Rendering选项卡
+    ds.opacity = 1.0;
+    //Size选项卡
+    ds.size = QSizeF( 15, 15 );
+#if 1
+    QgsLinearlyInterpolatedDiagramRenderer *dr = new QgsLinearlyInterpolatedDiagramRenderer();
+    dr->setLowerValue( 0.0 );
+    dr->setLowerSize( QSizeF( 0.0, 0.0 ) );
+    dr->setUpperValue( 100 );
+    dr->setUpperSize( QSizeF( 40, 40 ) );
+    dr->setClassificationField( QStringLiteral( "prec_2020" ) );
+#else
+    QgsSingleCategoryDiagramRenderer *dr = new QgsSingleCategoryDiagramRenderer();
+#endif
+    dr->setDiagram( new QgsTextDiagram() );
+    dr->setDiagramSettings( ds );
+
+    QgsDiagramLayerSettings dls = QgsDiagramLayerSettings();
+    dls.setPlacement( QgsDiagramLayerSettings::OverPoint );
+    dls.setShowAllDiagrams( true );
+
+    layer->setDiagramLayerSettings(dls);
+    layer->setDiagramRenderer( dr );
+}
+
+void MainWindow::diagramHistogramSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    QgsDiagramSettings ds;
+    ds.enabled = true;
+    //Attributes选项卡
+    QColor col1 = Qt::red;
+    QColor col2 = Qt::yellow;
+    QColor col3 = Qt::blue;
+    ds.categoryColors = QList<QColor>() << col1 << col2 << col3;
+    ds.categoryAttributes = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    ds.categoryLabels = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    //Rendering选项卡
+    ds.opacity = 1.0;
+    //Size选项卡
+    ds.size = QSizeF( 15, 15 );
+
+    QgsLinearlyInterpolatedDiagramRenderer *dr = new QgsLinearlyInterpolatedDiagramRenderer();
+    dr->setLowerValue( 0.0 );
+    dr->setLowerSize( QSizeF( 0.0, 0.0 ) );
+    dr->setUpperValue( 100 );
+    dr->setUpperSize( QSizeF( 40, 40 ) );
+    dr->setClassificationField( QStringLiteral( "prec_2020" ) );
+
+    dr->setDiagram(new QgsHistogramDiagram());
+    dr->setDiagramSettings(ds);
+
+    QgsDiagramLayerSettings dls = QgsDiagramLayerSettings();
+    dls.setPlacement( QgsDiagramLayerSettings::OverPoint );
+    dls.setShowAllDiagrams( true );
+
+    layer->setDiagramLayerSettings(dls);
+    layer->setDiagramRenderer( dr );
+
+}
+
+void MainWindow::diagramStackedBarSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    QgsDiagramSettings ds;
+    ds.enabled = true;
+    //Attributes选项卡
+    QColor col1 = Qt::red;
+    QColor col2 = Qt::yellow;
+    QColor col3 = Qt::blue;
+    ds.categoryColors = QList<QColor>() << col1 << col2 << col3;
+    ds.categoryAttributes = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    ds.categoryLabels = QList<QString>() << QStringLiteral( "prec_2020" ) << QStringLiteral( "prec_2021" ) << QStringLiteral( "prec_2022" );
+    //Rendering选项卡
+    ds.opacity = 1.0;
+    //Size选项卡
+    ds.size = QSizeF( 15, 15 );
+#if 1
+    QgsLinearlyInterpolatedDiagramRenderer *dr = new QgsLinearlyInterpolatedDiagramRenderer();
+    dr->setLowerValue( 0.0 );
+    dr->setLowerSize( QSizeF( 0.0, 0.0 ) );
+    dr->setUpperValue( 100 );
+    dr->setUpperSize( QSizeF( 40, 40 ) );
+    dr->setClassificationField( QStringLiteral( "prec_2020" ) );
+#else
+    QgsSingleCategoryDiagramRenderer *dr = new QgsSingleCategoryDiagramRenderer();
+#endif
+    dr->setDiagram(new QgsStackedBarDiagram());
+    dr->setDiagramSettings(ds);
+
+    QgsDiagramLayerSettings dls = QgsDiagramLayerSettings();
+    dls.setPlacement( QgsDiagramLayerSettings::OverPoint );
+    dls.setShowAllDiagrams( true );
+
+    layer->setDiagramLayerSettings(dls);
+    layer->setDiagramRenderer( dr );
 }
