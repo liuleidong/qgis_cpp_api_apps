@@ -143,11 +143,11 @@ public slots:
     void diagramStackedBarSlot();
     //
     void getFieldsSlot();
-    void getFeaturesSlot(QPlainTextEdit *plainTextEdit);
-    void selectFeaturesSlot(QPlainTextEdit *plainTextEdit);
-    void spatialIndexSlot(QPlainTextEdit *plainTextEdit);
-    void distanceAreaSlot(QPlainTextEdit *plainTextEdit);
-    void vectorFileWriterSlot(QPlainTextEdit *plainTextEdit);
+    void getFeaturesSlot();
+    void selectFeaturesSlot();
+    void spatialIndexSlot();
+    void distanceAreaSlot();
+    void vectorFileWriterSlot();
     //
     void processingClipSlot();
     void processingRandomPointsSlot();

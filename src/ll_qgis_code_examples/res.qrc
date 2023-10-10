@@ -88,5 +88,11 @@
         <file>res/images/processingBufferSlot.png</file>
         <file>res/images/processingClipSlot.png</file>
         <file>res/images/processingRandomPointsSlot.png</file>
+        <file>res/images/distanceAreaSlot.png</file>
+        <file>res/images/getFeaturesSlot.png</file>
+        <file>res/images/getFieldsSlot.png</file>
+        <file>res/images/selectFeaturesSlot.png</file>
+        <file>res/images/spatialIndexSlot.png</file>
+        <file>res/images/vectorFileWriterSlot.png</file>
     </qresource>
 </RCC>
