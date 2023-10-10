@@ -76,5 +76,10 @@
         <file>res/images/rasterPalettedSlot.png</file>
         <file>res/images/rasterSinglebandGraySlot.png</file>
         <file>res/images/rasterSinglebandPseudoSlot.png</file>
+        <file>res/images/annotationLineSlot.png</file>
+        <file>res/images/annotationPointSlot.png</file>
+        <file>res/images/annotationPolygonSlot.png</file>
+        <file>res/images/annotationTextSlot.png</file>
+        <file>res/images/labelSlot.png</file>
     </qresource>
 </RCC>

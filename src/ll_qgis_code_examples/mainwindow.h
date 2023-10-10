@@ -39,6 +39,7 @@ public:
     void init_groupBox_vector_line_symbol();
     void init_groupBox_vector_polygon_symbol();
     void init_groupBox_raster_symbol();
+    void init_groupBox_annotations();
 
 public slots:
     void actionToPanelsSlot();

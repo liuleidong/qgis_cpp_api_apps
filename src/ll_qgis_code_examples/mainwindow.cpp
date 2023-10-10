@@ -153,6 +153,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_vector_line_symbol();
     init_groupBox_vector_polygon_symbol();
     init_groupBox_raster_symbol();
+    init_groupBox_annotations();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -333,6 +334,17 @@ void MainWindow::init_groupBox_raster_symbol()
     ++row;column = -1;
     addPanelItem(layout,"rasterContoursSlot",QString::fromLocal8Bit("栅格符号-轮廓"),":/res/images/rasterContoursSlot.png",row,++column);
 
+}
+
+void MainWindow::init_groupBox_annotations()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_annotations->layout();
+    addPanelItem(layout,"labelSlot",QString::fromLocal8Bit("标注"),":/res/images/labelSlot.png",row,++column);
+    addPanelItem(layout,"annotationTextSlot",QString::fromLocal8Bit("注记-文本"),":/res/images/annotationTextSlot.png",row,++column);
+    addPanelItem(layout,"annotationPointSlot",QString::fromLocal8Bit("注记-点"),":/res/images/annotationPointSlot.png",row,++column);
+    addPanelItem(layout,"annotationLineSlot",QString::fromLocal8Bit("注记-线"),":/res/images/annotationLineSlot.png",row,++column);
+    addPanelItem(layout,"annotationPolygonSlot",QString::fromLocal8Bit("注记-面"),":/res/images/annotationPolygonSlot.png",row,++column);
 }
 
 
