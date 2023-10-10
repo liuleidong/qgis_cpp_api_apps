@@ -785,6 +785,7 @@ void MainWindow::pointSimpleMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -817,6 +818,7 @@ void MainWindow::pointSvgMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -852,6 +854,7 @@ void MainWindow::pointRasterMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -884,6 +887,7 @@ void MainWindow::pointAnimatedMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -916,6 +920,7 @@ void MainWindow::pointEllipseMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -952,6 +957,7 @@ void MainWindow::pointFontMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -983,6 +989,7 @@ void MainWindow::pointFilledMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1022,6 +1029,7 @@ void MainWindow::pointGeometryGeneratorMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1047,6 +1055,7 @@ void MainWindow::pointVectorFieldMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1078,6 +1087,7 @@ void MainWindow::pointMaskSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     QString reffilename = QStringLiteral("maps/shapefile/farms_33S.shp");
     QFileInfo refff(reffilename);
     QgsVectorLayer* reflayer = (QgsVectorLayer*)mApp->addVectorLayer(reffilename,ff.baseName());
@@ -1114,6 +1124,7 @@ void MainWindow::pointCategorizedSlot()
     QString filename = QStringLiteral("maps/shapefile/places_33S.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取分类渲染器并转换为分类渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsCategorizedSymbolRenderer *categorizedRenderer = QgsCategorizedSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1163,6 +1174,7 @@ void MainWindow::pointGraduatedSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取分类渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsGraduatedSymbolRenderer *graduatedRenderer = QgsGraduatedSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1218,6 +1230,7 @@ void MainWindow::pointRuleBasedSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsRuleBasedRenderer *ruleBasedRenderer = QgsRuleBasedRenderer::convertFromRenderer(layerRenderer);
@@ -1264,6 +1277,7 @@ void MainWindow::pointDisplacementSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsPointDisplacementRenderer *pointDisplacementRenderer = QgsPointDisplacementRenderer::convertFromRenderer(layerRenderer);
@@ -1291,6 +1305,7 @@ void MainWindow::pointClusterSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsPointClusterRenderer *pointClusterRenderer = QgsPointClusterRenderer::convertFromRenderer(layerRenderer);
@@ -1336,6 +1351,7 @@ void MainWindow::pointHeatmapSlot()
     QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsHeatmapRenderer *heatmapRenderer = QgsHeatmapRenderer::convertFromRenderer(layerRenderer);
@@ -1353,6 +1369,7 @@ void MainWindow::lineSimplelineSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1380,6 +1397,7 @@ void MainWindow::lineArrowSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1406,6 +1424,7 @@ void MainWindow::lineInterpolatedSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1431,6 +1450,7 @@ void MainWindow::lineHashedSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1457,6 +1477,7 @@ void MainWindow::lineMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1483,6 +1504,7 @@ void MainWindow::lineRasterSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1510,6 +1532,7 @@ void MainWindow::lineBurstSlot()
     QString filename = QStringLiteral("maps/shapefile/rivers.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1550,6 +1573,7 @@ void MainWindow::polygonSimplefillSlot()
     QString filename = QStringLiteral("maps/shapefile/water.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1576,6 +1600,7 @@ void MainWindow::polygonCentroidSlot()
     QString filename = QStringLiteral("maps/shapefile/water.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1609,6 +1634,7 @@ void MainWindow::polygonGradientSlot()
     QString filename = QStringLiteral("maps/shapefile/water.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1650,6 +1676,7 @@ void MainWindow::polygonLinePatternSlot()
     QString filename = QStringLiteral("maps/shapefile/water.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1678,6 +1705,7 @@ void MainWindow::polygonPointPatternSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1706,6 +1734,7 @@ void MainWindow::polygonRasterImageSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1734,6 +1763,7 @@ void MainWindow::polygonSvgSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1764,6 +1794,7 @@ void MainWindow::polygonRandomMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1794,6 +1825,7 @@ void MainWindow::polygonShapeburstSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1834,6 +1866,7 @@ void MainWindow::polygonOutlineSimpleSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1859,6 +1892,7 @@ void MainWindow::polygonOutlineArrowSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1884,6 +1918,7 @@ void MainWindow::polygonOutlineHashedSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1910,6 +1945,7 @@ void MainWindow::polygonOutlineInterpolatedSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1934,6 +1970,7 @@ void MainWindow::polygonOutlineLineburstSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1973,6 +2010,7 @@ void MainWindow::polygonOutlineMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -1999,6 +2037,7 @@ void MainWindow::polygonOutlineRasterSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
@@ -2026,6 +2065,7 @@ void MainWindow::polygonInvertedRendererSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //分别获取反转面和单一符号渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     QgsInvertedPolygonRenderer *invertedRenderer = QgsInvertedPolygonRenderer::convertFromRenderer(layerRenderer);
@@ -2055,6 +2095,7 @@ void MainWindow::polygon25DSlot()
     QString filename = QStringLiteral("maps/shapefile/houses.shp");
     QFileInfo ff(filename);
     QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //从图层获取渲染器
     QgsFeatureRenderer * layerRenderer= layer->renderer();
     Qgs25DRenderer *D25DRenderer = Qgs25DRenderer::convertFromRenderer(layerRenderer);
