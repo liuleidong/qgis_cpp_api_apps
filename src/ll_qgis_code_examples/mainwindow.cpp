@@ -703,8 +703,9 @@ void MainWindow::addWmsSlot()
 
 void MainWindow::addGdalOfflineSlot()
 {
-    QString mapPath = QCoreApplication::applicationDirPath()+QStringLiteral("maps/gaode20230630");
-    QString serverUrl = mapPath+QStringLiteral("//${z}/${y}/${x}.png");
+    QString mapPath = QCoreApplication::applicationDirPath()+QStringLiteral("/maps/gaode20230630");
+    QString tmsPath = mapPath+QStringLiteral("/tms.xml");
+    QString serverUrl = QStringLiteral("file:///") + mapPath + QStringLiteral("//${z}/${y}/${x}.png");
     QString tmsStr = QString("<GDAL_WMS>"
                      "<Service name=TMS><ServerUrl>%1</ServerUrl></Service>"
                      "<DataWindow>"
@@ -713,7 +714,7 @@ void MainWindow::addGdalOfflineSlot()
                      "</DataWindow>"
                      "<Projection>EPSG:4326</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><Cache />"
                              "</GDAL_WMS>").arg(serverUrl);
-    QFile file(mapPath+QStringLiteral("/tms.xml"));
+    QFile file(tmsPath);
     if(file.open(QIODevice::ReadWrite))
     {
         file.write(tmsStr.toStdString().c_str());
