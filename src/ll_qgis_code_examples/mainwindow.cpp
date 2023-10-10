@@ -2642,15 +2642,6 @@ void MainWindow::processingClipSlot()
 #endif
 }
 
-void MainWindow::algExecuted(bool successful, const QVariantMap &results)
-{
-    QgsMapLayer *layer = mContext->getMapLayer(results["OUTPUT"].toString());
-    if(layer)
-    {
-        QgsProject::instance()->addMapLayer(layer);
-    }
-}
-
 void MainWindow::processingRandomPointsSlot()
 {
     //添加测试图层
@@ -2721,4 +2712,13 @@ void MainWindow::processingBufferSlot()
     connect(algTask,&QgsProcessingAlgRunnerTask::executed,this,&MainWindow::algExecuted);
     QgsApplication::taskManager()->addTask(algTask);
 #endif
+}
+
+void MainWindow::algExecuted(bool successful, const QVariantMap &results)
+{
+    QgsMapLayer *layer = mContext->getMapLayer(results["OUTPUT"].toString());
+    if(layer)
+    {
+        QgsProject::instance()->addMapLayer(layer);
+    }
 }
