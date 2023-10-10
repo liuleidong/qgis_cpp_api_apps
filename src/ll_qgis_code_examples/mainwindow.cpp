@@ -728,8 +728,12 @@ void MainWindow::canvasCenterSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+
     QTimer::singleShot(1000*1,this,[=]
     {
+        auto layer = QgsProject::instance()->layers<QgsVectorLayer*>().first();
+        mApp->layerTreeView()->setCurrentLayer(layer);
+        mApp->layerTreeView()->defaultActions()->zoomToLayers( mApp->mapCanvas() );
         statusBar()->showMessage(QString::fromLocal8Bit("修改map canvas中心点"));
         mApp->mapCanvas()->setCenter(QgsPointXY(20.23960,-33.98442));
     });
@@ -740,10 +744,14 @@ void MainWindow::canvasRotationSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     QTimer::singleShot(1000*1,this,[=]
     {
-       statusBar()->showMessage(QString::fromLocal8Bit("修改map canvas角度"));
-       mApp->mapCanvas()->setRotation(45.0);
+        auto layer = QgsProject::instance()->layers<QgsVectorLayer*>().first();
+        mApp->layerTreeView()->setCurrentLayer(layer);
+        mApp->layerTreeView()->defaultActions()->zoomToLayers( mApp->mapCanvas() );
+        statusBar()->showMessage(QString::fromLocal8Bit("修改map canvas角度"));
+        mApp->mapCanvas()->setRotation(45.0);
     });
 
 }
@@ -754,6 +762,7 @@ void MainWindow::rubberBandLineSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //定义点                            
     QgsPointXY startPoint(20.34013,-33.90453);
     QgsPointXY endPoint(20.49744,-33.91126);
@@ -782,6 +791,7 @@ void MainWindow::rubberBandPolygonSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //定义三个点
     QgsPointXY point1(20.34013,-33.90453);
     QgsPointXY point2(20.49744,-33.91126);
@@ -811,6 +821,7 @@ void MainWindow::vertexMarkerSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
     //构造QgsVertexMarker并设置属性
     mVertexMarker = new QgsVertexMarker( mApp->mapCanvas() );
     mVertexMarker->setCenter( QgsPointXY(20.33474,-33.91104) );
@@ -825,6 +836,7 @@ void MainWindow::mapToolPanSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
 
     mApp->mapCanvas()->setMapTool(mMapToolZoomIn);
     statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是ZoomIn,1秒后切换为Pan"));
@@ -840,6 +852,8 @@ void MainWindow::mapToolZoomInSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
     statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是Pan,1秒后切换为ZoomIn"));
     QTimer::singleShot(1000*1,this,[=]
    {
@@ -853,6 +867,8 @@ void MainWindow::mapToolZoomOutSlot()
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
     mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
     statusBar()->showMessage(QString::fromLocal8Bit("当前Map Tool是Pan,1秒后切换为ZoomOut"));
     QTimer::singleShot(1000*1,this,[=]
    {
@@ -1172,7 +1188,7 @@ void MainWindow::pointMaskSlot()
     zoomToFirstLayer<QgsVectorLayer*>();
     QString reffilename = QStringLiteral("maps/shapefile/farms_33S.shp");
     QFileInfo refff(reffilename);
-    QgsVectorLayer* reflayer = (QgsVectorLayer*)mApp->addVectorLayer(reffilename,ff.baseName());
+    QgsVectorLayer* reflayer = (QgsVectorLayer*)mApp->addVectorLayer(reffilename,refff.baseName());
 
     //获取图层的渲染器renderer
     QgsFeatureRenderer * layerRenderer= layer->renderer();
