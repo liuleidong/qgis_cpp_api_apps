@@ -78,7 +78,7 @@
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QGroupBox" name="groupBox_tiff_symbol">
+             <widget class="QGroupBox" name="groupBox_raster_symbol">
               <property name="title">
                <string>栅格图层-符号化(Symbology)</string>
               </property>

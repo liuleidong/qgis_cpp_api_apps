@@ -152,6 +152,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_vector_point_symbol();
     init_groupBox_vector_line_symbol();
     init_groupBox_vector_polygon_symbol();
+    init_groupBox_raster_symbol();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -320,6 +321,20 @@ void MainWindow::init_groupBox_vector_polygon_symbol()
     addPanelItem(layout,"polygon25DSlot",QString::fromLocal8Bit("面符号-2.5D"),":/res/images/polygon25DSlot.png",row,++column);
 }
 
+void MainWindow::init_groupBox_raster_symbol()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_raster_symbol->layout();
+    addPanelItem(layout,"rasterMultibandSlot",QString::fromLocal8Bit("栅格符号-多波段彩色"),":/res/images/rasterMultibandSlot.png",row,++column);
+    addPanelItem(layout,"rasterPalettedSlot",QString::fromLocal8Bit("栅格符号-唯一值着色"),":/res/images/rasterPalettedSlot.png",row,++column);
+    addPanelItem(layout,"rasterSinglebandGraySlot",QString::fromLocal8Bit("栅格符号-单波段灰度"),":/res/images/rasterSinglebandGraySlot.png",row,++column);
+    addPanelItem(layout,"rasterSinglebandPseudoSlot",QString::fromLocal8Bit("栅格符号-单波段伪彩色"),":/res/images/rasterSinglebandPseudoSlot.png",row,++column);
+    addPanelItem(layout,"rasterHillshadeSlot",QString::fromLocal8Bit("栅格符号-山体阴影"),":/res/images/rasterHillshadeSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"rasterContoursSlot",QString::fromLocal8Bit("栅格符号-轮廓"),":/res/images/rasterContoursSlot.png",row,++column);
+
+}
+
 
 void MainWindow::panelImageButtonClickedSlot(QString slotName)
 {
@@ -362,6 +377,16 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
     {
         mApp->layerTreeDock()->show();
     }
+}
+
+QgsAnnotationLayer *MainWindow::addTestAnnotationLayer()
+{
+    QString name = QStringLiteral("Annotation");
+    QgsAnnotationLayer::LayerOptions options( QgsProject::instance()->transformContext() );
+    QgsAnnotationLayer *layer = new QgsAnnotationLayer( name, options );
+    layer->setCrs( QgsProject::instance()->crs() );
+    QgsProject::instance()->addMapLayer(layer);
+    return layer;
 }
 
 void MainWindow::addPanelItem(QGridLayout *layout,const QString &objectName, const QString &title,const QString &url, int row, int column)
@@ -2105,4 +2130,275 @@ void MainWindow::polygon25DSlot()
     QgsExpressionContextUtils::setLayerVariable( layer, QStringLiteral( "qgis_25d_angle" ), 70 );
 
     layer->setRenderer(D25DRenderer);
+}
+
+void MainWindow::rasterMultibandSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+
+    double minValue = 0;
+    double maxValue = 0;
+    minMaxValuesForBand( 1, layer->dataProvider(), minValue, maxValue );
+    QgsContrastEnhancement *rce = new QgsContrastEnhancement( ( Qgis::DataType )(layer->dataProvider()->dataType( 1 ) ) );
+    rce->setContrastEnhancementAlgorithm(QgsContrastEnhancement::StretchToMinimumMaximum);
+    rce->setMinimumValue(minValue);
+    rce->setMaximumValue(maxValue);
+    minMaxValuesForBand( 2, layer->dataProvider(), minValue, maxValue );
+    QgsContrastEnhancement *gce = new QgsContrastEnhancement( ( Qgis::DataType )(layer->dataProvider()->dataType( 2 ) ) );
+    gce->setContrastEnhancementAlgorithm(QgsContrastEnhancement::StretchToMinimumMaximum);
+    gce->setMinimumValue(minValue);
+    gce->setMaximumValue(maxValue);
+    minMaxValuesForBand( 3, layer->dataProvider(), minValue, maxValue );
+    QgsContrastEnhancement *bce = new QgsContrastEnhancement( ( Qgis::DataType )(layer->dataProvider()->dataType( 3 ) ) );
+    bce->setContrastEnhancementAlgorithm(QgsContrastEnhancement::StretchToMinimumMaximum);
+    bce->setMinimumValue(minValue);
+    bce->setMaximumValue(maxValue);
+
+    QgsMultiBandColorRenderer *renderer = new QgsMultiBandColorRenderer(layer->dataProvider(),1,2,3,rce,gce,bce);
+
+    //设置layer的属性
+    layer->setBlendMode(QPainter::CompositionMode_SourceOver);
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::rasterPalettedSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/with_color_table.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+
+    const int grayBand = 1;
+    const QgsPalettedRasterRenderer::ClassData classes = QgsPalettedRasterRenderer::colorTableToClassData( layer->dataProvider()->colorTable( grayBand ) );
+    auto renderer = new QgsPalettedRasterRenderer( layer->dataProvider(),grayBand,classes );
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::rasterSinglebandGraySlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+    //
+    const int grayBand = 1;
+    QgsSingleBandGrayRenderer *renderer = new QgsSingleBandGrayRenderer( layer->dataProvider(), grayBand );
+    renderer->setGradient(QgsSingleBandGrayRenderer::BlackToWhite);//
+    QgsContrastEnhancement *ce = new QgsContrastEnhancement( ( Qgis::DataType )(layer->dataProvider()->dataType( grayBand ) ) );
+    ce->setContrastEnhancementAlgorithm(QgsContrastEnhancement::StretchToMinimumMaximum);
+    ce->setMinimumValue(-1);
+    ce->setMaximumValue(2630);
+    renderer->setContrastEnhancement(ce);
+    QgsRasterMinMaxOrigin mmOrigin = renderer->minMaxOrigin();
+    renderer->setMinMaxOrigin(mmOrigin);
+    //QgsRasterLayer中有Layer Rendering和Resampling中的相应设置
+
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::rasterSinglebandPseudoSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+
+    const int bandNo = 1;
+    double minValue = 0;
+    double maxValue = 0;
+    minMaxValuesForBand( bandNo, layer->dataProvider(), minValue, maxValue );
+    QgsSingleBandPseudoColorRenderer *renderer =
+        new QgsSingleBandPseudoColorRenderer( layer->dataProvider(), bandNo, nullptr );
+    QgsGradientColorRamp *ramp = new QgsGradientColorRamp(QColor(20,0,0),QColor(255,0,0));
+    renderer->setClassificationMin(minValue);
+    renderer->setClassificationMax(maxValue);
+    renderer->createShader(ramp,QgsColorRampShader::Interpolated,QgsColorRampShader::Continuous,255);
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::rasterHillshadeSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+
+    QgsHillshadeRenderer *renderer = new QgsHillshadeRenderer(layer->dataProvider(),1,45,315);
+    renderer->setZFactor(10);
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::rasterContoursSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+    QFileInfo ff(filename);
+    QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsRasterLayer*>();
+
+    QgsRasterContourRenderer *renderer = new QgsRasterContourRenderer(layer->dataProvider());
+    renderer->setInputBand(1);
+    renderer->setContourInterval(100.00);
+    //这里可以设置QgsLineSymbol
+    //    renderer->setContourSymbol()
+    renderer->setContourIndexInterval(500.00);
+    //这里可以设置QgsLineSymbol
+    //    renderer->setContourIndexSymbol()
+
+    renderer->setDownscale(4.00);
+    layer->setRenderer(renderer);
+}
+
+void MainWindow::labelSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+    //
+    //QgsTextFormat --> QgsTextBackgroundSettings
+    //              --> QgsTextBufferSettings
+    //              --> QgsTextMaskSettings
+    //              --> QgsTextShadowSettings
+    //QgsCallout
+    //QgsLabelPlacementSettings
+    //QgsPalLayerSettings包含文本设置
+    QgsPalLayerSettings settings;
+    settings.drawLabels = true;
+    settings.fieldName = "name";
+    //文字设置
+    QgsTextFormat textFormat;
+    QgsTextBackgroundSettings backgroundSettings;
+    QgsTextBufferSettings bufferSettings;
+    QgsTextMaskSettings maskSettings;
+    QgsTextShadowSettings shadowSettings;
+    //开启背景并设置为白色
+    backgroundSettings.setEnabled(true);
+    backgroundSettings.setFillColor(QColor("white"));
+    textFormat.setBackground(backgroundSettings);
+    //开启buffer并设置颜色为黑色
+    bufferSettings.setEnabled(true);
+    bufferSettings.setColor(QColor("black"));
+    textFormat.setBuffer(bufferSettings);
+    //开启mask并设置size
+    maskSettings.setEnabled(true);
+    maskSettings.setSize(1.0);
+    textFormat.setMask(maskSettings);
+    //开启shadow
+    shadowSettings.setEnabled(true);
+    shadowSettings.setColor(QColor("red"));
+    textFormat.setShadow(shadowSettings);
+    settings.setFormat(textFormat);
+    //设置callout
+    auto callout = new QgsBalloonCallout();
+    settings.setCallout(callout);
+    //设置位置
+    QgsLabelPlacementSettings placementSettings;
+    placementSettings.setAllowDegradedPlacement(true);
+    settings.setPlacementSettings(placementSettings);
+
+    QgsVectorLayerSimpleLabeling* simpleLabeling = new QgsVectorLayerSimpleLabeling(settings);
+    layer->setLabelsEnabled(true);
+    layer->setLabeling(simpleLabeling);
+}
+
+void MainWindow::annotationTextSlot()
+{
+    //添加注释图层
+    QgsAnnotationLayer *annotationLayer = addTestAnnotationLayer();
+    //点即Text注释位置
+    QgsPoint p1(20.33989,-33.86805);
+    //构造并添加
+    auto pointText = new QgsAnnotationPointTextItem(QStringLiteral("Test"),p1);
+    annotationLayer->addItem(pointText);
+}
+
+bool MainWindow::minMaxValuesForBand(int band, QgsRasterDataProvider *provider, double &minValue, double &maxValue) const
+{
+    if ( !provider )
+    {
+        return false;
+    }
+
+    minValue = 0;
+    maxValue = 0;
+
+    //qgis的配置文件
+    //LLD_TODO 二次开发是否有配置文件呢?
+    const QgsSettings s;
+    if ( s.value( QStringLiteral( "/Raster/useStandardDeviation" ), false ).toBool() )
+    {
+        const QgsRasterBandStats stats = provider->bandStatistics( band, QgsRasterBandStats::Mean | QgsRasterBandStats::StdDev );
+
+        const double stdDevFactor = s.value( QStringLiteral( "/Raster/defaultStandardDeviation" ), 2.0 ).toDouble();
+        const double diff = stdDevFactor * stats.stdDev;
+        minValue = stats.mean - diff;
+        maxValue = stats.mean + diff;
+    }
+    else
+    {
+        const QgsRasterBandStats stats = provider->bandStatistics( band, QgsRasterBandStats::Min | QgsRasterBandStats::Max );
+        minValue = stats.minimumValue;
+        maxValue = stats.maximumValue;
+    }
+    return true;
+}
+
+void MainWindow::annotationPointSlot()
+{
+    //添加注释图层
+    QgsAnnotationLayer *annotationLayer = addTestAnnotationLayer();
+    //点即Text注释位置
+    QgsPoint p2(20.47760,-33.86676);
+    //构造并添加
+    auto markerItem = new QgsAnnotationMarkerItem(p2);
+    annotationLayer->addItem(markerItem);
+}
+
+void MainWindow::annotationLineSlot()
+{
+    //添加注释图层
+    QgsAnnotationLayer *annotationLayer = addTestAnnotationLayer();
+    //定义两个端点
+    QgsPoint p1(20.33989,-33.86805);
+    QgsPoint p2(20.47760,-33.86676);
+    QVector<QgsPoint> points;
+    points << p1 << p2;
+    auto lineString = new QgsLineString(points);
+    //构造并添加
+    auto lineItem = new QgsAnnotationLineItem(lineString);
+    annotationLayer->addItem(lineItem);
+}
+
+void MainWindow::annotationPolygonSlot()
+{
+    //添加注释图层
+    QgsAnnotationLayer *annotationLayer = addTestAnnotationLayer();
+    //定义3个点
+    QgsPoint p1(20.33989,-33.86805);
+    QgsPoint p2(20.47760,-33.86676);
+    QgsPoint p3(20.39973,-33.80499);
+    //3个点组成两条线
+    QgsLineString *line1 = new QgsLineString(p1,p2);
+    QgsLineString *line2 = new QgsLineString(p2,p3);
+    //两条线添加到QgsCompoundCurve
+    auto compoundCurve = new QgsCompoundCurve();
+    compoundCurve->addCurve(line1);
+    compoundCurve->addCurve(line2);
+    compoundCurve->close();
+    //创建多边形
+    auto curvePolygon = new QgsCurvePolygon();
+    curvePolygon->setExteriorRing(compoundCurve);
+    //添加多边形item
+    auto annotationPolygonItem = new QgsAnnotationPolygonItem(curvePolygon);
+    annotationLayer->addItem(annotationPolygonItem);
 }

@@ -70,5 +70,11 @@
         <file>res/images/polygonShapeburstSlot.png</file>
         <file>res/images/polygonSimplefillSlot.png</file>
         <file>res/images/polygonSvgSlot.png</file>
+        <file>res/images/rasterContoursSlot.png</file>
+        <file>res/images/rasterHillshadeSlot.png</file>
+        <file>res/images/rasterMultibandSlot.png</file>
+        <file>res/images/rasterPalettedSlot.png</file>
+        <file>res/images/rasterSinglebandGraySlot.png</file>
+        <file>res/images/rasterSinglebandPseudoSlot.png</file>
     </qresource>
 </RCC>

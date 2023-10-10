@@ -38,6 +38,7 @@ public:
     void init_groupBox_vector_point_symbol();
     void init_groupBox_vector_line_symbol();
     void init_groupBox_vector_polygon_symbol();
+    void init_groupBox_raster_symbol();
 
 public slots:
     void actionToPanelsSlot();
@@ -116,7 +117,22 @@ public slots:
     void polygonOutlineRasterSlot();
     void polygonInvertedRendererSlot();
     void polygon25DSlot();
+    //
+    void rasterMultibandSlot();
+    void rasterPalettedSlot();
+    void rasterSinglebandGraySlot();
+    void rasterSinglebandPseudoSlot();
+    void rasterHillshadeSlot();
+    void rasterContoursSlot();
+    //
+    void labelSlot();
+    void annotationTextSlot();
+    void annotationPointSlot();
+    void annotationLineSlot();
+    void annotationPolygonSlot();
 private:
+    QgsAnnotationLayer* addTestAnnotationLayer();
+    bool minMaxValuesForBand( int band, QgsRasterDataProvider *provider, double &minValue, double &maxValue ) const;
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
     template <typename T>
     void zoomToFirstLayer()
