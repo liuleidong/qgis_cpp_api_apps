@@ -155,6 +155,8 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_raster_symbol();
     init_groupBox_annotations();
     init_groupBox_diagram();
+
+    init_groupBox_processing();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -356,6 +358,15 @@ void MainWindow::init_groupBox_diagram()
     addPanelItem(layout,"diagramTextSlot",QString::fromLocal8Bit("图表-文字图表"),":/res/images/diagramTextSlot.png",row,++column);
     addPanelItem(layout,"diagramHistogramSlot",QString::fromLocal8Bit("图表-直方图"),":/res/images/diagramHistogramSlot.png",row,++column);
     addPanelItem(layout,"diagramStackedBarSlot",QString::fromLocal8Bit("图表-分段条形图"),":/res/images/diagramStackedBarSlot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_processing()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_processing->layout();
+    addPanelItem(layout,"processingClipSlot",QString::fromLocal8Bit("算法-裁剪"),":/res/images/diagramPieSlot.png",row,++column);
+    addPanelItem(layout,"processingRandomPointsSlot",QString::fromLocal8Bit("算法-随机点生成"),":/res/images/diagramTextSlot.png",row,++column);
+    addPanelItem(layout,"processingBufferSlot",QString::fromLocal8Bit("算法-缓冲区"),":/res/images/diagramHistogramSlot.png",row,++column);
 }
 
 
@@ -2591,4 +2602,123 @@ void MainWindow::diagramStackedBarSlot()
 
     layer->setDiagramLayerSettings(dls);
     layer->setDiagramRenderer( dr );
+}
+
+
+void MainWindow::processingClipSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/dongbei_roads.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    const QString id = "native:clip";
+    QVariantMap conf;
+    //    conf.insert(QStringLiteral("INPUT"),"maps/processing/dongbei_roads.shp");//直接用路径
+    conf.insert(QStringLiteral("INPUT"),layer->id());//或者使用layer id
+    conf.insert(QStringLiteral("OVERLAY"),"maps/processing/jilin_dist.shp");
+    QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+    conf.insert(QStringLiteral("OUTPUT"),value);
+    auto algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+    QgsProcessingContext *context = new QgsProcessingContext;
+    context->setProject(QgsProject::instance());
+    QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+#if 0
+    //这里采用的是运行在主线程的方法
+    algorithm->prepare(conf,*context,feedback);
+    QVariantMap runResults = algorithm->run(conf,*context,feedback);
+    QgsMapLayer *tempLayer = context->getMapLayer(runResults["OUTPUT"].toString());
+    if(layer)
+    {
+        QgsProject::instance()->addMapLayer(tempLayer);
+    }
+#else
+    //在线程中运行
+    mContext = context;
+    QgsProcessingAlgRunnerTask *algTask = new QgsProcessingAlgRunnerTask(algorithm,conf,*mContext,feedback);
+    connect(algTask,&QgsProcessingAlgRunnerTask::executed,this,&MainWindow::algExecuted);
+    QgsApplication::taskManager()->addTask(algTask);
+#endif
+}
+
+void MainWindow::algExecuted(bool successful, const QVariantMap &results)
+{
+    QgsMapLayer *layer = mContext->getMapLayer(results["OUTPUT"].toString());
+    if(layer)
+    {
+        QgsProject::instance()->addMapLayer(layer);
+    }
+}
+
+void MainWindow::processingRandomPointsSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/jilin_dist.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    const QString id = "native:randompointsinpolygons";
+    QVariantMap conf;
+    conf.insert(QStringLiteral("INPUT"),layer->id());//使用layer id或者使用物理路径均可
+    conf.insert(QStringLiteral("POINTS_NUMBER"),"10");//
+    QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+    conf.insert(QStringLiteral("OUTPUT"),value);
+    QgsProcessingAlgorithm *algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+    QgsProcessingContext *context = new QgsProcessingContext;
+    context->setProject(QgsProject::instance());
+    QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+#if 0
+    //这里采用的是运行在主线程的方法
+    algorithm->prepare(conf,*context,feedback);
+    QVariantMap runResults = algorithm->run(conf,*context,feedback);
+    QgsMapLayer *tempLayer = context->getMapLayer(runResults["OUTPUT"].toString());
+    if(layer)
+    {
+        QgsProject::instance()->addMapLayer(tempLayer);
+    }
+#else
+    //在线程中运行
+    mContext = context;
+    QgsProcessingAlgRunnerTask *algTask = new QgsProcessingAlgRunnerTask(algorithm,conf,*mContext,feedback);
+    connect(algTask,&QgsProcessingAlgRunnerTask::executed,this,&MainWindow::algExecuted);
+    QgsApplication::taskManager()->addTask(algTask);
+#endif
+}
+
+void MainWindow::processingBufferSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    const QString id = "native:buffer";
+    QVariantMap conf;
+    conf.insert(QStringLiteral("INPUT"),layer->id());//使用layer id或者使用物理路径均可
+    conf.insert(QStringLiteral("DISTANCE"),"100");
+    QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+    conf.insert(QStringLiteral("OUTPUT"),value);
+    auto algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+    QgsProcessingContext *context = new QgsProcessingContext;
+    context->setProject(QgsProject::instance());
+    QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+#if 0
+    //这里采用的是运行在主线程的方法
+    algorithm->prepare(conf,*context,feedback);
+    QVariantMap runResults = algorithm->run(conf,*context,feedback);
+    QgsMapLayer *tempLayer = context->getMapLayer(runResults["OUTPUT"].toString());
+    if(layer)
+    {
+        QgsProject::instance()->addMapLayer(tempLayer);
+    }
+#else
+    //在线程中运行
+    mContext = context;
+    QgsProcessingAlgRunnerTask *algTask = new QgsProcessingAlgRunnerTask(algorithm,conf,*mContext,feedback);
+    connect(algTask,&QgsProcessingAlgRunnerTask::executed,this,&MainWindow::algExecuted);
+    QgsApplication::taskManager()->addTask(algTask);
+#endif
 }

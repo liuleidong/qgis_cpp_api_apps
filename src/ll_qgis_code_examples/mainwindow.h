@@ -15,6 +15,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class QGridLayout;
+class QgsProcessingContext;
 class QgsMapToolZoom;
 class QgsRubberBand;
 class QgsVertexMarker;
@@ -42,6 +43,7 @@ public:
     void init_groupBox_annotations();
     void init_groupBox_diagram();
 
+    void init_groupBox_processing();
 public slots:
     void actionToPanelsSlot();
     void actionToCanvasSlot();
@@ -137,6 +139,13 @@ public slots:
     void diagramTextSlot();
     void diagramHistogramSlot();
     void diagramStackedBarSlot();
+    //
+
+    //
+    void processingClipSlot();
+    void processingRandomPointsSlot();
+    void processingBufferSlot();
+    void algExecuted( bool successful, const QVariantMap &results );
 private:
     QgsAnnotationLayer* addTestAnnotationLayer();
     bool minMaxValuesForBand( int band, QgsRasterDataProvider *provider, double &minValue, double &maxValue ) const;
@@ -164,5 +173,6 @@ private:
     QgsMapToolZoom *mMapToolZoomOut = nullptr;
     QgsMapToolZoom *mMapToolZoomIn = nullptr;
 
+    QgsProcessingContext *mContext = nullptr;
 };
 #endif // MAINWINDOW_H
