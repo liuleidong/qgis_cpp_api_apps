@@ -703,13 +703,23 @@ void MainWindow::addWmsSlot()
 
 void MainWindow::addGdalOfflineSlot()
 {
-#ifdef Q_OS_WINDOWS
-    QString filename = QStringLiteral("maps/gaode20230630/tms_win.xml");
-#else
-    QString filename = QStringLiteral("maps/gaode20230630/tms.xml");
-#endif
-    QFileInfo ff(filename);
-    QgsRasterLayer* layer = new QgsRasterLayer(filename,"gaodeoffline","gdal");
+    QString mapPath = QCoreApplication::applicationDirPath()+QStringLiteral("maps/gaode20230630");
+    QString serverUrl = mapPath+QStringLiteral("//${z}/${y}/${x}.png");
+    QString tmsStr = QString("<GDAL_WMS>"
+                     "<Service name=TMS><ServerUrl>%1</ServerUrl></Service>"
+                     "<DataWindow>"
+                     "<UpperLeftX>-180</UpperLeftX><UpperLeftY>90</UpperLeftY><LowerRightX>180</LowerRightX><LowerRightY>-90</LowerRightY>"
+                     "<TileLevel>2</TileLevel><YOrigin>top</YOrigin>"
+                     "</DataWindow>"
+                     "<Projection>EPSG:4326</Projection><BlockSizeX>256</BlockSizeX><BlockSizeY>256</BlockSizeY><BandsCount>3</BandsCount><Cache />"
+                             "</GDAL_WMS>").arg(serverUrl);
+    QFile file(mapPath+QStringLiteral("/tms.xml"));
+    if(file.open(QIODevice::ReadWrite))
+    {
+        file.write(tmsStr.toStdString().c_str());
+        file.close();
+    }
+    QgsRasterLayer* layer = new QgsRasterLayer(mapPath+QStringLiteral("/tms.xml"),"gaodeoffline","gdal");
     QgsProject::instance()->addMapLayer(layer);
     zoomToFirstLayer<QgsRasterLayer*>();
 }
