@@ -2,14 +2,15 @@
 
 | 名称 | 描述 |
 |--|--|
-| ll_qgis_code_examples | 包含大量示例代码：图层添加、矢量栅格数据符号化、MapCanvas使用、Gis算法调用 |
-| ll_qgis_realtime_uavs | QGis库二次开发应用，模拟收到经纬度后实时显示在高德地图上，可设置图标等参数 |
+| ll_qgis_code_examples | 包含大量示例代码：图层添加、地图符号化、MapCanvas使用、Gis算法调用等等 |
+| ll_qgis_realtime_uavs | 模拟收到经纬度后实时显示在高德地图上，可设置图标等参数 |
 | ll_qgis_hello | 最简单的qgis应用，调用QGis库，获取QGis的发行名称 |
 | 更多应用陆续添加中...... | |
 
 # 项目特性
 - 基于QGis3.28 Qt5.15.3
 - 从实际项目中抽取的QGis使用场景
+- 教程中有同一功能QGis软件操作和代码实现对比
 - Apache 协议开源
 
 # 项目文档
@@ -18,7 +19,7 @@
 # 付费社群
 - 这里放上知识星球的图片
 
-# qgis_cpp_api_apps
+# 源码说明
 ## ll_qgis_code_examples
 ### 截图
 
@@ -58,17 +59,55 @@
       - [x] 点聚合（Point cluster）
       - [x] 热力图（Heatmap）
     - [x] 矢量线符号化
+      - [x] 简单线（Simple line）
+      - [x] 栅格线（Raster Line）
+      - [x] 箭头（Arrow）
+      - [x] 几何生成器（Geometry generator）
+      - [x] 短划线（Hashed Line）
+      - [x] 插值线（Interpolated Line）
+      - [x] 爆炸线（Lineburst）
+      - [x] 标记线（Marker line）
     - [x] 矢量面符号化
-1. 矢量线符号化包括单一符号(Simple Line,Arrow,Interpolated Line,Hashed Line,Marker Line,Raster Line,Linebrust)
-2. 矢量面符号化包括单一符号(Simple fill,Centroid fill,Gradient fill,Line pattern fill,Point pattern fill,Raster image fill,Svg fill,Random Marker fill,Shapebrust fill,Outline:Simple line,Outline:Arrow,Outline:Hashed line,Outline:Interpolated,Outline:Linebrust,Outline:Marker line,Outline:Raster line)，反转面要素(Inverted polygons)，2.5D渲染
-3. 栅格符号化包括多波段彩色(Multiband color)，唯一值着色(Patelled/Unique)，单波段灰度(Singleband gray)，多波段伪彩色(Signleband pseudocolor)，山体阴影(Hillshade)，轮廓(Contours)
-4. 地图标注(Label)，注释图层(Annoation Layer)，文字类型注释，点类型注释，线类型注释，多边形类型注释
-5. 地图图表包括饼图(Pie Diagram)、文本图(Text Diagram)、直方图(Histogram)以及分段条形图(StackedBar Diagram)
-6. 矢量图层包含的数据显示，数据选择，数据查询，空间索引，距离面积计算以及将图层写入文件
-7.  地图Canvas的使用包括背景色，中心点，角度的修改，地图工具(Map Pan，Map Zoom)的使用，RubberBand画线画多边形，VertexMarker的使用
-8.  图层树的使用，在图层叶子节点右键菜单的实现
-9.  内置算法的使用(随机生成点、按照参照面裁剪、Buffer)
-### 运行截图
+      - [x] 单一符号（Single symbol）
+        - [x] 仅渲染中心点（Centroid fill）
+    	- [x] 几何生成器（Geometry generator）
+    	- [x] 渐变填充（Gradient fill）
+    	- [x] 使用线符号填充（Line pattern fill）
+    	- [x] 使用点符号填充（Point pattern fill）
+    	- [x] 随机标记填充（Random Marker Fill）
+    	- [x] 栅格数据填充（Raster image fill）
+    	- [x] SVG填充（SVG fill）
+    	- [x] 形状炸裂填充（Shapeburst fill）
+    	- [x] 简单填充（Simple fill）
+    	- [x] 箭头渲染边界（Outline: Arrow）
+    	- [x] 短划线渲染边界（Outline: Hashed Line）
+    	- [x] 插值线渲染边界（Outline: Interpolated Line）
+    	- [x] 爆炸线渲染边界（Outline: Lineburst）
+    	- [x] 标记符号渲染边界（Outline: Marker line）
+    	- [x] 栅格线渲染边界（Outline: Raster Line）
+    	- [x] 简单线渲染边界（Outline: Simple line）
+      - [x] 反转面要素（Inverted polygons）
+      - [x] 2.5 D
+    - [x] 栅格数据符号化
+    	- [x] Multiband color：多波段彩色
+    	- [x] Paletted/Unique values：唯一值着色
+    	- [x] Singleband gray：单波段灰度
+    	- [x] Singleband pseudocolor：单波段伪彩色
+    	- [x] Hillshade：山体阴影
+    	- [x] Contours：轮廓
+- [x] 地图标注，地图注释
+- [x] 地图图标
+  - [x] 饼图(Pie Diagram)
+  - [x] 文本图(Text Diagram)
+  - [x] 直方图(Histogram)
+  - [x] 分段条形图(StackedBar Diagram)
+- [x] 矢量数据操作:数据显示，数据选择，数据查询，空间索引，距离面积计算以及将图层写入文件
+- [x] 地图Canvas的使用:背景色，中心点，角度的修改，地图工具(Map Pan，Map Zoom)的使用，RubberBand画线画多边形，VertexMarker的使用
+- [x] 图层树的使用，在图层叶子节点右键菜单的实现
+- [x] 内置算法的使用
+  - [x] 随机生成点
+  - [x] 按照参照面裁剪
+  - [x] Buffer缓冲区
 
 ## ll_qgis_realtime_uavs
 演示从无人机获取数据，在地图上显示实时轨迹
