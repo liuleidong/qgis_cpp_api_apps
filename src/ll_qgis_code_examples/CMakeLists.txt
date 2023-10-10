@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+﻿cmake_minimum_required(VERSION 3.5)
 
 project(ll_qgis_code_examples VERSION 0.1 LANGUAGES CXX)
 
@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
         panelimagebutton.h panelimagebutton.cpp
+        vectordatadockwidget.h vectordatadockwidget.cpp vectordatadockwidget.ui
         res.qrc
 )
 

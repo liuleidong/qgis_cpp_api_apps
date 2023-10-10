@@ -6,6 +6,7 @@
 #include <QStatusBar>
 
 #include "ll_qgis_base_lib.h"
+#include "vectordatadockwidget.h"
 #include "qgsproject.h"
 #include "qgslayertreeview.h"
 #include "qgslayertreeviewdefaultactions.h"
@@ -32,6 +33,7 @@ public:
     void initToolbar();
     void initStackwidgetPageCanvas();
     void initPanels();
+    void initVectorDataDockWidget();
     void initMapTools();
     void initGroupboxInPanel();
     void init_groupBox_maps();
@@ -42,7 +44,7 @@ public:
     void init_groupBox_raster_symbol();
     void init_groupBox_annotations();
     void init_groupBox_diagram();
-
+    void init_groupBox_features();
     void init_groupBox_processing();
 public slots:
     void actionToPanelsSlot();
@@ -140,7 +142,12 @@ public slots:
     void diagramHistogramSlot();
     void diagramStackedBarSlot();
     //
-
+    void getFieldsSlot();
+    void getFeaturesSlot(QPlainTextEdit *plainTextEdit);
+    void selectFeaturesSlot(QPlainTextEdit *plainTextEdit);
+    void spatialIndexSlot(QPlainTextEdit *plainTextEdit);
+    void distanceAreaSlot(QPlainTextEdit *plainTextEdit);
+    void vectorFileWriterSlot(QPlainTextEdit *plainTextEdit);
     //
     void processingClipSlot();
     void processingRandomPointsSlot();
@@ -163,6 +170,7 @@ private:
 private:
     ll_qgis_base_lib *mApp = nullptr;
     Ui::MainWindow *ui;
+    VectorDataDockWidget *mVectorDataDockWidget = nullptr;
 
     QgsRubberBand *mRubberBandPoint = nullptr;
     QgsRubberBand *mRubberBandLine = nullptr;

@@ -138,6 +138,13 @@ void MainWindow::initPanels()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+void MainWindow::initVectorDataDockWidget()
+{
+    mVectorDataDockWidget = new VectorDataDockWidget(this);
+    mVectorDataDockWidget->hide();
+    this->addDockWidget(Qt::LeftDockWidgetArea,mVectorDataDockWidget);
+}
+
 void MainWindow::initMapTools()
 {
     mMapToolPan = new QgsMapToolPan(mApp->mapCanvas());
@@ -155,7 +162,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_raster_symbol();
     init_groupBox_annotations();
     init_groupBox_diagram();
-
+    init_groupBox_features();
     init_groupBox_processing();
 }
 
@@ -360,6 +367,20 @@ void MainWindow::init_groupBox_diagram()
     addPanelItem(layout,"diagramStackedBarSlot",QString::fromLocal8Bit("图表-分段条形图"),":/res/images/diagramStackedBarSlot.png",row,++column);
 }
 
+void MainWindow::init_groupBox_features()
+{
+    int row = 0,column = -1;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_features->layout();
+    addPanelItem(layout,"getFieldsSlot",QString::fromLocal8Bit("数据-获取字段"),":/res/images/rasterMultibandSlot.png",row,++column);
+    addPanelItem(layout,"getFeaturesSlot",QString::fromLocal8Bit("数据-查询数据"),":/res/images/rasterPalettedSlot.png",row,++column);
+    addPanelItem(layout,"selectFeaturesSlot",QString::fromLocal8Bit("数据-选择数据"),":/res/images/rasterSinglebandGraySlot.png",row,++column);
+    addPanelItem(layout,"spatialIndexSlot",QString::fromLocal8Bit("数据-空间索引"),":/res/images/rasterSinglebandPseudoSlot.png",row,++column);
+    addPanelItem(layout,"distanceAreaSlot",QString::fromLocal8Bit("数据-距离面积计算"),":/res/images/rasterHillshadeSlot.png",row,++column);
+    ++row;column = -1;
+    addPanelItem(layout,"vectorFileWriterSlot",QString::fromLocal8Bit("数据-写入文件"),":/res/images/rasterContoursSlot.png",row,++column);
+
+}
+
 void MainWindow::init_groupBox_processing()
 {
     int row = 0,column = -1;
@@ -381,6 +402,7 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
     if(index == 0)
     {
         mApp->layerTreeDock()->hide();
+        mVectorDataDockWidget->hide();
         mApp->mapCanvas()->setMapTool(mMapToolPan);
         mApp->mapCanvas()->setCanvasColor(QColor("white"));
         mApp->mapCanvas()->setRotation(0);
@@ -409,7 +431,7 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
     }
     else
     {
-        mApp->layerTreeDock()->show();
+        mApp->layerTreeDock()->show();        
     }
 }
 
@@ -2604,6 +2626,198 @@ void MainWindow::diagramStackedBarSlot()
     layer->setDiagramRenderer( dr );
 }
 
+void MainWindow::getFieldsSlot()
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+    mVectorDataDockWidget->show();
+    mVectorDataDockWidget->plainTextEdit()->clear();
+    for(auto field : layer->fields())
+    {
+        mVectorDataDockWidget->plainTextEdit()->appendPlainText(QString("%1:%2").arg(field.name()).arg(field.typeName()));
+    }
+}
+
+void MainWindow::getFeaturesSlot(QPlainTextEdit *plainTextEdit)
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    mVectorDataDockWidget->show();
+    plainTextEdit->clear();
+#if 0
+    QgsFeatureIterator it = layer->getFeatures();
+    QgsFeature f;
+    while(it.nextFeature(f))
+    {
+        QString str;
+        str.append(QString("%1").arg(f.id()));
+        str.append(" ");
+        QgsAttributes attrs = f.attributes();
+        for(int i = 0;i < attrs.size();++i)
+        {
+            str.append(attrs[i].toString());
+            str.append(" ");
+        }
+        plainTextEdit->appendPlainText(str);
+    }
+#else
+    //带feature的expression
+    QString str = QString("\"RAINFALL\" > 200.0");
+    auto request = QgsFeatureRequest().setFilterExpression(str);
+    QgsFeatureIterator it = layer->getFeatures(request);
+    QgsFeature f;
+    while(it.nextFeature(f))
+    {
+        QString str;
+        str.append(QString("%1").arg(f.id()));
+        str.append(" ");
+        QgsAttributes attrs = f.attributes();
+        for(int i = 0;i < attrs.size();++i)
+        {
+            str.append(attrs[i].toString());
+            str.append(" ");
+        }
+        plainTextEdit->appendPlainText(str);
+    }
+#endif
+}
+
+void MainWindow::selectFeaturesSlot(QPlainTextEdit *plainTextEdit)
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    mVectorDataDockWidget->show();
+    plainTextEdit->clear();
+    QString expression = QString("\"RAINFALL\" > 200.0");
+    //选择所有
+    //    layer->selectAll();
+    //按照id选择
+    //    QgsFeatureId id = 0;
+    //    layer->select(id);
+    //按照多个id选择
+    //    QgsFeatureIds ids;
+    //    ids << 0 << 1 << 2 << 3;
+    //    layer->select(ids);
+    //按照表达式选择
+    //    layer->selectByExpression(expression);
+    //按照区域选择,并且使用rubberband显示区域
+    QgsRectangle rect(1006585,6222254,1010253,6219118);
+    layer->selectByRect(rect);
+    QgsPointXY point1(1006585,6222254);
+    QgsPointXY point2(1010253,6222254);
+    QgsPointXY point3(1006585,6219118);
+    QgsPointXY point4(1010253,6219118);
+    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
+    rubberBand->addPoint(point1);
+    rubberBand->addPoint(point2);
+    rubberBand->addPoint(point4);
+    rubberBand->addPoint(point3);
+    rubberBand->show();
+    //选择feature并且闪烁
+    //    QgsMapCanvasUtils::flashMatchingFeatures(mApp->mapCanvas(),layer,expression);
+    //选择Feature并zoom
+    //    QgsMapCanvasUtils::zoomToMatchingFeatures(mApp->mapCanvas(),layer,expression);
+}
+
+void MainWindow::spatialIndexSlot(QPlainTextEdit *plainTextEdit)
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    QgsSpatialIndex *spatialIndex = new QgsSpatialIndex(layer->getFeatures());
+    QgsPointXY pt(1010253,6222254);
+    QList<QgsFeatureId> ids = spatialIndex->nearestNeighbor(pt,3);
+    for(int i = 0;i < ids.size();++i)
+    {
+        layer->select(ids[i]);
+    }
+}
+
+void MainWindow::distanceAreaSlot(QPlainTextEdit *plainTextEdit)
+{
+    //添加测试图层
+    QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    zoomToFirstLayer<QgsVectorLayer*>();
+
+    mVectorDataDockWidget->show();
+    auto feature = layer->getFeature(0);
+
+    QgsGeometry geom = feature.geometry();
+    QString name = feature.attribute("name").toString();
+    double area = geom.area();
+    double length = geom.length();
+    plainTextEdit->appendPlainText(QString("%1:length is %2,area is %3").arg(name).arg(length).arg(area));
+
+    auto d = QgsDistanceArea();
+    d.setEllipsoid("WGS84");
+    double a = d.measureArea(geom);
+    double l = d.measurePerimeter(geom);
+    plainTextEdit->appendPlainText(QString("%1:length is %2,area is %3").arg(name).arg(l).arg(a));
+}
+
+void MainWindow::vectorFileWriterSlot(QPlainTextEdit *plainTextEdit)
+{
+    //virtual layer的用法
+    //QgsVirtualLayerDefinition
+    QgsVirtualLayerDefinition def;
+    //add embedded layers
+    def.addSource("prec","maps/virtuallayer/2017.xlsx|layername=Sheet1","ogr");
+    def.addSource("jilin_dist","maps/virtuallayer/jilin_dist.shp","ogr");
+    //查询语句
+    def.setQuery("SELECT * FROM jilin_dist left outer join prec on jilin_dist.NAME = prec.city;");
+    //地理信息 无/auto detect/manual
+    //def.setGeometryWkbType( QgsWkbTypes::NoGeometry );
+    /*
+     *     const QgsWkbTypes::Type t = mGeometryType->currentIndex() > -1 ? static_cast<QgsWkbTypes::Type>( mGeometryType->currentData().toLongLong() ) : QgsWkbTypes::NoGeometry;
+            def.setGeometryWkbType( t );
+            def.setGeometryField( mGeometryField->text() );
+            def.setGeometrySrid( mSrid );
+    */
+    if ( ! def.toString().isEmpty() )
+    {
+        const QgsVectorLayer::LayerOptions options { QgsProject::instance()->transformContext() };
+        QgsVectorLayer *layer = new QgsVectorLayer( def.toString(), QStringLiteral( "virtual_layer" ), QStringLiteral( "virtual" ), options );
+        QgsProject::instance()->addMapLayer(layer);
+
+        QgsVectorFileWriter::SaveVectorOptions opt;
+        QgsVectorFileWriter::writeAsVectorFormatV3(layer,"maps/virtuallayer/myvurtual.shp",QgsProject::instance()->transformContext(),opt);
+
+        //从虚拟图层中读出数据
+        mVectorDataDockWidget->show();
+        plainTextEdit->clear();
+        QgsFeatureIterator it = layer->getFeatures();
+        QgsFeature f;
+        while(it.nextFeature(f))
+        {
+            QString str;
+            str.append(QString("%1").arg(f.id()));
+            str.append(" ");
+            QgsAttributes attrs = f.attributes();
+            for(int i = 0;i < attrs.size();++i)
+            {
+                str.append(attrs[i].toString());
+                str.append(" ");
+            }
+            plainTextEdit->appendPlainText(str);
+        }
+    }
+}
 
 void MainWindow::processingClipSlot()
 {
