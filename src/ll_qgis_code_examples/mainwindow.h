@@ -87,7 +87,14 @@ public slots:
     void pointDisplacementSlot();
     void pointClusterSlot();
     void pointHeatmapSlot();
-
+    //
+    void lineSimplelineSlot();
+    void lineArrowSlot();
+    void lineInterpolatedSlot();
+    void lineHashedSlot();
+    void lineMarkerSlot();
+    void lineRasterSlot();
+    void lineBurstSlot();
 private:
     void addPanelItem(QGridLayout *layout,const QString &objectName,const QString &title,const QString &url,int row,int column);
     template <typename T>

@@ -247,6 +247,28 @@ void MainWindow::init_groupBox_vector_point_symbol()
     addPanelItem(layout,"pointGeometryGeneratorMarkerSlot",QString::fromLocal8Bit("点符号-几何生成器"),":/res/images/pointGeometryGeneratorMarkerSlot.png",row,++column);
     addPanelItem(layout,"pointVectorFieldMarkerSlot",QString::fromLocal8Bit("点符号-矢量字段标记"),":/res/images/pointVectorFieldMarkerSlot.png",row,++column);
     addPanelItem(layout,"pointMaskSlot",QString::fromLocal8Bit("点符号-掩膜"),":/res/images/pointMaskSlot.png",row,++column);
+    labelrow = ++row;
+    QLabel *label_categorizedSymbolRenderer = new QLabel(QString::fromLocal8Bit("分类符号渲染"));
+    layout->addWidget(label_categorizedSymbolRenderer,labelrow,0);
+    ++row;column = -1;
+    addPanelItem(layout,"pointCategorizedSlot",QString::fromLocal8Bit("点符号-分类渲染"),":/res/images/pointCategorizedSlot.png",row,++column);
+    QLabel *label_graduatedSymbolRenderer = new QLabel(QString::fromLocal8Bit("分级符号渲染"));
+    layout->addWidget(label_graduatedSymbolRenderer,labelrow,1);
+    addPanelItem(layout,"pointGraduatedSlot",QString::fromLocal8Bit("点符号-分级渲染"),":/res/images/pointGraduatedSlot.png",row,++column);
+    QLabel *label_ruleBasedSymbolRenderer = new QLabel(QString::fromLocal8Bit("基于规则符号渲染"));
+    layout->addWidget(label_ruleBasedSymbolRenderer,labelrow,2);
+    addPanelItem(layout,"pointRuleBasedSlot",QString::fromLocal8Bit("点符号-基于规则渲染"),":/res/images/pointRuleBasedSlot.png",row,++column);
+    QLabel *label_displacementSymbolRenderer = new QLabel(QString::fromLocal8Bit("点分布"));
+    layout->addWidget(label_displacementSymbolRenderer,labelrow,3);
+    addPanelItem(layout,"pointDisplacementSlot",QString::fromLocal8Bit("点符号-点分布"),":/res/images/pointDisplacementSlot.png",row,++column);
+    QLabel *label_cluserSymbolRenderer = new QLabel(QString::fromLocal8Bit("点聚合"));
+    layout->addWidget(label_cluserSymbolRenderer,labelrow,4);
+    addPanelItem(layout,"pointClusterSlot",QString::fromLocal8Bit("点符号-点聚合"),":/res/images/pointClusterSlot.png",row,++column);
+    labelrow = ++row;
+    QLabel *label_heatmapSymbolRenderer = new QLabel(QString::fromLocal8Bit("热力图"));
+    layout->addWidget(label_heatmapSymbolRenderer,labelrow,0);
+    ++row;column = -1;
+    addPanelItem(layout,"pointHeatmapSlot",QString::fromLocal8Bit("点符号-热力图"),":/res/images/pointHeatmapSlot.png",row,++column);
 }
 
 
@@ -1276,3 +1298,199 @@ void MainWindow::pointHeatmapSlot()
     layer->setRenderer(heatmapRenderer);
 }
 
+void MainWindow::lineSimplelineSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+
+//构建QgsSimpleLineSymbolLayer
+#if 0
+    auto simpleLineSymbolLayer = new QgsSimpleLineSymbolLayer(QColor("black"));
+#else
+    QVariantMap mp;
+    mp["line_color"] = QStringLiteral("black");
+    auto simpleLineSymbolLayer = QgsSimpleLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << simpleLineSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineArrowSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto arrowSymbolLayer  = new QgsArrowSymbolLayer();
+#else
+    QVariantMap mp;
+    mp["head_type"] = QStringLiteral("0");
+    mp["arrow_type"] = QStringLiteral("0");
+    auto arrowSymbolLayer  = QgsArrowSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << arrowSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineInterpolatedSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto interpolatedSymbolLayer = new QgsInterpolatedLineSymbolLayer();
+#else
+    QVariantMap mp;
+    mp["single_color"] = QStringLiteral("black");
+    auto interpolatedSymbolLayer = QgsInterpolatedLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << interpolatedSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineHashedSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto hashedSymbolLayer = new QgsHashedLineSymbolLayer(true,3);
+#else
+    QVariantMap mp;
+    mp["rotate"] = QStringLiteral("1");
+    mp["interval"] = QStringLiteral("3");
+    auto hashedSymbolLayer = QgsHashedLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << hashedSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineMarkerSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 1
+    auto markerSymbolLayer = new QgsMarkerLineSymbolLayer(true,3);
+#else
+    QVariantMap mp;
+    mp["rotate"] = QStringLiteral("1");
+    mp["interval"] = QStringLiteral("3");
+    auto markerSymbolLayer = QgsMarkerLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << markerSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineRasterSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+    auto rasterSymbolLayer = new QgsRasterLineSymbolLayer(QStringLiteral("resources/cock.jpg"));
+    rasterSymbolLayer->setWidth(2.0);
+#else
+    QVariantMap mp;
+    mp["imageFile"] = QStringLiteral("resources/cock.jpg");
+    mp["line_width"] = QStringLiteral("2.0");
+    auto rasterSymbolLayer = QgsRasterLineSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << rasterSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}
+
+void MainWindow::lineBurstSlot()
+{
+    //添加一个线图层
+    QString filename = QStringLiteral("maps/shapefile/rivers.shp");
+    QFileInfo ff(filename);
+    QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+    //从图层获取渲染器
+    QgsFeatureRenderer * layerRenderer= layer->renderer();
+    QgsSingleSymbolRenderer *singleSymbolRenderer = QgsSingleSymbolRenderer::convertFromRenderer(layerRenderer);
+#if 0
+//    auto lineBurstSymbolLayer = new QgsLineburstSymbolLayer(QColor(35,35,35),Qt::white);
+//    lineBurstSymbolLayer->setGradientColorType(Qgis::GradientColorSource::SimpleTwoColor);
+//    lineBurstSymbolLayer->setWidth(2.0);
+    auto lineBurstSymbolLayer = new QgsLineburstSymbolLayer();
+    lineBurstSymbolLayer->setGradientColorType(Qgis::GradientColorSource::ColorRamp);
+    QgsGradientColorRamp *ramp = new QgsGradientColorRamp(QColor( 0, 255, 0 ), QColor( 0, 20, 0 ));
+    lineBurstSymbolLayer->setColorRamp(ramp);
+    lineBurstSymbolLayer->setWidth(2.0);
+
+#else
+    QVariantMap mp;
+    //    mp["color_type"] = QStringLiteral("0");
+    //    mp["color"] = QStringLiteral("35,35,35");
+    //    mp["gradient_color2"] = QStringLiteral("250,250,250");
+
+    mp["color_type"] = QStringLiteral("1");
+    mp["color1"] = QStringLiteral("0, 255, 0");
+    mp["color2"] = QStringLiteral("0, 20, 0");
+    mp["line_width"] = QStringLiteral("2.0");
+    auto lineBurstSymbolLayer = QgsLineburstSymbolLayer::create(mp);
+#endif
+    //多个Symbol Layer构成一个Symbol
+    QgsSymbolLayerList layerList;
+    layerList << lineBurstSymbolLayer;
+    //构造QgsLineSymbol并设置renderer
+    auto lineSymbol = new QgsLineSymbol(layerList);
+    singleSymbolRenderer->setSymbol(lineSymbol);
+    layer->setRenderer(singleSymbolRenderer);
+}

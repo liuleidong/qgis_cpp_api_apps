@@ -39,5 +39,11 @@
         <file>res/images/pointGeometryGeneratorMarkerSlot.png</file>
         <file>res/images/pointMaskSlot.png</file>
         <file>res/images/pointVectorFieldMarkerSlot.png</file>
+        <file>res/images/pointCategorizedSlot.png</file>
+        <file>res/images/pointGraduatedSlot.png</file>
+        <file>res/images/pointRuleBasedSlot.png</file>
+        <file>res/images/pointDisplacementSlot.png</file>
+        <file>res/images/pointClusterSlot.png</file>
+        <file>res/images/pointHeatmapSlot.png</file>
     </qresource>
 </RCC>
