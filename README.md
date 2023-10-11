@@ -10,7 +10,7 @@
 # 项目特性
 - 基于QGis3.28 Qt5.15.3
 - 从实际项目中抽取的QGis二次开发使用场景
-- 文档中有QGis软件操作和二次开发代码对比
+- 教程中有QGis软件操作和二次开发代码对比
 - Apache 协议开源
 
 # 项目文档
@@ -19,8 +19,12 @@
 - [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8661452&doc_id=4536843)
 
 # 付费社群
-- 这里放上知识星球的图片
-
+![输入图片说明](https://foruda.gitee.com/images/1697008758923342657/29897e59_1547275.png "屏幕截图")
+>![输入图片说明](https://foruda.gitee.com/images/1697009055812082913/081fb9a6_1547275.png "屏幕截图")
+>ll_qgis_code_examples程序的详细教程，每一个代码示例均有QGis软件操作说明以及对应的C++代码实现
+>如运行Buffer算法：
+![输入图片说明](https://foruda.gitee.com/images/1697009425419580674/1aabecfd_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1697009513115780675/61ed69c3_1547275.png "屏幕截图")
 # 源码说明
 ## ll_qgis_code_examples
 ### 截图
@@ -149,3 +153,9 @@
 - [x] 简单的hello qgis应用
 - [x] 获取qgis的发行名称并显示在界面上
 
+# 参考资料
+- [A gentle introduction in GIS](https://docs.qgis.org/3.28/en/docs/gentle_gis_introduction/)
+- [PyQGIS cookbook](https://docs.qgis.org/3.28/en/docs/pyqgis_developer_cookbook/)
+- [GIS Training manual](https://docs.qgis.org/3.28/en/docs/training_manual/)
+- [超图examples](https://iclient.supermap.io/examples/leaflet/examples.html#iPortal)
+- [QGIS软件及其应用教程](https://e.jd.com/30710101.html?ebook=1)
