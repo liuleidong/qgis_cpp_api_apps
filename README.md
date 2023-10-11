@@ -20,11 +20,11 @@
 
 # 付费社群
 ![输入图片说明](https://foruda.gitee.com/images/1697008758923342657/29897e59_1547275.png "屏幕截图")
->![输入图片说明](https://foruda.gitee.com/images/1697009055812082913/081fb9a6_1547275.png "屏幕截图")
->ll_qgis_code_examples程序的详细教程，每一个代码示例均有QGis软件操作说明以及对应的C++代码实现
->如运行Buffer算法：
+- 社群中有示例程序的详细教程如ll_qgis_code_examples，教程讲述了QGis软件如何操作以及对应的C++代码实现
+如运行Buffer算法：
 ![输入图片说明](https://foruda.gitee.com/images/1697009425419580674/1aabecfd_1547275.png "屏幕截图")
 ![输入图片说明](https://foruda.gitee.com/images/1697009513115780675/61ed69c3_1547275.png "屏幕截图")
+
 # 源码说明
 ## ll_qgis_code_examples
 ### 截图
