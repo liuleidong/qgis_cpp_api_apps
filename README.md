@@ -15,6 +15,8 @@
 
 # 项目文档
 - 详细文档见[wiki](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/Home)
+- [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8518226&doc_id=4536843)
+- [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8661452&doc_id=4536843)
 
 # 付费社群
 - 这里放上知识星球的图片
@@ -22,6 +24,18 @@
 # 源码说明
 ## ll_qgis_code_examples
 ### 截图
+- 添加离线高德影像
+![输入图片说明](https://foruda.gitee.com/images/1697005305558159268/a0e65779_1547275.gif "1.gif")
+- RubberBand画多边形
+![输入图片说明](https://foruda.gitee.com/images/1697005324434196244/cadd0c0e_1547275.gif "2.gif")
+- 符号化-点-动画标记
+![输入图片说明](https://foruda.gitee.com/images/1697005336901985866/7e59e5b8_1547275.gif "3.gif")
+- 符号化-面-2.5D
+![输入图片说明](https://foruda.gitee.com/images/1697005349623295156/f3f6ff15_1547275.gif "4.gif")
+- 地图图表
+![输入图片说明](https://foruda.gitee.com/images/1697005363624765326/5c3caf6b_1547275.gif "5.gif")
+- 数据处理-算法-裁剪-随机点生成-缓冲区
+![输入图片说明](https://foruda.gitee.com/images/1697005378968366819/b450afff_1547275.gif "6.gif")
 
 ### 演示QGis C++ API的使用，包括如下功能：
  - [x] 加载各种格式数据
@@ -116,7 +130,7 @@
 ## ll_qgis_realtime_uavs
 演示从无人机获取数据，在地图上显示实时轨迹
 ### 截图
-
+![输入图片说明](https://foruda.gitee.com/images/1696998704428412332/0f6c662d_1547275.gif "uav.gif")
 ### 功能说明
 - [x] 加载高德路网地图
 - [x] 模拟接收设备经纬度
@@ -125,8 +139,13 @@
 - [x] 显示设备实时轨迹
 - [x] 设置设备符号，可设置简单点符号或者svg符号
 - [x] 设置其他属性
+- [ ] 轨迹线颜色
+- [ ] 轨迹线宽度
 
 ## ll_qgis_hello
+### 截图
+![输入图片说明](https://foruda.gitee.com/images/1696998146067525015/c9785510_1547275.png "屏幕截图")
+### 功能说明
 - [x] 简单的hello qgis应用
 - [x] 获取qgis的发行名称并显示在界面上
 
