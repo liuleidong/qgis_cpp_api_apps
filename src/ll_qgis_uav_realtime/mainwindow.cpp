@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
 #include <QGridLayout>
@@ -47,12 +47,13 @@ void MainWindow::initialize()
 
 //    QString url1 = QStringLiteral("https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}");
 //    mApp->addWmsLayer(url1,"gaode satellite");
+    statusBar()->showMessage(QString::fromLocal8Bit("正在加载图层......"));
     QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
     mApp->addWmsLayer(url,"gaode roads");
 
     connect(mParamDockWidget,&ParamDockWidget::setParamsSignal,this,&MainWindow::setParamsSlot);
 
-    QTimer::singleShot(1000*5,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);startTimer();});
+    QTimer::singleShot(1000*1,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);startTimer();});
 }
 
 void MainWindow::setPointLayerSimpleMarker(QgsVectorLayer *layer, const SMarkerSymbolSimple &simpleMarker)
@@ -209,6 +210,7 @@ void MainWindow::addOrMoveLine(const SGeometryInfo &geometryInfo,int trajectoryL
 
 void MainWindow::startTimer()
 {
+    statusBar()->showMessage(QString::fromLocal8Bit("图层加载完成"));
     //创建以点为形式显示设备的图层
     mDevPointLayer = new QgsVectorLayer("MultiPoint?crs=epsg:4326"
                                         "&field=id:integer&field=type:integer&field=name:string(20)"
