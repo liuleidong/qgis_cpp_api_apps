@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QDebug>
@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     qDebug() << Qgis::releaseName();
-    ui->label->setText(Qgis::releaseName());
+    ui->label->setText("QGis ReleaseName is:"+Qgis::releaseName());
 }
 
 MainWindow::~MainWindow()
