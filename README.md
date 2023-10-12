@@ -18,8 +18,12 @@
 - [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8518226&doc_id=4536843)
 - [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8661452&doc_id=4536843)
 
-# 付费社群
+# 社群
+## 知识星球
 ![输入图片说明](https://foruda.gitee.com/images/1697008758923342657/29897e59_1547275.png "屏幕截图")
+## 公众号
+![输入图片说明](https://foruda.gitee.com/images/1697077286578350399/c111e1c7_1547275.jpeg "qrcode_for_gh_5fe62453ec05_258.jpg")
+
 - 社群中有示例程序的详细教程如ll_qgis_code_examples，教程讲述了QGis软件如何操作以及对应的C++代码实现
 如运行Buffer算法：
 ![输入图片说明](https://foruda.gitee.com/images/1697009425419580674/1aabecfd_1547275.png "屏幕截图")
