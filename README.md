@@ -17,6 +17,7 @@
 - 详细文档见[wiki](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/Home)
 - [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8518226&doc_id=4536843)
 - [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8661452&doc_id=4536843)
+- [QGis库架构](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E5%BA%93%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84)
 - [QGIS离线文档](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E7%A6%BB%E7%BA%BF%E6%96%87%E6%A1%A3)
 
 # 社群
