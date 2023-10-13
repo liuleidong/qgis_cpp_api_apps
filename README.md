@@ -20,7 +20,7 @@
 
 # 社群
 ## 知识星球
-![输入图片说明](https://foruda.gitee.com/images/1697008758923342657/29897e59_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1697160230025579811/496ec4a9_1547275.png "屏幕截图")
 ## 公众号
 ![输入图片说明](https://foruda.gitee.com/images/1697077286578350399/c111e1c7_1547275.jpeg "qrcode_for_gh_5fe62453ec05_258.jpg")
 
