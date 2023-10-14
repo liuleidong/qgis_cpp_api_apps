@@ -120,7 +120,7 @@
     	- [x] Hillshade：山体阴影
     	- [x] Contours：轮廓
 - [x] 地图标注，地图注释
-- [x] 地图图标
+- [x] 地图图表
   - [x] 饼图(Pie Diagram)
   - [x] 文本图(Text Diagram)
   - [x] 直方图(Histogram)
