@@ -372,13 +372,13 @@ void MainWindow::init_groupBox_features()
 {
     int row = 0,column = -1;
     QGridLayout *layout = (QGridLayout *)ui->groupBox_features->layout();
-    addPanelItem(layout,"getFieldsSlot",QString::fromLocal8Bit("数据-获取字段"),":/res/images/rasterMultibandSlot.png",row,++column);
-    addPanelItem(layout,"getFeaturesSlot",QString::fromLocal8Bit("数据-查询数据"),":/res/images/rasterPalettedSlot.png",row,++column);
-    addPanelItem(layout,"selectFeaturesSlot",QString::fromLocal8Bit("数据-选择数据"),":/res/images/rasterSinglebandGraySlot.png",row,++column);
-    addPanelItem(layout,"spatialIndexSlot",QString::fromLocal8Bit("数据-空间索引"),":/res/images/rasterSinglebandPseudoSlot.png",row,++column);
-    addPanelItem(layout,"distanceAreaSlot",QString::fromLocal8Bit("数据-距离面积计算"),":/res/images/rasterHillshadeSlot.png",row,++column);
+    addPanelItem(layout,"getFieldsSlot",QString::fromLocal8Bit("数据-获取字段"),":/res/images/getFieldsSlot.png",row,++column);
+    addPanelItem(layout,"getFeaturesSlot",QString::fromLocal8Bit("数据-查询数据"),":/res/images/getFeaturesSlot.png",row,++column);
+    addPanelItem(layout,"selectFeaturesSlot",QString::fromLocal8Bit("数据-选择数据"),":/res/images/selectFeaturesSlot.png",row,++column);
+    addPanelItem(layout,"spatialIndexSlot",QString::fromLocal8Bit("数据-空间索引"),":/res/images/spatialIndexSlot.png",row,++column);
+    addPanelItem(layout,"distanceAreaSlot",QString::fromLocal8Bit("数据-距离面积计算"),":/res/images/distanceAreaSlot.png",row,++column);
     ++row;column = -1;
-    addPanelItem(layout,"vectorFileWriterSlot",QString::fromLocal8Bit("数据-写入文件"),":/res/images/rasterContoursSlot.png",row,++column);
+    addPanelItem(layout,"vectorFileWriterSlot",QString::fromLocal8Bit("数据-写入文件"),":/res/images/vectorFileWriterSlot.png",row,++column);
 
 }
 
