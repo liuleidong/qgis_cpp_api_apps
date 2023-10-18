@@ -12,6 +12,8 @@
 
 int main(int argc, char *argv[])
 {
+    qputenv("QGIS_DEBUG",QString("2").toStdString().c_str());
+    qputenv("QGIS_LOG_FILE",QString("gislog.log").toStdString().c_str());
     QgsApplication a(argc, argv,true);
     QString strAppDir = QCoreApplication::applicationDirPath();
 

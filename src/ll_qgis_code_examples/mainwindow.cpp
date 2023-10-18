@@ -584,7 +584,7 @@ void MainWindow::addCsvSlot()
 {
     QString filename = QStringLiteral("maps/jilin_maincity.csv");
     QFileInfo ff(filename);
-    QString uri = QString("file:///%1/%2%3").arg(QCoreApplication::applicationDirPath()).arg(filename).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
+    QString uri = QString("file://%1/%2%3").arg(QCoreApplication::applicationDirPath()).arg(filename).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
     QgsVectorLayer* vecLayer = new QgsVectorLayer(uri,ff.baseName(),"delimitedtext");
     if(!vecLayer->isValid())
     {

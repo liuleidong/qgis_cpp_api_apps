@@ -17,6 +17,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../ll_qgis_base_lib/) # 指定头文�
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Svg REQUIRED)
 
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
