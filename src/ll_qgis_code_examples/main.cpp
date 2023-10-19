@@ -40,9 +40,9 @@ int main(int argc, char *argv[])
     qputenv("PROJ_LIB",strProjDir.toStdString().c_str());
     //Alters prefix path - used by 3rd party apps.
     QgsApplication::setPrefixPath( strAppDir, false );
-    QString strPluginDir = strAppDir + QString("/plugins/");
+    QString strPluginDir = strAppDir + QString("/qgis_runtime_dlls/plugins/");
     QgsApplication::setPluginPath(strPluginDir);
-    QString strPkgDir = strAppDir + QString("/share/qgis");
+    QString strPkgDir = strAppDir + QString("/qgis_runtime_dlls/share/qgis");
     QgsApplication::setPkgDataPath(strPkgDir);
     //loads providers
     QgsApplication::initQgis();
