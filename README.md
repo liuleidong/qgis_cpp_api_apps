@@ -15,22 +15,19 @@
 
 # 项目文档
 - 详细文档见[wiki](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/Home)
-- [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8518226&doc_id=4536843)
-- [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/pages?sort_id=8661452&doc_id=4536843)
+- [环境搭建](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA)
+- [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E7%BC%96%E8%AF%91)
+- [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E8%BF%90%E8%A1%8C)
 - [QGis库架构](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E5%BA%93%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84)
 - [QGIS离线文档](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E7%A6%BB%E7%BA%BF%E6%96%87%E6%A1%A3)
 
 # 社群
-## 知识星球
-![输入图片说明](https://foruda.gitee.com/images/1697160230025579811/496ec4a9_1547275.png "屏幕截图")
 ## 公众号
 ![输入图片说明](https://foruda.gitee.com/images/1697077286578350399/c111e1c7_1547275.jpeg "qrcode_for_gh_5fe62453ec05_258.jpg")
-
-- 社群中有示例程序的详细教程如ll_qgis_code_examples，教程讲述了QGis软件如何操作以及对应的C++代码实现
-如运行Buffer算法：
-![输入图片说明](https://foruda.gitee.com/images/1697009425419580674/1aabecfd_1547275.png "屏幕截图")
-![输入图片说明](https://foruda.gitee.com/images/1697009513115780675/61ed69c3_1547275.png "屏幕截图")
-
+- 请关注微信公众号获取最新消息推送
+## 知识星球
+![输入图片说明](https://foruda.gitee.com/images/1697160230025579811/496ec4a9_1547275.png "屏幕截图")
+- 加入知识星球有偿咨询
 # 源码说明
 ## ll_qgis_code_examples
 ### 截图
