@@ -15,11 +15,11 @@
 
 # 项目文档
 - 详细文档见[wiki](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/Home)
-- [环境搭建](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA)
+- [QGIS离线文档](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E7%A6%BB%E7%BA%BF%E6%96%87%E6%A1%A3)
+- [QGis库架构](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E5%BA%93%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84)
+- [QGis调试环境搭建](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA)
 - [编译](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E7%BC%96%E8%AF%91)
 - [运行](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/%E8%BF%90%E8%A1%8C)
-- [QGis库架构](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E5%BA%93%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84)
-- [QGIS离线文档](https://gitee.com/richie12/qgis_cpp_api_apps/wikis/QGis%E7%A6%BB%E7%BA%BF%E6%96%87%E6%A1%A3)
 
 # 社群
 ## 公众号
