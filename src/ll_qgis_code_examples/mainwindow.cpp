@@ -698,7 +698,7 @@ void MainWindow::addWmsSlot()
 {
     QString url = QStringLiteral("https://wprd01.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}");
     mApp->addWmsLayer(url,"gaode roads");
-    QTimer::singleShot(1000*3,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);});
+    QTimer::singleShot(1000*1,this,[=]{QgsPointXY pt(11804480,4660807);mApp->mapCanvas()->zoomByFactor(1/1600.0,&pt);});
 }
 
 void MainWindow::addGdalOfflineSlot()
@@ -2694,7 +2694,7 @@ void MainWindow::getFeaturesSlot()
             str.append(attrs[i].toString());
             str.append(" ");
         }
-        plainTextEdit->appendPlainText(str);
+        mVectorDataDockWidget->plainTextEdit()->appendPlainText(str);
     }
 #else
     //带feature的expression
