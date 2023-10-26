@@ -17,6 +17,12 @@ int main(int argc, char *argv[])
     QgsApplication a(argc, argv,true);
     QString strAppDir = QCoreApplication::applicationDirPath();
 
+    QFile qssFile("qrc:/../../inc/qss/Aqua.qss");//1.
+    if(qssFile.open(QFile::ReadOnly)){//2.
+        a.setStyleSheet(qssFile.readAll());//3.
+    }
+    qssFile.close();//4.
+
 #if (QT_VERSION <= QT_VERSION_CHECK(5,0,0))
 #if _MSC_VER
     QTextCodec *codec = QTextCodec::codecForName("gbk");

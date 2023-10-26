@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+﻿cmake_minimum_required(VERSION 3.5)
 
 project(ll_qgis_uav_realtime VERSION 0.1 LANGUAGES CXX)
 
@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         paramdockwidget.h paramdockwidget.cpp paramdockwidget.ui
+        res.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

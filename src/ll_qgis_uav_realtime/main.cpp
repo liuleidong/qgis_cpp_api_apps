@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 
 #include <QApplication>
 #include <QDir>
@@ -13,6 +13,12 @@ int main(int argc, char *argv[])
 {
     QgsApplication a(argc, argv,true);
     QString strAppDir = QCoreApplication::applicationDirPath();
+
+    QFile qssFile("qrc:/../../inc/qss/Aqua.qss");//1.
+    if(qssFile.open(QFile::ReadOnly)){//2.
+        a.setStyleSheet(qssFile.readAll());//3.
+    }
+    qssFile.close();//4.
 
     //proj的配置目录，坐标映射相关 proj.db
     QString strProjDir = strAppDir + QString("/share/proj/");
