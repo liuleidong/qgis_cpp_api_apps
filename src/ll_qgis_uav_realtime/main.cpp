@@ -14,11 +14,12 @@ int main(int argc, char *argv[])
     QgsApplication a(argc, argv,true);
     QString strAppDir = QCoreApplication::applicationDirPath();
 
-    QFile qssFile("qrc:/../../inc/qss/Aqua.qss");//1.
-    if(qssFile.open(QFile::ReadOnly)){//2.
-        a.setStyleSheet(qssFile.readAll());//3.
+    QFile qssFile(strAppDir + QString("/qss/Aqua.qss"));
+    if(qssFile.open(QFile::ReadOnly))
+    {
+        a.setStyleSheet(qssFile.readAll());
     }
-    qssFile.close();//4.
+    qssFile.close();
 
     //proj的配置目录，坐标映射相关 proj.db
     QString strProjDir = strAppDir + QString("/share/proj/");

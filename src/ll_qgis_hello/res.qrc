@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>../../inc/qss/AMOLED.qss</file>
+        <file alias="AMOLED.qss">../../inc/qss/AMOLED.qss</file>
         <file>../../inc/qss/Aqua.qss</file>
         <file>../../inc/qss/ConsoleStyle.qss</file>
         <file>../../inc/qss/ElegantDark.qss</file>

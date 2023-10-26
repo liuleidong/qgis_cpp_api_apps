@@ -19,7 +19,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        res.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

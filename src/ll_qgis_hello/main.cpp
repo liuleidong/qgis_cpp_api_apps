@@ -7,11 +7,13 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QFile qssFile("qrc:/../../inc/qss/ElegantDark.qss");//1.
-    if(qssFile.open(QFile::ReadOnly)){//2.
-        a.setStyleSheet(qssFile.readAll());//3.
+    QString strAppDir = QCoreApplication::applicationDirPath();
+    QFile qssFile(strAppDir + QString("/qss/ElegantDark.qss"));
+    if(qssFile.open(QFile::ReadOnly))
+    {
+        a.setStyleSheet(qssFile.readAll());
     }
-    qssFile.close();//4.
+    qssFile.close();
 
     MainWindow w;
     w.show();

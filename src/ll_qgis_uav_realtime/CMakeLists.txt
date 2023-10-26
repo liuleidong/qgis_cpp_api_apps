@@ -24,7 +24,6 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         paramdockwidget.h paramdockwidget.cpp paramdockwidget.ui
-        res.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
