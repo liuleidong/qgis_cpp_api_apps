@@ -16,8 +16,8 @@ if(WIN32)
 ELSEIF(UNIX)
     MESSAGE(STATUS "Now is UNIX-like OS's.")
     include_directories(/usr/include/gdal/)
-    include_directories(${PROJECT_SOURCE_DIR}/thirdparty/qgis/include/qgis)
-    link_directories(${PROJECT_SOURCE_DIR}/thirdparty/qgis/lib/) # 指定库搜索路径
+    include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/qgis)
+    link_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/lib/) # 指定库搜索路径
 ENDIF()
 
 link_directories(${PROJECT_SOURCE_DIR}/bin) # 指定库搜索路径
@@ -27,3 +27,4 @@ add_subdirectory(./src/ll_qgis_base_lib)
 add_subdirectory(./src/ll_qgis_hello)
 add_subdirectory(./src/ll_qgis_code_examples)
 add_subdirectory(./src/ll_qgis_uav_realtime)
+add_subdirectory(./src/ll_qgis_layer_export)
