@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "ll_qgis_base_lib.h"
+#include "exportdockwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,9 +19,13 @@ public:
     ~MainWindow();
     void initialize();
 
+public slots:
+    void setExportParamsSlot(SExportParams eparam);
+
 private:
     Ui::MainWindow *ui;
 
     ll_qgis_base_lib *mApp = nullptr;
+    ExportDockWidget *mExportDockWidget = nullptr;
 };
 #endif // MAINWINDOW_H
