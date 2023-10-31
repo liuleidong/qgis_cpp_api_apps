@@ -14,8 +14,29 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menumenu">
+    <property name="title">
+     <string>menu</string>
+    </property>
+    <addaction name="action_export"/>
+   </widget>
+   <addaction name="menumenu"/>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_export">
+   <property name="text">
+    <string>导出</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

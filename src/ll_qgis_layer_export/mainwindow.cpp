@@ -11,8 +11,8 @@
 #include "qgsprojectviewsettings.h"
 #include "qgscoordinateutils.h"
 #include "qgsvectorfilewritertask.h"
-
-#include "vectorlayersaveasdialog.h"
+//#include "qgsdatumtransformdialog.h"
+//#include "qgsmessageviewer.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -65,6 +65,7 @@ void MainWindow::initialize()
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
     connect( mApp->mapCanvas(), &QgsMapCanvas::scaleChanged, this, &MainWindow::showScaleSlot);
     statusBar()->addPermanentWidget(mScaleWidget);
+
 
     //add test layer
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
@@ -122,133 +123,138 @@ void MainWindow::updateMouseCoordinatePrecisionSlot()
     mCoordsEdit->setMouseCoordinatesPrecision( QgsCoordinateUtils::calculateCoordinatePrecision( mApp->mapCanvas()->mapUnitsPerPixel(), mApp->mapCanvas()->mapSettings().destinationCrs() ) );
 }
 
-//QString MainWindow::saveAsVectorFileGeneral(QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap)
-//{
-//    if ( !vlayer )
-//      return QString();
+void MainWindow::on_action_export_triggered()
+{
+    auto vlayer = QgsProject::instance()->layers<QgsVectorLayer*>().first();
+    saveAsVectorFileGeneral(vlayer,true,false,false);
+}
 
-//    const QString layerId = vlayer->id();
+QString MainWindow::saveAsVectorFileGeneral(QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap)
+{
+    if ( !vlayer )
+      return QString();
 
-//    auto onSuccess = [this, layerId]( const QString & newFilename,
-//                                      bool addToCanvas,
-//                                      const QString & layerName,
-//                                      const QString & encoding,
-//                                      const QString & vectorFileName )
-//    {
-//      if ( addToCanvas )
+    const QString layerId = vlayer->id();
+
+    auto onSuccess = [this, layerId]( const QString & newFilename,
+                                      bool addToCanvas,
+                                      const QString & layerName,
+                                      const QString & encoding,
+                                      const QString & vectorFileName )
+    {
+      if ( addToCanvas )
+      {
+        QString uri( newFilename );
+        if ( !layerName.isEmpty() )
+          uri += "|layername=" + layerName;
+        bool ok = false;
+//        QgsAppLayerHandling::addOgrVectorLayers( {uri}, encoding, QStringLiteral( "file" ), ok );
+      }
+
+      // We need to re-retrieve the map layer here, in case it's been deleted during the lifetime of the task
+//      if ( QgsVectorLayer *vlayer = qobject_cast< QgsVectorLayer * >( QgsProject::instance()->mapLayer( layerId ) ) )
+//        this->emit layerSavedAs( vlayer, vectorFileName );
+    };
+
+    auto onFailure = []( int error, const QString & errorMessage )
+    {
+      if ( error != QgsVectorFileWriter::Canceled )
+      {
+//        QgsMessageViewer *m = new QgsMessageViewer( nullptr );
+//        m->setWindowTitle( tr( "Save Error" ) );
+//        m->setMessageAsPlainText( tr( "Export to vector file failed.\nError: %1" ).arg( errorMessage ) );
+//        m->exec();
+      }
+    };
+
+    return saveAsVectorFileGeneral( vlayer, symbologyOption, onlySelected, defaultToAddToMap, onSuccess, onFailure );
+}
+
+QString MainWindow::saveAsVectorFileGeneral( QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap, const std::function<void( const QString &, bool, const QString &, const QString &, const QString & )> &onSuccess, const std::function<void ( int, const QString & )> &onFailure, VectorLayerSaveAsDialog::Options options, const QString &dialogTitle )
+{
+    QgsCoordinateReferenceSystem destCRS;
+
+    if ( !symbologyOption )
+    {
+      options &= ~VectorLayerSaveAsDialog::Symbology;
+    }
+
+    VectorLayerSaveAsDialog *dialog = new VectorLayerSaveAsDialog( vlayer, options, this );
+    if ( !dialogTitle.isEmpty() )
+      dialog->setWindowTitle( dialogTitle );
+
+    dialog->setMapCanvas( mApp->mapCanvas() );
+    dialog->setIncludeZ( QgsWkbTypes::hasZ( vlayer->wkbType() ) );
+    dialog->setOnlySelected( onlySelected );
+    dialog->setAddToCanvas( defaultToAddToMap );
+
+    QString vectorFilename;
+    if ( dialog->exec() == QDialog::Accepted )
+    {
+      QString encoding = dialog->encoding();
+      vectorFilename = dialog->filename();
+      QString format = dialog->format();
+      QStringList datasourceOptions = dialog->datasourceOptions();
+      bool autoGeometryType = dialog->automaticGeometryType();
+      QgsWkbTypes::Type forcedGeometryType = dialog->geometryType();
+
+      QgsCoordinateTransform ct;
+      destCRS = dialog->crsObject();
+
+//      if ( destCRS.isValid() )
 //      {
-//        QString uri( newFilename );
-//        if ( !layerName.isEmpty() )
-//          uri += "|layername=" + layerName;
-//        bool ok = false;
-////        QgsAppLayerHandling::addOgrVectorLayers( {uri}, encoding, QStringLiteral( "file" ), ok );
+//        QgsDatumTransformDialog::run( vlayer->crs(), destCRS, this, mApp->mapCanvas() );
+//        ct = QgsCoordinateTransform( vlayer->crs(), destCRS, QgsProject::instance() );
 //      }
 
-//      // We need to re-retrieve the map layer here, in case it's been deleted during the lifetime of the task
-////      if ( QgsVectorLayer *vlayer = qobject_cast< QgsVectorLayer * >( QgsProject::instance()->mapLayer( layerId ) ) )
-////        this->emit layerSavedAs( vlayer, vectorFileName );
-//    };
+      QgsRectangle filterExtent = dialog->filterExtent();
+//      QgisAppFieldValueConverter converter( vlayer, dialog->attributesAsDisplayedValues() );
+//      QgisAppFieldValueConverter *converterPtr = nullptr;
+//      // No need to use the converter if there is nothing to convert
+//      if ( !dialog->attributesAsDisplayedValues().isEmpty() )
+//        converterPtr = &converter;
 
-//    auto onFailure = []( int error, const QString & errorMessage )
-//    {
-//      if ( error != QgsVectorFileWriter::Canceled )
-//      {
-////        QgsMessageViewer *m = new QgsMessageViewer( nullptr );
-////        m->setWindowTitle( tr( "Save Error" ) );
-////        m->setMessageAsPlainText( tr( "Export to vector file failed.\nError: %1" ).arg( errorMessage ) );
-////        m->exec();
-//      }
-//    };
+      QgsVectorFileWriter::SaveVectorOptions options;
+      options.driverName = format;
+      options.layerName = dialog->layername();
+      options.actionOnExistingFile = dialog->creationActionOnExistingFile();
+      options.fileEncoding = encoding;
+      options.ct = ct;
+      options.onlySelectedFeatures = dialog->onlySelected();
+      options.datasourceOptions = datasourceOptions;
+      options.layerOptions = dialog->layerOptions();
+      options.skipAttributeCreation = dialog->selectedAttributes().isEmpty();
+      options.symbologyExport = static_cast< QgsVectorFileWriter::SymbologyExport >( dialog->symbologyExport() );
+      options.symbologyScale = dialog->scale();
+      if ( dialog->hasFilterExtent() )
+        options.filterExtent = filterExtent;
+      options.overrideGeometryType = autoGeometryType ? QgsWkbTypes::Unknown : forcedGeometryType;
+      options.forceMulti = dialog->forceMulti();
+      options.includeZ = dialog->includeZ();
+      options.attributes = dialog->selectedAttributes();
+      options.attributesExportNames = dialog->attributesExportNames();
+//      options.fieldValueConverter = converterPtr;
+      options.saveMetadata = dialog->persistMetadata();
+      options.layerMetadata = vlayer->metadata();
 
-////    return saveAsVectorFileGeneral( vlayer, symbologyOption, onlySelected, defaultToAddToMap, onSuccess, onFailure );
-//}
+      bool addToCanvas = dialog->addToCanvas();
+      QgsVectorFileWriterTask *writerTask = new QgsVectorFileWriterTask( vlayer, vectorFilename, options );
 
-//QString MainWindow::saveAsVectorFileGeneral( QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap, const std::function<void( const QString &, bool, const QString &, const QString &, const QString & )> &onSuccess, const std::function<void ( int, const QString & )> &onFailure, QgsVectorLayerSaveAsDialog::Options options, const QString &dialogTitle )
-//{
-//    QgsCoordinateReferenceSystem destCRS;
+      // when writer is successful:
+      connect( writerTask, &QgsVectorFileWriterTask::completed, this, [onSuccess, addToCanvas, encoding, vectorFilename]( const QString & newFilename, const QString & newLayer )
+      {
+        onSuccess( newFilename, addToCanvas, newLayer, encoding, vectorFilename );
+      } );
 
-//    if ( !symbologyOption )
-//    {
-//      options &= ~QgsVectorLayerSaveAsDialog::Symbology;
-//    }
+      // when an error occurs:
+      connect( writerTask, &QgsVectorFileWriterTask::errorOccurred, this, [onFailure]( int error, const QString & errorMessage )
+      {
+        onFailure( error, errorMessage );
+      } );
 
-//    QgsVectorLayerSaveAsDialog *dialog = new QgsVectorLayerSaveAsDialog( vlayer, options, this );
-//    if ( !dialogTitle.isEmpty() )
-//      dialog->setWindowTitle( dialogTitle );
+      QgsApplication::taskManager()->addTask( writerTask );
+    }
 
-//    dialog->setMapCanvas( mApp->mapCanvas() );
-//    dialog->setIncludeZ( QgsWkbTypes::hasZ( vlayer->wkbType() ) );
-//    dialog->setOnlySelected( onlySelected );
-//    dialog->setAddToCanvas( defaultToAddToMap );
-
-//    QString vectorFilename;
-//    if ( dialog->exec() == QDialog::Accepted )
-//    {
-//      QString encoding = dialog->encoding();
-//      vectorFilename = dialog->filename();
-//      QString format = dialog->format();
-//      QStringList datasourceOptions = dialog->datasourceOptions();
-//      bool autoGeometryType = dialog->automaticGeometryType();
-//      QgsWkbTypes::Type forcedGeometryType = dialog->geometryType();
-
-//      QgsCoordinateTransform ct;
-//      destCRS = dialog->crsObject();
-
-////      if ( destCRS.isValid() )
-////      {
-////        QgsDatumTransformDialog::run( vlayer->crs(), destCRS, this, mMapCanvas );
-////        ct = QgsCoordinateTransform( vlayer->crs(), destCRS, QgsProject::instance() );
-////      }
-
-//      QgsRectangle filterExtent = dialog->filterExtent();
-////      QgisAppFieldValueConverter converter( vlayer, dialog->attributesAsDisplayedValues() );
-////      QgisAppFieldValueConverter *converterPtr = nullptr;
-////      // No need to use the converter if there is nothing to convert
-////      if ( !dialog->attributesAsDisplayedValues().isEmpty() )
-////        converterPtr = &converter;
-
-//      QgsVectorFileWriter::SaveVectorOptions options;
-//      options.driverName = format;
-//      options.layerName = dialog->layername();
-//      options.actionOnExistingFile = dialog->creationActionOnExistingFile();
-//      options.fileEncoding = encoding;
-//      options.ct = ct;
-//      options.onlySelectedFeatures = dialog->onlySelected();
-//      options.datasourceOptions = datasourceOptions;
-//      options.layerOptions = dialog->layerOptions();
-//      options.skipAttributeCreation = dialog->selectedAttributes().isEmpty();
-//      options.symbologyExport = static_cast< QgsVectorFileWriter::SymbologyExport >( dialog->symbologyExport() );
-//      options.symbologyScale = dialog->scale();
-//      if ( dialog->hasFilterExtent() )
-//        options.filterExtent = filterExtent;
-//      options.overrideGeometryType = autoGeometryType ? QgsWkbTypes::Unknown : forcedGeometryType;
-//      options.forceMulti = dialog->forceMulti();
-//      options.includeZ = dialog->includeZ();
-//      options.attributes = dialog->selectedAttributes();
-//      options.attributesExportNames = dialog->attributesExportNames();
-////      options.fieldValueConverter = converterPtr;
-//      options.saveMetadata = dialog->persistMetadata();
-//      options.layerMetadata = vlayer->metadata();
-
-//      bool addToCanvas = dialog->addToCanvas();
-//      QgsVectorFileWriterTask *writerTask = new QgsVectorFileWriterTask( vlayer, vectorFilename, options );
-
-//      // when writer is successful:
-//      connect( writerTask, &QgsVectorFileWriterTask::completed, this, [onSuccess, addToCanvas, encoding, vectorFilename]( const QString & newFilename, const QString & newLayer )
-//      {
-//        onSuccess( newFilename, addToCanvas, newLayer, encoding, vectorFilename );
-//      } );
-
-//      // when an error occurs:
-//      connect( writerTask, &QgsVectorFileWriterTask::errorOccurred, this, [onFailure]( int error, const QString & errorMessage )
-//      {
-//        onFailure( error, errorMessage );
-//      } );
-
-//      QgsApplication::taskManager()->addTask( writerTask );
-//    }
-
-//    delete dialog;
-//    return vectorFilename;
-
-//}
+    delete dialog;
+    return vectorFilename;
+}

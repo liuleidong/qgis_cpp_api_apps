@@ -3,11 +3,13 @@
 
 #include <QMainWindow>
 
-#include "ll_qgis_base_lib.h"
-#include "exportdockwidget.h"
 #include "qgsstatusbarscalewidget.h"
 #include "qgsstatusbarcoordinateswidget.h"
 #include "ui_qgsvectorlayersaveasdialogbase.h"
+
+#include "ll_qgis_base_lib.h"
+#include "exportdockwidget.h"
+#include "vectorlayersaveasdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,21 +23,22 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void initialize();
+    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer = nullptr, bool symbologyOption = true, bool onlySelected = false, bool defaultToAddToMap = true );
 
+    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap,
+                                     const std::function< void ( const QString &newFilename,
+                                         bool addToCanvas,
+                                         const QString &layerName,
+                                         const QString &encoding,
+                                         const QString &vectorFileName )> &onSuccess, const std::function< void ( int error, const QString &errorMessage ) > &onFailure,
+                                     VectorLayerSaveAsDialog::Options dialogOptions = VectorLayerSaveAsDialog::AllOptions,
+                                     const QString &dialogTitle = QString() );
 public slots:
     void setExportParamsSlot(SExportParams eparam);
     void showScaleSlot( double scale );
     void updateMouseCoordinatePrecisionSlot();
-//    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer = nullptr, bool symbologyOption = true, bool onlySelected = false, bool defaultToAddToMap = true );
+    void on_action_export_triggered();
 
-//    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap,
-//                                     const std::function< void ( const QString &newFilename,
-//                                         bool addToCanvas,
-//                                         const QString &layerName,
-//                                         const QString &encoding,
-//                                         const QString &vectorFileName )> &onSuccess, const std::function< void ( int error, const QString &errorMessage ) > &onFailure,
-//                                     QgsVectorLayerSaveAsDialog::Options dialogOptions = QgsVectorLayerSaveAsDialog::AllOptions,
-//                                     const QString &dialogTitle = QString() );
 
 private:
     Ui::MainWindow *ui;
