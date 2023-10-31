@@ -72,7 +72,8 @@ ELSEIF(UNIX)
         qgis_app.so
         qgis_core.so
         qgis_gui.so
-        qgis_analysis.so)
+        qgis_analysis.so
+        gdal.so)
 ENDIF()
 
 set_target_properties(ll_qgis_layer_export PROPERTIES

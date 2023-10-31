@@ -15,7 +15,7 @@ if(WIN32)
     link_directories(${PROJECT_SOURCE_DIR}/thirdparty/windows/qgis-ltr-dev/lib/) # 指定库搜索路径
 ELSEIF(UNIX)
     MESSAGE(STATUS "Now is UNIX-like OS's.")
-    include_directories(/usr/include/gdal/)
+    include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/gdal/include)
     include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/qgis)
     link_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/lib/) # 指定库搜索路径
 ENDIF()
