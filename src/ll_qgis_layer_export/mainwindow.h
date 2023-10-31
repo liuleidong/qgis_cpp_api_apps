@@ -5,6 +5,7 @@
 
 #include "ll_qgis_base_lib.h"
 #include "exportdockwidget.h"
+#include "qgsstatusbarscalewidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,11 +22,14 @@ public:
 
 public slots:
     void setExportParamsSlot(SExportParams eparam);
+    void showScaleSlot( double scale );
 
 private:
     Ui::MainWindow *ui;
 
     ll_qgis_base_lib *mApp = nullptr;
     ExportDockWidget *mExportDockWidget = nullptr;
+
+    QgsStatusBarScaleWidget *mScaleWidget = nullptr;
 };
 #endif // MAINWINDOW_H

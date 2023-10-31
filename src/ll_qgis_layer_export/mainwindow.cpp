@@ -7,6 +7,7 @@
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
 #include "qgsvectorfilewriter.h"
+#include "qgsprojectviewsettings.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,6 +38,13 @@ void MainWindow::initialize()
     connect(mExportDockWidget,&ExportDockWidget::setExportParamsSignal,this,&MainWindow::setExportParamsSlot);
     //    ui->menuParams->addAction(mExportDockWidget->toggleViewAction());
 
+
+    mScaleWidget = new QgsStatusBarScaleWidget( mApp->mapCanvas(), statusBar() );
+    mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
+//    mScaleWidget->setFont( statusBarFont );
+    connect( mApp->mapCanvas(), &QgsMapCanvas::scaleChanged, this, &MainWindow::showScaleSlot);
+    statusBar()->addPermanentWidget(mScaleWidget);
+
     //add test layer
     QString filename = QStringLiteral("maps/shapefile/protected_areas.shp");
     QFileInfo ff(filename);
@@ -61,4 +69,9 @@ void MainWindow::setExportParamsSlot(SExportParams eparam)
     auto layer = QgsProject::instance()->layers<QgsVectorLayer*>().first();
     QgsVectorFileWriter::writeAsVectorFormatV3(layer,"maps/testExport/test_revert",QgsProject::instance()->transformContext(),options);
 
+}
+
+void MainWindow::showScaleSlot(double scale)
+{
+    mScaleWidget->setScale( scale );
 }
