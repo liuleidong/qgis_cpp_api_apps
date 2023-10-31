@@ -18,12 +18,16 @@ include_directories(${PROJECT_SOURCE_DIR}/../ll_qgis_base_lib/) # 指定头文�
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Xml Svg REQUIRED)
 
+#QT5_WRAP_UI(ll_qgis_layer_export qgsvectorlayersaveasdialogbase.ui)
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
         exportdockwidget.h exportdockwidget.cpp exportdockwidget.ui
         qgsstatusbarscalewidget.h qgsstatusbarscalewidget.cpp
         qgsstatusbarcoordinateswidget.h qgsstatusbarcoordinateswidget.cpp
+        qgsvectorlayersaveasdialogbase.ui
+        vectorlayersaveasdialog.h vectorlayersaveasdialog.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

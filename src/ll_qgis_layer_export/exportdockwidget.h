@@ -7,6 +7,8 @@ namespace Ui {
 class ExportDockWidget;
 }
 
+class QgsVectorLayer;
+
 typedef struct SExportParams_
 {
     QString fileName;
@@ -22,6 +24,7 @@ public:
     ~ExportDockWidget();
 
 public slots:
+    void on_pushButton_browse_clicked();
     void on_pushButton_export_clicked();
 
 signals:

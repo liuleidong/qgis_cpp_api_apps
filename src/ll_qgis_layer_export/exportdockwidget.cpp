@@ -1,6 +1,8 @@
 #include "exportdockwidget.h"
 #include "ui_exportdockwidget.h"
 
+#include "qgsproject.h"
+#include "qgsvectorlayer.h"
 #include "qgsvectorfilewriter.h"
 
 ExportDockWidget::ExportDockWidget(QWidget *parent) :
@@ -20,6 +22,11 @@ ExportDockWidget::ExportDockWidget(QWidget *parent) :
 ExportDockWidget::~ExportDockWidget()
 {
     delete ui;
+}
+
+void ExportDockWidget::on_pushButton_browse_clicked()
+{
+
 }
 
 void ExportDockWidget::on_pushButton_export_clicked()

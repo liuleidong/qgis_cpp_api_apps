@@ -7,6 +7,7 @@
 #include "exportdockwidget.h"
 #include "qgsstatusbarscalewidget.h"
 #include "qgsstatusbarcoordinateswidget.h"
+#include "ui_qgsvectorlayersaveasdialogbase.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +26,16 @@ public slots:
     void setExportParamsSlot(SExportParams eparam);
     void showScaleSlot( double scale );
     void updateMouseCoordinatePrecisionSlot();
+//    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer = nullptr, bool symbologyOption = true, bool onlySelected = false, bool defaultToAddToMap = true );
+
+//    QString saveAsVectorFileGeneral( QgsVectorLayer *vlayer, bool symbologyOption, bool onlySelected, bool defaultToAddToMap,
+//                                     const std::function< void ( const QString &newFilename,
+//                                         bool addToCanvas,
+//                                         const QString &layerName,
+//                                         const QString &encoding,
+//                                         const QString &vectorFileName )> &onSuccess, const std::function< void ( int error, const QString &errorMessage ) > &onFailure,
+//                                     QgsVectorLayerSaveAsDialog::Options dialogOptions = QgsVectorLayerSaveAsDialog::AllOptions,
+//                                     const QString &dialogTitle = QString() );
 
 private:
     Ui::MainWindow *ui;
