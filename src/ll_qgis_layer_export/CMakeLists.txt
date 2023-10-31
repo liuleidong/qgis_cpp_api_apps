@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
         mainwindow.cpp mainwindow.h mainwindow.ui
         exportdockwidget.h exportdockwidget.cpp exportdockwidget.ui
         qgsstatusbarscalewidget.h qgsstatusbarscalewidget.cpp
+        qgsstatusbarcoordinateswidget.h qgsstatusbarcoordinateswidget.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -3,11 +3,13 @@
 
 #include <QGridLayout>
 
+#include "qgsapplication.h"
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
 #include "qgsvectorfilewriter.h"
 #include "qgsprojectviewsettings.h"
+#include "qgscoordinateutils.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,7 +22,19 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete mExportDockWidget;
+    mExportDockWidget = nullptr;
+    delete mCoordsEdit;
+    mCoordsEdit = nullptr;
+    delete mScaleWidget;
+    mScaleWidget = nullptr;
     delete ui;
+
+    // This function *MUST* be the last one called, as it destroys in
+    // particular GDAL. As above objects can hold GDAL/OGR objects, it is not
+    // safe destroying them afterwards
+    QgsApplication::exitQgis();
+    // Do *NOT* add anything here !
 }
 
 void MainWindow::initialize()
@@ -38,10 +52,14 @@ void MainWindow::initialize()
     connect(mExportDockWidget,&ExportDockWidget::setExportParamsSignal,this,&MainWindow::setExportParamsSlot);
     //    ui->menuParams->addAction(mExportDockWidget->toggleViewAction());
 
+    mCoordsEdit = new QgsStatusBarCoordinatesWidget( statusBar() );
+    mCoordsEdit->setObjectName( QStringLiteral( "mCoordsEdit" ) );
+    mCoordsEdit->setMapCanvas( mApp->mapCanvas() );
+    connect( mApp->mapCanvas(), &QgsMapCanvas::scaleChanged, this, &MainWindow::updateMouseCoordinatePrecisionSlot);
+    statusBar()->addPermanentWidget( mCoordsEdit, 0 );
 
     mScaleWidget = new QgsStatusBarScaleWidget( mApp->mapCanvas(), statusBar() );
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
-//    mScaleWidget->setFont( statusBarFont );
     connect( mApp->mapCanvas(), &QgsMapCanvas::scaleChanged, this, &MainWindow::showScaleSlot);
     statusBar()->addPermanentWidget(mScaleWidget);
 
@@ -74,4 +92,9 @@ void MainWindow::setExportParamsSlot(SExportParams eparam)
 void MainWindow::showScaleSlot(double scale)
 {
     mScaleWidget->setScale( scale );
+}
+
+void MainWindow::updateMouseCoordinatePrecisionSlot()
+{
+    mCoordsEdit->setMouseCoordinatesPrecision( QgsCoordinateUtils::calculateCoordinatePrecision( mApp->mapCanvas()->mapUnitsPerPixel(), mApp->mapCanvas()->mapSettings().destinationCrs() ) );
 }

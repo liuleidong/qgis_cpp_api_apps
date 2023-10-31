@@ -27,10 +27,10 @@ class QValidator;
 class QgsMapCanvas;
 
 #include <QWidget>
-#include "qgis_app.h"
+//#include "qgis_app.h"
 #include "qgspointxy.h"
 
-class APP_EXPORT QgsStatusBarCoordinatesWidget : public QWidget
+class QgsStatusBarCoordinatesWidget : public QWidget
 {
     Q_OBJECT
 

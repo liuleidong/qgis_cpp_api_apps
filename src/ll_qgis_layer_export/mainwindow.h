@@ -6,6 +6,7 @@
 #include "ll_qgis_base_lib.h"
 #include "exportdockwidget.h"
 #include "qgsstatusbarscalewidget.h"
+#include "qgsstatusbarcoordinateswidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +24,7 @@ public:
 public slots:
     void setExportParamsSlot(SExportParams eparam);
     void showScaleSlot( double scale );
+    void updateMouseCoordinatePrecisionSlot();
 
 private:
     Ui::MainWindow *ui;
@@ -31,5 +33,6 @@ private:
     ExportDockWidget *mExportDockWidget = nullptr;
 
     QgsStatusBarScaleWidget *mScaleWidget = nullptr;
+    QgsStatusBarCoordinatesWidget *mCoordsEdit = nullptr;
 };
 #endif // MAINWINDOW_H
