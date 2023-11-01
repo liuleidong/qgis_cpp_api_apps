@@ -11,8 +11,6 @@
 #include "qgsprojectviewsettings.h"
 #include "qgscoordinateutils.h"
 #include "qgsvectorfilewritertask.h"
-//#include "qgsdatumtransformdialog.h"
-//#include "qgsmessageviewer.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,6 +39,7 @@ MainWindow::~MainWindow()
 void MainWindow::initialize()
 {
     mApp->initialize(this);
+
     auto gridLayout = new QGridLayout;
     gridLayout->addWidget((QWidget*)mApp->mapCanvas());
     centralWidget()->setLayout(gridLayout);

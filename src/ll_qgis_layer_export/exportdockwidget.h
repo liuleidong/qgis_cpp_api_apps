@@ -11,7 +11,6 @@ class QgsVectorLayer;
 
 typedef struct SExportParams_
 {
-    QString fileName;
     QString driverName;
 }SExportParams;
 
