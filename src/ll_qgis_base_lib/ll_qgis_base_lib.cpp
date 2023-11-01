@@ -102,6 +102,23 @@ void ll_qgis_base_lib::initialize(QMainWindow *mainWindow)
 
     initLayerTreeView();
     initMaptools();
+    initStatusbarWidget();
+}
+
+void ll_qgis_base_lib::cleanup()
+{
+    delete mMapCanvas;
+    mMapCanvas = nullptr;
+
+    delete mLayerTreeView;
+    mLayerTreeView = nullptr;
+
+    delete mLayerTreeMapCanvasBridge;
+    mLayerTreeMapCanvasBridge = nullptr;
+
+    delete mLayerTreeDock;
+    mLayerTreeDock = nullptr;
+
 }
 
 void ll_qgis_base_lib::initLayerTreeView()
@@ -198,20 +215,22 @@ void ll_qgis_base_lib::initLayerTreeView()
     QWidget *w = new QWidget;
     w->setLayout( vboxLayout );
     mLayerTreeDock->setWidget( w );
-
-//    mMainWindow->addDockWidget( Qt::LeftDockWidgetArea, mLayerTreeDock );
-//    mMainWindow->setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
-//    mMainWindow->setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
-//    mMainWindow->setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
-//    mMainWindow->setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
-//    mLayerTreeDock->show();
-//    refreshMapCanvas();
 }
 
 void ll_qgis_base_lib::initMaptools()
 {
     mMapToolPan = new QgsMapToolPan(mMapCanvas);
     mMapCanvas->setMapTool(mMapToolPan);
+}
+
+void ll_qgis_base_lib::initStatusbarWidget()
+{
+    mCoordsEdit = new QgsStatusBarCoordinatesWidget( mMainWindow->statusBar() );
+    mCoordsEdit->setObjectName( QStringLiteral( "mCoordsEdit" ) );
+    mCoordsEdit->setMapCanvas( mMapCanvas);
+
+    mScaleWidget = new QgsStatusBarScaleWidget( mMapCanvas, mMainWindow->statusBar() );
+    mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
 }
 
 QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
@@ -382,8 +401,6 @@ bool ll_qgis_base_lib::readProjects(const QString &filename, Qgis::ProjectReadFl
 void ll_qgis_base_lib::setCrs(const QgsCoordinateReferenceSystem &crs, bool adjustEllipsoid)
 {
     QgsProject::instance()->setCrs(crs,adjustEllipsoid);
-    //layer
-    //    layer()->setCrs( crs );
 }
 
 
@@ -478,6 +495,16 @@ void ll_qgis_base_lib::userRotation()
     double degrees = 0.0;//mRotationEdit->value();
     mMapCanvas->setRotation( degrees );
     mMapCanvas->refresh();
+}
+
+QgsStatusBarCoordinatesWidget *ll_qgis_base_lib::coordsEdit() const
+{
+    return mCoordsEdit;
+}
+
+QgsStatusBarScaleWidget *ll_qgis_base_lib::scaleWidget() const
+{
+    return mScaleWidget;
 }
 
 QgsDockWidget *ll_qgis_base_lib::layerTreeDock() const

@@ -17,13 +17,12 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Xml REQUIRED)
 
 add_library(ll_qgis_base_lib SHARED
   ll_qgis_base_lib_global.h
-  ll_qgis_base_lib.cpp
-  ll_qgis_base_lib.h
-  ll_qgis_base_lib_layerhandling.cpp
-  ll_qgis_base_lib_layerhandling.h
-  ll_qgis_base_lib_layertreeview_menu.cpp
-  ll_qgis_base_lib_layertreeview_menu.h
   ll_qgis_base_lib_singleton.h
+  ll_qgis_base_lib.cpp ll_qgis_base_lib.h
+  ll_qgis_base_lib_layerhandling.cpp ll_qgis_base_lib_layerhandling.h
+  ll_qgis_base_lib_layertreeview_menu.cpp ll_qgis_base_lib_layertreeview_menu.h
+  qgsstatusbarscalewidget.h qgsstatusbarscalewidget.cpp
+  qgsstatusbarcoordinateswidget.h qgsstatusbarcoordinateswidget.cpp
   image.qrc
 )
 if(WIN32)

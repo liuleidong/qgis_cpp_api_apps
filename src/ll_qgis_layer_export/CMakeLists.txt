@@ -24,8 +24,6 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp mainwindow.h mainwindow.ui
         exportdockwidget.h exportdockwidget.cpp exportdockwidget.ui
-        qgsstatusbarscalewidget.h qgsstatusbarscalewidget.cpp
-        qgsstatusbarcoordinateswidget.h qgsstatusbarcoordinateswidget.cpp
         qgsvectorlayersaveasdialogbase.ui
         vectorlayersaveasdialog.h vectorlayersaveasdialog.cpp
 )

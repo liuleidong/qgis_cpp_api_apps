@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 
-#include "qgsstatusbarscalewidget.h"
-#include "qgsstatusbarcoordinateswidget.h"
 #include "ui_qgsvectorlayersaveasdialogbase.h"
 
 #include "ll_qgis_base_lib.h"
@@ -37,6 +35,8 @@ public slots:
     void setExportParamsSlot(SExportParams eparam);
     void showScaleSlot( double scale );
     void updateMouseCoordinatePrecisionSlot();
+
+    void on_action_open_triggered();
     void on_action_export_triggered();
 
 
@@ -46,7 +46,5 @@ private:
     ll_qgis_base_lib *mApp = nullptr;
     ExportDockWidget *mExportDockWidget = nullptr;
 
-    QgsStatusBarScaleWidget *mScaleWidget = nullptr;
-    QgsStatusBarCoordinatesWidget *mCoordsEdit = nullptr;
 };
 #endif // MAINWINDOW_H
