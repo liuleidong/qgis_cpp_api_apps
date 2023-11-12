@@ -25,6 +25,9 @@
 ## 公众号
 ![输入图片说明](https://foruda.gitee.com/images/1697077286578350399/c111e1c7_1547275.jpeg "qrcode_for_gh_5fe62453ec05_258.jpg")
 - 请关注微信公众号获取最新消息推送
+## QQ群
+![输入图片说明](https://foruda.gitee.com/images/1699751272170435321/86a409ca_1547275.png "屏幕截图")
+- 加入qq群
 ## 知识星球
 ![输入图片说明](https://foruda.gitee.com/images/1697160230025579811/496ec4a9_1547275.png "屏幕截图")
 - 加入知识星球有偿咨询
