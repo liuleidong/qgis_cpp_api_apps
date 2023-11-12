@@ -34,7 +34,7 @@ public:
     void initStackwidgetPageCanvas();
     void initPanels();
     void initVectorDataDockWidget();
-    void initMapTools();
+    void initMapTools();    
     void initGroupboxInPanel();
     void init_groupBox_maps();
     void init_groupBox_canvas();
@@ -46,6 +46,7 @@ public:
     void init_groupBox_diagram();
     void init_groupBox_features();
     void init_groupBox_processing();
+    void init_groupBox_association();
 public slots:
     void actionToPanelsSlot();
     void actionToCanvasSlot();

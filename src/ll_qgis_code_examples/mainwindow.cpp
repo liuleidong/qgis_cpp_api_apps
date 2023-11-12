@@ -165,6 +165,7 @@ void MainWindow::initGroupboxInPanel()
     init_groupBox_diagram();
     init_groupBox_features();
     init_groupBox_processing();
+    init_groupBox_association();
 }
 
 void MainWindow::init_groupBox_maps()
@@ -389,6 +390,26 @@ void MainWindow::init_groupBox_processing()
     addPanelItem(layout,"processingClipSlot",QString::fromLocal8Bit("算法-裁剪"),":/res/images/processingClipSlot.png",row,++column);
     addPanelItem(layout,"processingRandomPointsSlot",QString::fromLocal8Bit("算法-随机点生成"),":/res/images/processingRandomPointsSlot.png",row,++column);
     addPanelItem(layout,"processingBufferSlot",QString::fromLocal8Bit("算法-缓冲区"),":/res/images/processingBufferSlot.png",row,++column);
+}
+
+void MainWindow::init_groupBox_association()
+{
+    int row = 0,column = 0;
+    QGridLayout *layout = (QGridLayout *)ui->groupBox_association->layout();
+    auto p1 = new PanelImageButton;
+    p1->setTitleText(QString::fromLocal8Bit("公众号"));
+    p1->setImageUrl(":/res/associations/association_weixin.jpeg");
+    layout->addWidget(p1,row,column++);
+
+    auto p3 = new PanelImageButton;
+    p3->setTitleText(QString::fromLocal8Bit("QQ群"));
+    p3->setImageUrl(":/res/associations/association_qq.png");
+    layout->addWidget(p3,row,column++);
+
+    auto p2 = new PanelImageButton;
+    p2->setTitleText(QString::fromLocal8Bit("知识星球"));
+    p2->setImageUrl(":/res/associations/association_planet.png");
+    layout->addWidget(p2,row,column++);
 }
 
 
