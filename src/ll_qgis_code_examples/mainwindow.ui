@@ -38,14 +38,14 @@
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="7" column="0">
-             <widget class="QGroupBox" name="groupBox_diagram">
+             <widget class="QGroupBox" name="groupBox_annotations">
               <property name="title">
-               <string>图表(Diagram)</string>
+               <string>标注(Label)和注记(Annotation)</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_9"/>
+              <layout class="QGridLayout" name="gridLayout_8"/>
              </widget>
             </item>
-            <item row="8" column="0">
+            <item row="9" column="0">
              <widget class="QGroupBox" name="groupBox_features">
               <property name="title">
                <string>矢量图层数据(Features)</string>
@@ -54,30 +54,14 @@
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_canvas">
+             <widget class="QGroupBox" name="groupBox_maps">
               <property name="title">
-               <string>Map Canvas</string>
+               <string>图层添加</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout"/>
+              <layout class="QGridLayout" name="gridLayout_3"/>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QGroupBox" name="groupBox_vector_polygon_symbol">
-              <property name="title">
-               <string>矢量图层-面-符号化(Symbology)</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_6"/>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QGroupBox" name="groupBox_vector_line_symbol">
-              <property name="title">
-               <string>矢量图层-线-符号化(Symbology)</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_5"/>
-             </widget>
-            </item>
-            <item row="5" column="0">
+            <item row="6" column="0">
              <widget class="QGroupBox" name="groupBox_raster_symbol">
               <property name="title">
                <string>栅格图层-符号化(Symbology)</string>
@@ -86,6 +70,30 @@
              </widget>
             </item>
             <item row="2" column="0">
+             <widget class="QGroupBox" name="groupBox_canvas">
+              <property name="title">
+               <string>Map Canvas</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout"/>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QGroupBox" name="groupBox_diagram">
+              <property name="title">
+               <string>图表(Diagram)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_9"/>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QGroupBox" name="groupBox_processing">
+              <property name="title">
+               <string>数据处理(Processing)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_11"/>
+             </widget>
+            </item>
+            <item row="3" column="0">
              <widget class="QGroupBox" name="groupBox_vector_point_symbol">
               <property name="title">
                <string>矢量图层-点-符号化(Symbology)</string>
@@ -93,28 +101,28 @@
               <layout class="QGridLayout" name="gridLayout_4"/>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QGroupBox" name="groupBox_annotations">
+            <item row="4" column="0">
+             <widget class="QGroupBox" name="groupBox_vector_line_symbol">
               <property name="title">
-               <string>标注(Label)和注记(Annotation)</string>
+               <string>矢量图层-线-符号化(Symbology)</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_8"/>
+              <layout class="QGridLayout" name="gridLayout_5"/>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QGroupBox" name="groupBox_vector_polygon_symbol">
+              <property name="title">
+               <string>矢量图层-面-符号化(Symbology)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_6"/>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_maps">
+             <widget class="QGroupBox" name="groupBox_association">
               <property name="title">
-               <string>图层添加</string>
+               <string>社群</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_3"/>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="QGroupBox" name="groupBox_processing">
-              <property name="title">
-               <string>数据处理(Processing)</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_11"/>
+              <layout class="QGridLayout" name="gridLayout_12"/>
              </widget>
             </item>
            </layout>

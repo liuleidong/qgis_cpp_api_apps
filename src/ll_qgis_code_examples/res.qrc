@@ -100,5 +100,8 @@
         <file>res/icons/page_last.png</file>
         <file>res/icons/right-arrow.png</file>
         <file>res/images/addGdb.png</file>
+        <file>res/associations/association_planet.png</file>
+        <file>res/associations/association_qq.png</file>
+        <file>res/associations/association_weixin.jpeg</file>
     </qresource>
 </RCC>
