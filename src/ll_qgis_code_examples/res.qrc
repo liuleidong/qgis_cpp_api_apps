@@ -99,5 +99,6 @@
         <file>res/icons/page_first.png</file>
         <file>res/icons/page_last.png</file>
         <file>res/icons/right-arrow.png</file>
+        <file>res/images/addGdb.png</file>
     </qresource>
 </RCC>

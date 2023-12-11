@@ -59,6 +59,7 @@ public slots:
     void addGmlSlot();
     void addKmlSlot();
     void addDxfSlot();
+    void addGdbSlot();
     void addCoverageSlot();
     void addGpx1Slot();
     void addCsvSlot();

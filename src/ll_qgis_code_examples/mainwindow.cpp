@@ -183,6 +183,7 @@ void MainWindow::init_groupBox_maps()
     ++row;column = -1;
     addPanelItem(layout,"addKmlSlot",QString::fromLocal8Bit("添加kml文件"),":/res/images/addKmlSlot.png",row,++column);
     addPanelItem(layout,"addDxfSlot",QString::fromLocal8Bit("添加dxf文件"),":/res/images/addDxfSlot.png",row,++column);
+    addPanelItem(layout,"addGdbSlot",QString::fromLocal8Bit("添加gdb文件"),":/res/images/addGdb.png",row,++column);
     addPanelItem(layout,"addCoverageSlot",QString::fromLocal8Bit("添加coverage文件"),":/res/images/addCoverageSlot.png",row,++column);
 
     int labelRow = ++row;
@@ -549,6 +550,18 @@ void MainWindow::addDxfSlot()
     QgsVectorLayer* points_smallLayer = new QgsVectorLayer(QString("%1%2").arg(filename).arg("|layername=entities|geometrytype=Point"),"entities2","ogr");
     QList<QgsMapLayer *> mapLayers;
     mapLayers << points_gpkgLayer << points_smallLayer;
+    QgsProject::instance()->addMapLayers(mapLayers);
+    zoomToFirstLayer<QgsVectorLayer*>();
+}
+
+void MainWindow::addGdbSlot()
+{
+    QString filename = QStringLiteral("maps/2.gdb");
+    QFileInfo ff(filename);
+    QgsVectorLayer* aaLayer = new QgsVectorLayer(QString("%1%2").arg(filename).arg("|layername=farmer_change"),"farmer_change","ogr");
+    QgsVectorLayer* ARCLayer = new QgsVectorLayer(QString("%1%2").arg(filename).arg("|layername=mark"),"mark","ogr");
+    QList<QgsMapLayer *> mapLayers;
+    mapLayers << aaLayer << ARCLayer;
     QgsProject::instance()->addMapLayers(mapLayers);
     zoomToFirstLayer<QgsVectorLayer*>();
 }
