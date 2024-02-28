@@ -616,9 +616,10 @@ void MainWindow::addGpx1Slot()
 
 void MainWindow::addCsvSlot()
 {
-    QString filename = QStringLiteral("maps/jilin_maincity.csv");
+    QString filename = QString("%1/%2").arg(QCoreApplication::applicationDirPath()).arg(QStringLiteral("maps/jilin_maincity.csv"));
     QFileInfo ff(filename);
-    QString uri = QString("file://%1/%2%3").arg(QCoreApplication::applicationDirPath()).arg(filename).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
+    QUrl url = QUrl::fromLocalFile(filename);
+    QString uri = QString("%1%2").arg(QString::fromLatin1( url.toEncoded())).arg("?type=csv&xField=longitude&yField=latitude&crs=EPSG:4326");
     QgsVectorLayer* vecLayer = new QgsVectorLayer(uri,ff.baseName(),"delimitedtext");
     if(!vecLayer->isValid())
     {
