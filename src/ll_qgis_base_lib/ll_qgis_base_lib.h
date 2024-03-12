@@ -77,6 +77,17 @@ public:
     /// \brief 程序退出时清理资源
     ///
     void cleanup();
+
+    ///
+    /// \brief initMapCanvas
+    ///
+    void initMapCanvas();
+
+    ///
+    /// \brief initSrs
+    ///
+    void initSrs();
+
     ///
     /// \brief 图层管理初始化
     /// QgsLayerTreeView QgsLayerTreeModel
@@ -120,6 +131,17 @@ public:
      * @return
      */
     QgsMapLayer *addVectorLayer(const QString &uri, const QString &baseName, const QString &provider="ogr");
+
+    /**
+     * @brief addOgrVectorLayers
+     * @param uris
+     * @param encoding
+     * @param dataSourceType
+     * @param ok
+     * @param showWarningOnInvalid
+     * @return
+     */
+    QList< QgsMapLayer * > addOgrVectorLayers(const QString &uri, const QString &baseName, const QString &provider="ogr");
     /**
      * @brief addRasterLayer
      * @param uri
@@ -158,6 +180,7 @@ public:
      */
     void legendLayerStretchUsingCurrentExtent();
 
+    void showVectorLayerSaveAsDialog();
 public slots:
     void slot_autoSelectAddedLayer(const QList<QgsMapLayer *> layers);
 
@@ -168,6 +191,12 @@ private slots:
     void hideSelectedLayers();
     void removeLayer();
     void userRotation();
+
+signals:
+    void showVectorLayerSaveAsDialogSignal();
+
+private:
+    void computeDataSources();
 
 private:
     QMainWindow *mMainWindow = nullptr;
@@ -181,6 +210,9 @@ private:
     QgsStatusBarCoordinatesWidget *mCoordsEdit = nullptr;
 
     QList<QgsMapLayer *> mLayersList;
+
+    QStringList mDataSources;
+    QString mVectorPath;
 };
 
 #endif // LD_LIB_APP_H

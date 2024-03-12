@@ -71,6 +71,8 @@
 
 #include "qgsvirtuallayerdefinition.h"
 #include "qgsvectorfilewriter.h"
+#include "qgsfilewidget.h"
+#include "qgsproviderregistry.h"
 //Raster
 #include "qgssinglebandgrayrenderer.h"
 #include "qgscontrastenhancement.h"
@@ -94,12 +96,8 @@ void ll_qgis_base_lib::initialize(QMainWindow *mainWindow)
 {
     mMainWindow = mainWindow;
 
-    mMapCanvas = new QgsMapCanvas;
-    mMapCanvas->enableAntiAliasing(true);
-    mMapCanvas->setCachingEnabled(true);
-    mMapCanvas->setCanvasColor(QColor(255,255,255));
-    mMapCanvas->setVisible(true);
-
+    initMapCanvas();
+    initSrs();
     initLayerTreeView();
     initMaptools();
     initStatusbarWidget();
@@ -119,6 +117,29 @@ void ll_qgis_base_lib::cleanup()
     delete mLayerTreeDock;
     mLayerTreeDock = nullptr;
 
+}
+
+void ll_qgis_base_lib::initMapCanvas()
+{
+    mMapCanvas = new QgsMapCanvas;
+    mMapCanvas->enableAntiAliasing(true);
+    mMapCanvas->setCachingEnabled(true);
+    mMapCanvas->setCanvasColor(QColor(255,255,255));
+    mMapCanvas->setVisible(true);
+}
+
+void ll_qgis_base_lib::initSrs()
+{
+    QgsSettings settings;
+    qDebug() << settings.fileName();
+    QgsProject *prj = QgsProject::instance();
+    // set project CRS
+    const QgsCoordinateReferenceSystem srs = QgsCoordinateReferenceSystem( settings.value( QStringLiteral( "/projections/defaultProjectCrs" ), geoEpsgCrsAuthId(), QgsSettings::App ).toString() );
+    // write the projections _proj string_ to project settings
+    const bool planimetric = settings.value( QStringLiteral( "measure/planimetric" ), true, QgsSettings::Core ).toBool();
+    prj->setCrs( srs, !planimetric ); // If the default ellipsoid is not planimetric, set it from the default crs
+    if ( planimetric )
+      prj->setEllipsoid( geoNone() );
 }
 
 void ll_qgis_base_lib::initLayerTreeView()
@@ -231,6 +252,8 @@ void ll_qgis_base_lib::initStatusbarWidget()
 
     mScaleWidget = new QgsStatusBarScaleWidget( mMapCanvas, mMainWindow->statusBar() );
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
+    mScaleWidget->updateScales();
+
 }
 
 QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
@@ -242,6 +265,15 @@ QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString 
         return layer;
     }
     return nullptr;
+}
+
+QList<QgsMapLayer *> ll_qgis_base_lib::addOgrVectorLayers(const QString &uri, const QString &baseName, const QString &provider)
+{
+    bool ok = false;
+    mVectorPath = uri;
+    computeDataSources();
+    QList<QgsMapLayer *> layers = ll_qgis_base_lib_layerhandling::addOgrVectorLayers(mDataSources,"","file",ok);
+    return layers;
 }
 
 QgsMapLayer *ll_qgis_base_lib::addRasterLayer(const QString &uri, const QString &baseName, const QString &provider)
@@ -388,6 +420,11 @@ void ll_qgis_base_lib::legendLayerStretchUsingCurrentExtent()
     }
 }
 
+void ll_qgis_base_lib::showVectorLayerSaveAsDialog()
+{
+    emit showVectorLayerSaveAsDialogSignal();
+}
+
 bool ll_qgis_base_lib::saveProjects(const QString &filename)
 {
     return QgsProject::instance()->write(filename);
@@ -495,6 +532,22 @@ void ll_qgis_base_lib::userRotation()
     double degrees = 0.0;//mRotationEdit->value();
     mMapCanvas->setRotation( degrees );
     mMapCanvas->refresh();
+}
+
+void ll_qgis_base_lib::computeDataSources()
+{
+    QgsSettings settings;
+    mDataSources.clear();
+
+    QStringList openOptions;
+    for ( const auto &filePath : QgsFileWidget::splitFilePaths( mVectorPath ) )
+    {
+      QVariantMap parts;
+      if ( !openOptions.isEmpty() )
+        parts.insert( QStringLiteral( "openOptions" ), openOptions );
+      parts.insert( QStringLiteral( "path" ), filePath );
+      mDataSources << QgsProviderRegistry::instance()->encodeUri( QStringLiteral( "ogr" ), parts );
+    }
 }
 
 QgsStatusBarCoordinatesWidget *ll_qgis_base_lib::coordsEdit() const

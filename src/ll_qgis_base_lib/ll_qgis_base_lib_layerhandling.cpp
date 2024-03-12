@@ -1,4 +1,6 @@
-#include "ll_qgis_base_lib_layerhandling.h"
+﻿#include "ll_qgis_base_lib_layerhandling.h"
+
+#include <QMessageBox>
 
 #include "qgsproviderregistry.h"
 #include "qgsprovidermetadata.h"
@@ -11,12 +13,209 @@
 #include "qgslayertree.h"
 #include "qgslayertreeview.h"
 #include "qgslayertreenode.h"
+#include "qgszipitem.h"
+#include "qgsguiutils.h"
 
 #include "ll_qgis_base_lib.h"
 
 QgsVectorLayer *ll_qgis_base_lib_layerhandling::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
 {
     return addLayerPrivate< QgsVectorLayer >( QgsMapLayerType::VectorLayer, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "ogr" ), true );
+}
+
+QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const QStringList &layers, const QString &encoding, const QString &dataSourceType, bool &ok, bool showWarningOnInvalid )
+{
+    //note: this method ONLY supports vector layers from the OGR provider!
+    ok = false;
+
+//    QgsCanvasRefreshBlocker refreshBlocker;
+
+    QList<QgsMapLayer *> layersToAdd;
+    QList<QgsMapLayer *> addedLayers;
+    QgsSettings settings;
+    bool userAskedToAddLayers = false;
+
+    for ( const QString &layerUri : layers )
+    {
+      const QString uri = layerUri.trimmed();
+      QString baseName;
+      if ( dataSourceType == QLatin1String( "file" ) )
+      {
+        QString srcWithoutLayername( uri );
+        int posPipe = srcWithoutLayername.indexOf( '|' );
+        if ( posPipe >= 0 )
+          srcWithoutLayername.resize( posPipe );
+        baseName = QgsProviderUtils::suggestLayerNameFromFilePath( srcWithoutLayername );
+
+        // if needed prompt for zipitem layers
+        QString vsiPrefix = QgsZipItem::vsiPrefix( uri );
+        if ( ! uri.startsWith( QLatin1String( "/vsi" ), Qt::CaseInsensitive ) &&
+             ( vsiPrefix == QLatin1String( "/vsizip/" ) || vsiPrefix == QLatin1String( "/vsitar/" ) ) )
+        {
+          if ( askUserForZipItemLayers( uri, { QgsMapLayerType::VectorLayer } ) )
+            continue;
+        }
+      }
+      else if ( dataSourceType == QLatin1String( "database" ) )
+      {
+        // Try to extract the database name and use it as base name
+        // sublayers names (if any) will be appended to the layer name
+        const QVariantMap parts( QgsProviderRegistry::instance()->decodeUri( QStringLiteral( "ogr" ), uri ) );
+        if ( parts.value( QStringLiteral( "databaseName" ) ).isValid() )
+          baseName = parts.value( QStringLiteral( "databaseName" ) ).toString();
+        else
+          baseName = uri;
+      }
+      else //directory //protocol
+      {
+        baseName = QgsProviderUtils::suggestLayerNameFromFilePath( uri );
+      }
+
+      if ( settings.value( QStringLiteral( "qgis/formatLayerName" ), false ).toBool() )
+      {
+        baseName = QgsMapLayer::formatLayerName( baseName );
+      }
+
+      QgsDebugMsgLevel( "completeBaseName: " + baseName, 2 );
+      const bool isVsiCurl { uri.startsWith( QLatin1String( "/vsicurl" ), Qt::CaseInsensitive ) };
+      const auto scheme { QUrl( uri ).scheme() };
+      const bool isRemoteUrl { scheme.startsWith( QLatin1String( "http" ) ) || scheme == QLatin1String( "ftp" ) };
+
+      std::unique_ptr< QgsTemporaryCursorOverride > cursorOverride;
+      if ( isVsiCurl || isRemoteUrl )
+      {
+        cursorOverride = std::make_unique< QgsTemporaryCursorOverride >( Qt::WaitCursor );
+        qApp->processEvents();
+      }
+
+      QList< QgsProviderSublayerDetails > sublayers = QgsProviderRegistry::instance()->providerMetadata( QStringLiteral( "ogr" ) )->querySublayers( uri, Qgis::SublayerQueryFlag::IncludeSystemTables );
+      // filter out non-vector sublayers
+      sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
+      {
+        return sublayer.type() != QgsMapLayerType::VectorLayer;
+      } ), sublayers.end() );
+
+      cursorOverride.reset();
+
+      const QVariantMap uriParts = QgsProviderRegistry::instance()->decodeUri( QStringLiteral( "ogr" ), uri );
+      const QString path = uriParts.value( QStringLiteral( "path" ) ).toString();
+
+      if ( !sublayers.empty() )
+      {
+        userAskedToAddLayers = true;
+
+        const bool detailsAreIncomplete = QgsProviderUtils::sublayerDetailsAreIncomplete( sublayers, QgsProviderUtils::SublayerCompletenessFlag::IgnoreUnknownFeatureCount );
+        const bool singleSublayerOnly = sublayers.size() == 1;
+        QString groupName;
+
+        if ( !singleSublayerOnly || detailsAreIncomplete )
+        {
+          // ask user for sublayers (unless user settings dictate otherwise!)
+          switch ( shouldAskUserForSublayers( sublayers ) )
+          {
+          /*
+            case SublayerHandling::AskUser:
+            {
+              // prompt user for sublayers
+              QgsProviderSublayersDialog dlg( uri, path, sublayers, {QgsMapLayerType::VectorLayer}, QgisApp::instance() );
+
+              if ( dlg.exec() )
+                sublayers = dlg.selectedLayers();
+              else
+                sublayers.clear(); // dialog was canceled, so don't add any sublayers
+              groupName = dlg.groupName();
+              break;
+            }
+           */
+            case SublayerHandling::AskUser:
+            case SublayerHandling::LoadAll:
+            {
+              if ( detailsAreIncomplete )
+              {
+                // requery sublayers, resolving geometry types
+                sublayers = QgsProviderRegistry::instance()->querySublayers( uri, Qgis::SublayerQueryFlag::ResolveGeometryType );
+                // filter out non-vector sublayers
+                sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
+                {
+                  return sublayer.type() != QgsMapLayerType::VectorLayer;
+                } ), sublayers.end() );
+              }
+              break;
+            }
+
+            case SublayerHandling::AbortLoading:
+              sublayers.clear(); // don't add any sublayers
+              break;
+          };
+        }
+        else if ( detailsAreIncomplete )
+        {
+          // requery sublayers, resolving geometry types
+          sublayers = QgsProviderRegistry::instance()->querySublayers( uri, Qgis::SublayerQueryFlag::ResolveGeometryType );
+          // filter out non-vector sublayers
+          sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
+          {
+            return sublayer.type() != QgsMapLayerType::VectorLayer;
+          } ), sublayers.end() );
+        }
+
+        // now add sublayers
+        if ( !sublayers.empty() )
+        {
+          addedLayers << addSublayers( sublayers, baseName, groupName );
+        }
+
+      }
+      else
+      {
+        QString msg = QObject::tr( "%1 is not a valid or recognized data source." ).arg( uri );
+        // If the failed layer was a vsicurl type, give the user a chance to try the normal download.
+        if ( isVsiCurl &&
+             QMessageBox::question( nullptr, QObject::tr( "Invalid Data Source" ),
+                                    QObject::tr( "Download with \"Protocol\" source type has failed, do you want to try the \"File\" source type?" ) ) == QMessageBox::Yes )
+        {
+          QString fileUri = uri;
+          fileUri.replace( QLatin1String( "/vsicurl/" ), " " );
+          return addOgrVectorLayers( QStringList() << fileUri, encoding, dataSourceType, showWarningOnInvalid );
+        }
+//        else if ( showWarningOnInvalid )
+//        {
+//          QgisApp::instance()->visibleMessageBar()->pushMessage( QObject::tr( "Invalid Data Source" ), msg, Qgis::MessageLevel::Critical );
+//        }
+      }
+    }
+
+    // make sure at least one layer was successfully added
+    if ( layersToAdd.isEmpty() )
+    {
+      // we also return true if we asked the user for sublayers, but they choose none. In this case nothing
+      // went wrong, so we shouldn't return false and cause GUI warnings to appear
+      ok = userAskedToAddLayers || !addedLayers.isEmpty();
+    }
+
+    // Register this layer with the layers registry
+    QgsProject::instance()->addMapLayers( layersToAdd );
+//    for ( QgsMapLayer *l : std::as_const( layersToAdd ) )
+//    {
+//      QgisApp::instance()->askUserForDatumTransform( l->crs(), QgsProject::instance()->crs(), l );
+//      QgsAppLayerHandling::postProcessAddedLayer( l );
+//    }
+//    QgisApp::instance()->activateDeactivateLayerRelatedActions( QgisApp::instance()->activeLayer() );
+
+    ok = true;
+    addedLayers.append( layersToAdd );
+
+    for ( QgsMapLayer *l : std::as_const( addedLayers ) )
+    {
+      if ( !encoding.isEmpty() )
+      {
+        if ( QgsVectorLayer *vl = qobject_cast< QgsVectorLayer * >( l ) )
+          vl->setProviderEncoding( encoding );
+      }
+    }
+
+    return addedLayers;
+
 }
 
 QgsRasterLayer *ll_qgis_base_lib_layerhandling::addRasterLayer(const QString &uri, const QString &baseName, const QString &provider)
@@ -104,7 +303,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addSublayers(const QList<Qg
         else
         {
             if ( layerName != baseName && !layerName.isEmpty() && !baseName.isEmpty() )
-              layer->setName( QStringLiteral( "%1 — %2" ).arg( baseName, layerName ) );
+              layer->setName( QString::fromLocal8Bit( "%1 — %2" ).arg( baseName, layerName ) );
             else if ( !layerName.isEmpty() )
               layer->setName( layerName );
             else if ( !baseName.isEmpty() )
@@ -193,4 +392,123 @@ T *ll_qgis_base_lib_layerhandling::addLayerPrivate(QgsMapLayerType type, const Q
     }
     return result;
 
+}
+bool ll_qgis_base_lib_layerhandling::askUserForZipItemLayers( const QString &path, const QList<QgsMapLayerType> &acceptableTypes )
+{
+  // query sublayers
+  QList< QgsProviderSublayerDetails > sublayers = QgsProviderRegistry::instance()->querySublayers( path, Qgis::SublayerQueryFlag::IncludeSystemTables );
+
+  // filter out non-matching sublayers
+  sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), [acceptableTypes]( const QgsProviderSublayerDetails & sublayer )
+  {
+    return !acceptableTypes.empty() && !acceptableTypes.contains( sublayer.type() );
+  } ), sublayers.end() );
+
+  if ( sublayers.empty() )
+    return false;
+
+  const bool detailsAreIncomplete = QgsProviderUtils::sublayerDetailsAreIncomplete( sublayers, QgsProviderUtils::SublayerCompletenessFlag::IgnoreUnknownFeatureCount );
+  const bool singleSublayerOnly = sublayers.size() == 1;
+  QString groupName;
+
+  if ( !singleSublayerOnly || detailsAreIncomplete )
+  {
+    // ask user for sublayers (unless user settings dictate otherwise!)
+    switch ( shouldAskUserForSublayers( sublayers ) )
+    {
+    /*
+      case SublayerHandling::AskUser:
+      {
+        // prompt user for sublayers
+        QgsProviderSublayersDialog dlg( path, path, sublayers, acceptableTypes, QgisApp::instance() );
+
+        if ( dlg.exec() )
+          sublayers = dlg.selectedLayers();
+        else
+          sublayers.clear(); // dialog was canceled, so don't add any sublayers
+        groupName = dlg.groupName();
+        break;
+      }
+    */
+      case SublayerHandling::AskUser:
+      case SublayerHandling::LoadAll:
+      {
+        if ( detailsAreIncomplete )
+        {
+          // requery sublayers, resolving geometry types
+          sublayers = QgsProviderRegistry::instance()->querySublayers( path, Qgis::SublayerQueryFlag::ResolveGeometryType );
+          sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), [acceptableTypes]( const QgsProviderSublayerDetails & sublayer )
+          {
+            return !acceptableTypes.empty() && !acceptableTypes.contains( sublayer.type() );
+          } ), sublayers.end() );
+        }
+        break;
+      }
+
+      case SublayerHandling::AbortLoading:
+        sublayers.clear(); // don't add any sublayers
+        break;
+    };
+  }
+  else if ( detailsAreIncomplete )
+  {
+    // requery sublayers, resolving geometry types
+    sublayers = QgsProviderRegistry::instance()->querySublayers( path, Qgis::SublayerQueryFlag::ResolveGeometryType );
+    sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), [acceptableTypes]( const QgsProviderSublayerDetails & sublayer )
+    {
+      return !acceptableTypes.empty() && !acceptableTypes.contains( sublayer.type() );
+    } ), sublayers.end() );
+  }
+
+  // now add sublayers
+  if ( !sublayers.empty() )
+  {
+//    QgsCanvasRefreshBlocker refreshBlocker;
+    QgsSettings settings;
+
+    QString base = QgsProviderUtils::suggestLayerNameFromFilePath( path );
+    if ( settings.value( QStringLiteral( "qgis/formatLayerName" ), false ).toBool() )
+    {
+      base = QgsMapLayer::formatLayerName( base );
+    }
+
+    addSublayers( sublayers, base, groupName );
+//    QgisApp::instance()->activateDeactivateLayerRelatedActions( QgisApp::instance()->activeLayer() );
+  }
+
+  return true;
+}
+
+ll_qgis_base_lib_layerhandling::SublayerHandling ll_qgis_base_lib_layerhandling::shouldAskUserForSublayers( const QList<QgsProviderSublayerDetails> &layers, bool hasNonLayerItems )
+{
+  if ( hasNonLayerItems )
+    return SublayerHandling::AskUser;
+
+  QgsSettings settings;
+  const Qgis::SublayerPromptMode promptLayers = settings.enumValue( QStringLiteral( "qgis/promptForSublayers" ), Qgis::SublayerPromptMode::AlwaysAsk );
+
+  switch ( promptLayers )
+  {
+    case Qgis::SublayerPromptMode::AlwaysAsk:
+      return SublayerHandling::AskUser;
+
+    case Qgis::SublayerPromptMode::AskExcludingRasterBands:
+    {
+      // if any non-raster layers are found, we ask the user. Otherwise we load all
+      for ( const QgsProviderSublayerDetails &sublayer : layers )
+      {
+        if ( sublayer.type() != QgsMapLayerType::RasterLayer )
+          return SublayerHandling::AskUser;
+      }
+      return SublayerHandling::LoadAll;
+    }
+
+    case Qgis::SublayerPromptMode::NeverAskSkip:
+      return SublayerHandling::AbortLoading;
+
+    case Qgis::SublayerPromptMode::NeverAskLoadAll:
+      return SublayerHandling::LoadAll;
+  }
+
+  return SublayerHandling::AskUser;
 }
