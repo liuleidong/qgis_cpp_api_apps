@@ -29,6 +29,7 @@ public:
     static QgsVectorLayer *addVectorLayer( const QString &uri, const QString &baseName, const QString &provider = QLatin1String( "ogr" ) );
     static QList< QgsMapLayer * > addOgrVectorLayers( const QStringList &uris, const QString &encoding, const QString &dataSourceType, bool &ok, bool showWarningOnInvalid = true );
     static QgsRasterLayer *addRasterLayer( QString const &uri, const QString &baseName, const QString &provider = QLatin1String( "gdal" ) );
+    static QList< QgsMapLayer * > addGdalRasterLayers( const QStringList &uris, bool &ok, bool showWarningOnInvalid = true );
 private:
     template<typename T> static T *addLayerPrivate( QgsMapLayerType type, const QString &uri, const QString &baseName, const QString &providerKey, bool guiWarnings = false );
     static QList< QgsMapLayer * > addSublayers( const QList< QgsProviderSublayerDetails> &layers, const QString &baseName, const QString &groupName );

@@ -223,6 +223,102 @@ QgsRasterLayer *ll_qgis_base_lib_layerhandling::addRasterLayer(const QString &ur
     return addLayerPrivate< QgsRasterLayer >( QgsMapLayerType::RasterLayer, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "gdal" ), true );
 }
 
+QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addGdalRasterLayers(const QStringList &uris, bool &ok, bool showWarningOnInvalid)
+{
+    ok = false;
+    if ( uris.empty() )
+    {
+      return {};
+    }
+
+//    QgsCanvasRefreshBlocker refreshBlocker;
+
+    // this is messy since some files in the list may be rasters and others may
+    // be ogr layers. We'll set returnValue to false if one or more layers fail
+    // to load.
+
+    QList< QgsMapLayer * > res;
+
+    for ( const QString &uri : uris )
+    {
+      QString errMsg;
+
+      // if needed prompt for zipitem layers
+      QString vsiPrefix = QgsZipItem::vsiPrefix( uri );
+      if ( ( !uri.startsWith( QLatin1String( "/vsi" ), Qt::CaseInsensitive ) || uri.endsWith( QLatin1String( ".zip" ) ) || uri.endsWith( QLatin1String( ".tar" ) ) ) &&
+           ( vsiPrefix == QLatin1String( "/vsizip/" ) || vsiPrefix == QLatin1String( "/vsitar/" ) ) )
+      {
+        if ( askUserForZipItemLayers( uri, { QgsMapLayerType::RasterLayer } ) )
+          continue;
+      }
+
+      const bool isVsiCurl { uri.startsWith( QLatin1String( "/vsicurl" ), Qt::CaseInsensitive ) };
+      const bool isRemoteUrl { uri.startsWith( QLatin1String( "http" ) ) || uri == QLatin1String( "ftp" ) };
+
+      std::unique_ptr< QgsTemporaryCursorOverride > cursorOverride;
+      if ( isVsiCurl || isRemoteUrl )
+      {
+        cursorOverride = std::make_unique< QgsTemporaryCursorOverride >( Qt::WaitCursor );
+//        QgisApp::instance()->visibleMessageBar()->pushInfo( QObject::tr( "Remote layer" ), QObject::tr( "loading %1, please wait …" ).arg( uri ) );
+        qApp->processEvents();
+      }
+
+      if ( QgsRasterLayer::isValidRasterFileName( uri, errMsg ) )
+      {
+        QFileInfo myFileInfo( uri );
+
+        // set the layer name to the file base name unless provided explicitly
+        QString layerName;
+        const QVariantMap uriDetails = QgsProviderRegistry::instance()->decodeUri( QStringLiteral( "gdal" ), uri );
+        if ( !uriDetails[ QStringLiteral( "layerName" ) ].toString().isEmpty() )
+        {
+          layerName = uriDetails[ QStringLiteral( "layerName" ) ].toString();
+        }
+        else
+        {
+          layerName = QgsProviderUtils::suggestLayerNameFromFilePath( uri );
+        }
+
+        // try to create the layer
+        cursorOverride.reset();
+        QgsRasterLayer *layer = addLayerPrivate< QgsRasterLayer >( QgsMapLayerType::RasterLayer, uri, layerName, QStringLiteral( "gdal" ), showWarningOnInvalid );
+        res << layer;
+
+        if ( layer && layer->isValid() )
+        {
+          //only allow one copy of a ai grid file to be loaded at a
+          //time to prevent the user selecting all adfs in 1 dir which
+          //actually represent 1 coverage,
+
+          if ( myFileInfo.fileName().endsWith( QLatin1String( ".adf" ), Qt::CaseInsensitive ) )
+          {
+            break;
+          }
+        }
+        // if layer is invalid addLayerPrivate() will show the error
+
+      } // valid raster filename
+      else
+      {
+        ok = false;
+
+        // Issue message box warning unless we are loading from cmd line since
+        // non-rasters are passed to this function first and then successfully
+        // loaded afterwards (see main.cpp)
+        if ( showWarningOnInvalid )
+        {
+          QString msg = QObject::tr( "%1 is not a supported raster data source" ).arg( uri );
+          if ( !errMsg.isEmpty() )
+            msg += '\n' + errMsg;
+
+//          QgisApp::instance()->visibleMessageBar()->pushMessage( QObject::tr( "Unsupported Data Source" ), msg, Qgis::MessageLevel::Critical );
+        }
+      }
+    }
+    return res;
+
+}
+
 QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addSublayers(const QList<QgsProviderSublayerDetails> &layers, const QString &baseName, const QString &groupName)
 {
     QgsLayerTreeGroup *group = nullptr;
