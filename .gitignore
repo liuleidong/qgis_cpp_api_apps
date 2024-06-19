@@ -45,3 +45,4 @@ CMakeLists.txt.user*
 thirdparty/
 bin/gdalwmscache/
 bin/share/
+build/
