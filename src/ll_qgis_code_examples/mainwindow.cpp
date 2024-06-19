@@ -649,7 +649,7 @@ void MainWindow::addSpatiaLiteSlot()
 
 void MainWindow::addMemorySlot()
 {
-    QString uri = QStringLiteral("Point?crs=epsg:4326&field=name:string(20)");
+    QString uri = QStringLiteral("Point?crs=epsg:4326&field=name:string(20)&field=type:integer");
     QgsVectorLayer *layer = new QgsVectorLayer(uri,"New stratch layer","memory");
     QgsProject::instance()->addMapLayer(layer);
     if(layer)
@@ -672,13 +672,23 @@ void MainWindow::addMemorySlot()
         //添加Feature
         QgsVectorDataProvider * dataProvider = layer->dataProvider();
         QgsFields fields;
-        QgsField fName("test");
+        QgsField fName("name");
+        QgsField fType("type");
         fields.append(fName);
+        fields.append(fType);
         QgsFeature f(fields);
         f.setGeometry(QgsGeometry::fromPointXY(QgsPointXY(-34.0146,20.3046)));
         f.setAttribute("test",QString("string1"));
+        f.setAttribute("type",1);
+
         dataProvider->addFeature(f);
         //提交改动
+        layer->commitChanges();
+
+        layer->startEditing();
+        f.setAttribute("test",QString("string2"));
+        f.setAttribute("type",2);
+        qDebug() << f.attribute("test");
         layer->commitChanges();
     }
     zoomToFirstLayer<QgsVectorLayer*>();

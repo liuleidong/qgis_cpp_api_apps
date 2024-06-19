@@ -191,6 +191,8 @@ private slots:
     void hideSelectedLayers();
     void removeLayer();
     void userRotation();
+    void showScaleSlot( double scale );
+    void updateMouseCoordinatePrecisionSlot();
 
 signals:
     void showVectorLayerSaveAsDialogSignal();

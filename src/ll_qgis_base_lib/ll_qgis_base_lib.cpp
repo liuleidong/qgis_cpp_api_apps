@@ -78,6 +78,8 @@
 #include "qgscontrastenhancement.h"
 #include "qgsrastertransparency.h"
 
+#include "qgscoordinateutils.h"
+
 #include "ll_qgis_base_lib_layertreeview_menu.h"
 #include "ll_qgis_base_lib_layerhandling.h"
 
@@ -253,6 +255,11 @@ void ll_qgis_base_lib::initStatusbarWidget()
     mScaleWidget = new QgsStatusBarScaleWidget( mMapCanvas, mMainWindow->statusBar() );
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
     mScaleWidget->updateScales();
+
+    mMainWindow->statusBar()->addPermanentWidget( mCoordsEdit, 0 );
+    mMainWindow->statusBar()->addPermanentWidget( mScaleWidget);
+    connect( mMapCanvas, &QgsMapCanvas::scaleChanged, this, &ll_qgis_base_lib::updateMouseCoordinatePrecisionSlot);
+    connect( mMapCanvas, &QgsMapCanvas::scaleChanged, this, &ll_qgis_base_lib::showScaleSlot);
 
 }
 
@@ -532,6 +539,16 @@ void ll_qgis_base_lib::userRotation()
     double degrees = 0.0;//mRotationEdit->value();
     mMapCanvas->setRotation( degrees );
     mMapCanvas->refresh();
+}
+
+void ll_qgis_base_lib::showScaleSlot(double scale)
+{
+    mScaleWidget->setScale( scale );
+}
+
+void ll_qgis_base_lib::updateMouseCoordinatePrecisionSlot()
+{
+    mCoordsEdit->setMouseCoordinatesPrecision( QgsCoordinateUtils::calculateCoordinatePrecision( mMapCanvas->mapUnitsPerPixel(), mMapCanvas->mapSettings().destinationCrs() ) );
 }
 
 void ll_qgis_base_lib::computeDataSources()
