@@ -83,6 +83,8 @@
 #include "ll_qgis_base_lib_layertreeview_menu.h"
 #include "ll_qgis_base_lib_layerhandling.h"
 
+ll_qgis_base_lib* ll_qgis_base_lib::sInstance = nullptr;
+
 ll_qgis_base_lib::ll_qgis_base_lib()
 {
 
@@ -571,6 +573,16 @@ QgsStatusBarCoordinatesWidget *ll_qgis_base_lib::coordsEdit() const
 {
     return mCoordsEdit;
 }
+
+ll_qgis_base_lib *ll_qgis_base_lib::Instance()
+{
+    if(sInstance == nullptr)
+    {
+        sInstance = new ll_qgis_base_lib;
+    }
+    return sInstance;
+}
+
 
 QgsStatusBarScaleWidget *ll_qgis_base_lib::scaleWidget() const
 {
