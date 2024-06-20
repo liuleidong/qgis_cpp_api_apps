@@ -46,3 +46,10 @@ thirdparty/
 bin/gdalwmscache/
 bin/share/
 build/
+*.log
+bin/ll_qgis_app_demo
+bin/ll_qgis_code_examples
+bin/ll_qgis_hello
+bin/ll_qgis_uav_realtime
+bin/symbology-style.db
+bin/user-history.db

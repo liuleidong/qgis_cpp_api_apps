@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "ll_qgis_base_lib_global.h"
-#include "ll_qgis_base_lib_singleton.h"
+//#include "ll_qgis_base_lib_singleton.h"
 #include "ld_symbol_property.h"
 #include "ld_geometry.h"
 
@@ -46,11 +46,10 @@ class QgsRasterDataProvider;
  */
 class LD_LIB_APP_EXPORT ll_qgis_base_lib : public QObject
 {
-    DECLARE_SINGLETON(ll_qgis_base_lib);
     Q_OBJECT
-private:
-    ll_qgis_base_lib();
 public:
+
+    ll_qgis_base_lib();
     ///
     /// \brief 返回库版本
     /// \return
@@ -63,6 +62,8 @@ public:
     QgsDockWidget *layerTreeDock() const;    
     QgsStatusBarScaleWidget *scaleWidget() const;
     QgsStatusBarCoordinatesWidget *coordsEdit() const;
+
+    static ll_qgis_base_lib* Instance();
 
     ///
     /// \brief
@@ -201,8 +202,9 @@ private:
     void computeDataSources();
 
 private:
-    QMainWindow *mMainWindow = nullptr;
+    static ll_qgis_base_lib *sInstance;
 
+    QMainWindow *mMainWindow = nullptr;
     QgsMapCanvas *mMapCanvas = nullptr;
     QgsDockWidget* mLayerTreeDock = nullptr;
     QgsLayerTreeView* mLayerTreeView = nullptr;
