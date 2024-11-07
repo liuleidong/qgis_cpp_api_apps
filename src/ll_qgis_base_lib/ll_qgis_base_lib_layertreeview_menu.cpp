@@ -54,7 +54,6 @@ QMenu *ll_qgis_base_layertreeview_menu::createContextMenu()
         else if(QgsLayerTree::isLayer(node))
         {
             QgsMapLayer* layer = QgsLayerTree::toLayer(node)->layer();
-            QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
             if ( layer && layer->isSpatial() )
             {
                 //添加zoom to layer右键菜单项目
@@ -62,6 +61,10 @@ QMenu *ll_qgis_base_layertreeview_menu::createContextMenu()
                 zoomToLayers->setEnabled( layer->isValid() );
                 menu->addAction(zoomToLayers);
             }
+            //删除图层
+            menu->addAction(actions->actionRemoveGroupOrLayer(menu));
+            //矢量图层特有
+            QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
             if ( vlayer )
             {
                 //显示图层Feature数量
@@ -80,8 +83,7 @@ QMenu *ll_qgis_base_layertreeview_menu::createContextMenu()
                 connect( actionShowLabels, &QAction::toggled, this, &ll_qgis_base_layertreeview_menu::toggleLabels );
                 menu->addAction( actionShowLabels );
             }
-            //删除图层
-            menu->addAction(actions->actionRemoveGroupOrLayer(menu));
+            //raster图层特有
             QgsRasterLayer *rlayer = qobject_cast<QgsRasterLayer *>( layer );
             if ( rlayer )
             {

@@ -121,9 +121,7 @@ void MainWindow::addOrMovePoint(const SGeometryInfo &geometryInfo, const QString
     QgsVectorDataProvider * dataProvider = mDevPointLayer->dataProvider();
     if(isFeatureExsit)
     {
-        mDevPointLayer->startEditing(
-
-                    );
+        mDevPointLayer->startEditing();
         QgsGeometry geometry = QgsGeometry::fromPointXY(QgsPointXY(geometryInfo.longitude,geometryInfo.latitude));
         mDevPointLayer->changeGeometry(ff.id(),geometry);
         mDevPointLayer->commitChanges();

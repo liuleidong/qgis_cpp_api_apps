@@ -78,8 +78,12 @@
 #include "qgscontrastenhancement.h"
 #include "qgsrastertransparency.h"
 
+#include "qgscoordinateutils.h"
+
 #include "ll_qgis_base_lib_layertreeview_menu.h"
 #include "ll_qgis_base_lib_layerhandling.h"
+
+ll_qgis_base_lib* ll_qgis_base_lib::sInstance = nullptr;
 
 ll_qgis_base_lib::ll_qgis_base_lib()
 {
@@ -255,6 +259,11 @@ void ll_qgis_base_lib::initStatusbarWidget()
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
     mScaleWidget->updateScales();
     mMainWindow->statusBar()->addPermanentWidget(mScaleWidget);
+    mMainWindow->statusBar()->addPermanentWidget( mCoordsEdit, 0 );
+    mMainWindow->statusBar()->addPermanentWidget( mScaleWidget);
+    connect( mMapCanvas, &QgsMapCanvas::scaleChanged, this, &ll_qgis_base_lib::updateMouseCoordinatePrecisionSlot);
+    connect( mMapCanvas, &QgsMapCanvas::scaleChanged, this, &ll_qgis_base_lib::showScaleSlot);
+
 }
 
 QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
@@ -535,6 +544,16 @@ void ll_qgis_base_lib::userRotation()
     mMapCanvas->refresh();
 }
 
+void ll_qgis_base_lib::showScaleSlot(double scale)
+{
+    mScaleWidget->setScale( scale );
+}
+
+void ll_qgis_base_lib::updateMouseCoordinatePrecisionSlot()
+{
+    mCoordsEdit->setMouseCoordinatesPrecision( QgsCoordinateUtils::calculateCoordinatePrecision( mMapCanvas->mapUnitsPerPixel(), mMapCanvas->mapSettings().destinationCrs() ) );
+}
+
 void ll_qgis_base_lib::computeDataSources()
 {
     QgsSettings settings;
@@ -555,6 +574,16 @@ QgsStatusBarCoordinatesWidget *ll_qgis_base_lib::coordsEdit() const
 {
     return mCoordsEdit;
 }
+
+ll_qgis_base_lib *ll_qgis_base_lib::Instance()
+{
+    if(sInstance == nullptr)
+    {
+        sInstance = new ll_qgis_base_lib;
+    }
+    return sInstance;
+}
+
 
 QgsStatusBarScaleWidget *ll_qgis_base_lib::scaleWidget() const
 {
