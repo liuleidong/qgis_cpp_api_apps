@@ -246,14 +246,15 @@ void ll_qgis_base_lib::initMaptools()
 
 void ll_qgis_base_lib::initStatusbarWidget()
 {
-    mCoordsEdit = new QgsStatusBarCoordinatesWidget( mMainWindow->statusBar() );
+    mCoordsEdit = new QgsStatusBarCoordinatesWidget(nullptr);
     mCoordsEdit->setObjectName( QStringLiteral( "mCoordsEdit" ) );
     mCoordsEdit->setMapCanvas( mMapCanvas);
+    mMainWindow->statusBar()->addPermanentWidget(mCoordsEdit);
 
-    mScaleWidget = new QgsStatusBarScaleWidget( mMapCanvas, mMainWindow->statusBar() );
+    mScaleWidget = new QgsStatusBarScaleWidget( mMapCanvas );
     mScaleWidget->setObjectName( QStringLiteral( "mScaleWidget" ) );
     mScaleWidget->updateScales();
-
+    mMainWindow->statusBar()->addPermanentWidget(mScaleWidget);
 }
 
 QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
