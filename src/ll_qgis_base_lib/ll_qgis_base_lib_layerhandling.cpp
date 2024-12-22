@@ -20,7 +20,7 @@
 
 QgsVectorLayer *ll_qgis_base_lib_layerhandling::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
 {
-    return addLayerPrivate< QgsVectorLayer >( QgsMapLayerType::VectorLayer, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "ogr" ), true );
+    return addLayerPrivate< QgsVectorLayer >( Qgis::LayerType::Vector, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "ogr" ), true );
 }
 
 QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const QStringList &layers, const QString &encoding, const QString &dataSourceType, bool &ok, bool showWarningOnInvalid )
@@ -52,7 +52,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
         if ( ! uri.startsWith( QLatin1String( "/vsi" ), Qt::CaseInsensitive ) &&
              ( vsiPrefix == QLatin1String( "/vsizip/" ) || vsiPrefix == QLatin1String( "/vsitar/" ) ) )
         {
-          if ( askUserForZipItemLayers( uri, { QgsMapLayerType::VectorLayer } ) )
+          if ( askUserForZipItemLayers( uri, { Qgis::LayerType::Vector } ) )
             continue;
         }
       }
@@ -92,7 +92,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
       // filter out non-vector sublayers
       sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
       {
-        return sublayer.type() != QgsMapLayerType::VectorLayer;
+        return sublayer.type() != Qgis::LayerType::Vector;
       } ), sublayers.end() );
 
       cursorOverride.reset();
@@ -117,7 +117,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
             case SublayerHandling::AskUser:
             {
               // prompt user for sublayers
-              QgsProviderSublayersDialog dlg( uri, path, sublayers, {QgsMapLayerType::VectorLayer}, QgisApp::instance() );
+              QgsProviderSublayersDialog dlg( uri, path, sublayers, {Qgis::LayerType::Vector}, QgisApp::instance() );
 
               if ( dlg.exec() )
                 sublayers = dlg.selectedLayers();
@@ -137,7 +137,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
                 // filter out non-vector sublayers
                 sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
                 {
-                  return sublayer.type() != QgsMapLayerType::VectorLayer;
+                  return sublayer.type() != Qgis::LayerType::Vector;
                 } ), sublayers.end() );
               }
               break;
@@ -155,7 +155,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
           // filter out non-vector sublayers
           sublayers.erase( std::remove_if( sublayers.begin(), sublayers.end(), []( const QgsProviderSublayerDetails & sublayer )
           {
-            return sublayer.type() != QgsMapLayerType::VectorLayer;
+            return sublayer.type() != Qgis::LayerType::Vector;
           } ), sublayers.end() );
         }
 
@@ -220,7 +220,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addOgrVectorLayers( const Q
 
 QgsRasterLayer *ll_qgis_base_lib_layerhandling::addRasterLayer(const QString &uri, const QString &baseName, const QString &provider)
 {
-    return addLayerPrivate< QgsRasterLayer >( QgsMapLayerType::RasterLayer, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "gdal" ), true );
+    return addLayerPrivate< QgsRasterLayer >( Qgis::LayerType::Vector, uri, baseName, !provider.isEmpty() ? provider : QLatin1String( "gdal" ), true );
 }
 
 QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addGdalRasterLayers(const QStringList &uris, bool &ok, bool showWarningOnInvalid)
@@ -248,7 +248,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addGdalRasterLayers(const Q
       if ( ( !uri.startsWith( QLatin1String( "/vsi" ), Qt::CaseInsensitive ) || uri.endsWith( QLatin1String( ".zip" ) ) || uri.endsWith( QLatin1String( ".tar" ) ) ) &&
            ( vsiPrefix == QLatin1String( "/vsizip/" ) || vsiPrefix == QLatin1String( "/vsitar/" ) ) )
       {
-        if ( askUserForZipItemLayers( uri, { QgsMapLayerType::RasterLayer } ) )
+        if ( askUserForZipItemLayers( uri, { Qgis::LayerType::Vector } ) )
           continue;
       }
 
@@ -281,7 +281,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addGdalRasterLayers(const Q
 
         // try to create the layer
         cursorOverride.reset();
-        QgsRasterLayer *layer = addLayerPrivate< QgsRasterLayer >( QgsMapLayerType::RasterLayer, uri, layerName, QStringLiteral( "gdal" ), showWarningOnInvalid );
+        QgsRasterLayer *layer = addLayerPrivate< QgsRasterLayer >( Qgis::LayerType::Vector, uri, layerName, QStringLiteral( "gdal" ), showWarningOnInvalid );
         res << layer;
 
         if ( layer && layer->isValid() )
@@ -419,7 +419,7 @@ QList<QgsMapLayer *> ll_qgis_base_lib_layerhandling::addSublayers(const QList<Qg
 }
 
 template<typename T>
-T *ll_qgis_base_lib_layerhandling::addLayerPrivate(QgsMapLayerType type, const QString &uri, const QString &baseName, const QString &providerKey, bool guiWarnings)
+T *ll_qgis_base_lib_layerhandling::addLayerPrivate(Qgis::LayerType type, const QString &uri, const QString &baseName, const QString &providerKey, bool guiWarnings)
 {
     QVariantMap uriElements = QgsProviderRegistry::instance()->decodeUri( providerKey, uri );
     QString path = uri;
@@ -489,7 +489,7 @@ T *ll_qgis_base_lib_layerhandling::addLayerPrivate(QgsMapLayerType type, const Q
     return result;
 
 }
-bool ll_qgis_base_lib_layerhandling::askUserForZipItemLayers( const QString &path, const QList<QgsMapLayerType> &acceptableTypes )
+bool ll_qgis_base_lib_layerhandling::askUserForZipItemLayers( const QString &path, const QList<Qgis::LayerType> &acceptableTypes )
 {
   // query sublayers
   QList< QgsProviderSublayerDetails > sublayers = QgsProviderRegistry::instance()->querySublayers( path, Qgis::SublayerQueryFlag::IncludeSystemTables );
@@ -593,7 +593,7 @@ ll_qgis_base_lib_layerhandling::SublayerHandling ll_qgis_base_lib_layerhandling:
       // if any non-raster layers are found, we ask the user. Otherwise we load all
       for ( const QgsProviderSublayerDetails &sublayer : layers )
       {
-        if ( sublayer.type() != QgsMapLayerType::RasterLayer )
+        if ( sublayer.type() != Qgis::LayerType::Vector )
           return SublayerHandling::AskUser;
       }
       return SublayerHandling::LoadAll;
