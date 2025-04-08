@@ -25,10 +25,19 @@ set(PROJECT_SOURCES
 add_executable(ll_qgis_hello ${PROJECT_SOURCES})
 
 if(WIN32)
+    if(MSYS OR MINGW)
+        target_link_libraries(ll_qgis_hello
+            Qt${QT_VERSION_MAJOR}::Widgets
+            qgis_core
+            qgis_gui
+            -lstdc++)
+    else()
     target_link_libraries(ll_qgis_hello
         Qt${QT_VERSION_MAJOR}::Widgets
         qgis_core.lib
         qgis_gui.lib)
+    ENDIF()
+
 ELSEIF(UNIX)
     target_link_libraries(ll_qgis_hello
         Qt${QT_VERSION_MAJOR}::Widgets

@@ -70,6 +70,7 @@
 #include "qgsvectorfilewriter.h"
 #include "qgsprocessingregistry.h"
 #include "qgsprocessingalgrunnertask.h"
+#include "qgsspatialindex.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -431,7 +432,7 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
         mApp->mapCanvas()->setRotation(0);
         if(mRubberBandPoint)
         {
-            mRubberBandPoint->reset(QgsWkbTypes::PointGeometry);
+            mRubberBandPoint->reset(Qgis::GeometryType::Point);
             mRubberBandPoint = nullptr;
         }
         //QgsRubberBand和QgsVertexMarker都是QGraphicsItem的子类
@@ -440,12 +441,12 @@ void MainWindow::stackWidgetCurentChangedSlot(int index)
         //一种删除QGraphicsItem的方式
         if(mRubberBandLine)
         {
-            mRubberBandLine->reset(QgsWkbTypes::LineGeometry);
+            mRubberBandLine->reset(Qgis::GeometryType::Line);
             mRubberBandLine = nullptr;
         }
         if(mRubberBandPolygon)
         {
-            mRubberBandPolygon->reset(QgsWkbTypes::PolygonGeometry);
+            mRubberBandPolygon->reset(Qgis::GeometryType::Polygon);
             mRubberBandPolygon = nullptr;
         }
         //另一种删除QGraphicsItem的方式
@@ -823,7 +824,7 @@ void MainWindow::rubberBandLineSlot()
     QgsPointXY startPoint(20.34013,-33.90453);
     QgsPointXY endPoint(20.49744,-33.91126);
     //新建QgsRubberBand，注意类型是LineGeometry
-    mRubberBandLine = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::LineGeometry);
+    mRubberBandLine = new QgsRubberBand(mApp->mapCanvas(),Qgis::GeometryType::Line);
     //将点添加到rubberband中
     mRubberBandLine->addPoint(startPoint);
     mRubberBandLine->addPoint(endPoint);
@@ -831,7 +832,7 @@ void MainWindow::rubberBandLineSlot()
     mRubberBandLine->setWidth(4);
     mRubberBandLine->setColor(QColor(222,155,67));
     //定义一个点类型的RubberBand
-    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),Qgis::GeometryType::Point);
     mRubberBandPoint->addPoint(startPoint);
     mRubberBandPoint->addPoint(endPoint);
     mRubberBandPoint->setWidth(6);
@@ -853,7 +854,7 @@ void MainWindow::rubberBandPolygonSlot()
     QgsPointXY point2(20.49744,-33.91126);
     QgsPointXY point3(20.41396,-33.93079);
     //新建PolygonGeometry类型的RubberBand
-    mRubberBandPolygon = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
+    mRubberBandPolygon = new QgsRubberBand(mApp->mapCanvas(),Qgis::GeometryType::Polygon);
     //添加三个点
     mRubberBandPolygon->addPoint(point1);
     mRubberBandPolygon->addPoint(point2);
@@ -861,7 +862,7 @@ void MainWindow::rubberBandPolygonSlot()
     //设置线宽颜色等属性
     mRubberBandPolygon->setWidth(4);
     mRubberBandPolygon->setColor(QColor(222,155,67));
-    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PointGeometry);
+    mRubberBandPoint = new QgsRubberBand(mApp->mapCanvas(),Qgis::GeometryType::Point);
     mRubberBandPoint->addPoint(point1);
     mRubberBandPoint->addPoint(point2);
     mRubberBandPoint->addPoint(point3);
@@ -1475,7 +1476,7 @@ void MainWindow::pointClusterSlot()
     fm->setColor( QColor( 255, 255, 255 ) );
     fm->setSize( 3.2 );
     fm->setOffset( QPointF( 0, -0.4 ) );
-    fm->setDataDefinedProperty( QgsSymbolLayer::PropertyCharacter, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
+    fm->setDataDefinedProperty( QgsSymbolLayer::Property::Character, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
     markerSymbol->insertSymbolLayer( 1, fm );
     pointClusterRenderer->setClusterSymbol(markerSymbol);
 #else
@@ -1490,7 +1491,7 @@ void MainWindow::pointClusterSlot()
     mp1[QString("color")] = QStringLiteral("white");
     mp1[QString("offset")] = QStringLiteral("0, -0.8");
     auto fontSymbolLayer = QgsFontMarkerSymbolLayer::create(mp1);
-    fontSymbolLayer->setDataDefinedProperty( QgsSymbolLayer::PropertyCharacter, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
+    fontSymbolLayer->setDataDefinedProperty( QgsSymbolLayer::Property::Character, QgsProperty::fromExpression( QStringLiteral( "@cluster_size" ) ) );
     QgsSymbolLayerList layerList;
     layerList << simpleSymbolLayer << fontSymbolLayer;
     auto markerSymbol = new QgsMarkerSymbol(layerList);
@@ -2466,7 +2467,7 @@ bool MainWindow::minMaxValuesForBand(int band, QgsRasterDataProvider *provider, 
     const QgsSettings s;
     if ( s.value( QStringLiteral( "/Raster/useStandardDeviation" ), false ).toBool() )
     {
-        const QgsRasterBandStats stats = provider->bandStatistics( band, QgsRasterBandStats::Mean | QgsRasterBandStats::StdDev );
+        const QgsRasterBandStats stats = provider->bandStatistics( band, Qgis::RasterBandStatistic::Mean | Qgis::RasterBandStatistic::StdDev );
 
         const double stdDevFactor = s.value( QStringLiteral( "/Raster/defaultStandardDeviation" ), 2.0 ).toDouble();
         const double diff = stdDevFactor * stats.stdDev;
@@ -2475,7 +2476,7 @@ bool MainWindow::minMaxValuesForBand(int band, QgsRasterDataProvider *provider, 
     }
     else
     {
-        const QgsRasterBandStats stats = provider->bandStatistics( band, QgsRasterBandStats::Min | QgsRasterBandStats::Max );
+        const QgsRasterBandStats stats = provider->bandStatistics( band, Qgis::RasterBandStatistic::Min | Qgis::RasterBandStatistic::Max );
         minValue = stats.minimumValue;
         maxValue = stats.maximumValue;
     }
@@ -2790,7 +2791,7 @@ void MainWindow::selectFeaturesSlot()
     QgsPointXY point2(1010253,6222254);
     QgsPointXY point3(1006585,6219118);
     QgsPointXY point4(1010253,6219118);
-    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),QgsWkbTypes::PolygonGeometry);
+    QgsRubberBand *rubberBand = new QgsRubberBand(mApp->mapCanvas(),Qgis::GeometryType::Polygon);
     rubberBand->addPoint(point1);
     rubberBand->addPoint(point2);
     rubberBand->addPoint(point4);

@@ -29,15 +29,28 @@ set(PROJECT_SOURCES
 add_executable(ll_qgis_uav_realtime ${PROJECT_SOURCES})
 
 if(WIN32)
-    target_link_libraries(ll_qgis_uav_realtime
-        Qt${QT_VERSION_MAJOR}::Widgets
-        Qt${QT_VERSION_MAJOR}::Xml
-        Qt${QT_VERSION_MAJOR}::Svg
-        ll_qgis_base_lib
-        qgis_app.lib
-        qgis_core.lib
-        qgis_gui.lib
-        qgis_analysis.lib)
+    if(MSYS OR MINGW)
+        target_link_libraries(ll_qgis_uav_realtime
+            Qt${QT_VERSION_MAJOR}::Widgets
+            Qt${QT_VERSION_MAJOR}::Xml
+            Qt${QT_VERSION_MAJOR}::Svg
+            ll_qgis_base_lib
+            qgis_app
+            qgis_core
+            qgis_gui
+            qgis_analysis
+            -lstdc++)
+    else()
+        target_link_libraries(ll_qgis_uav_realtime
+            Qt${QT_VERSION_MAJOR}::Widgets
+            Qt${QT_VERSION_MAJOR}::Xml
+            Qt${QT_VERSION_MAJOR}::Svg
+            ll_qgis_base_lib
+            qgis_app.lib
+            qgis_core.lib
+            qgis_gui.lib
+            qgis_analysis.lib)
+    endif()
 ELSEIF(UNIX)
     target_link_libraries(ll_qgis_uav_realtime
         Qt${QT_VERSION_MAJOR}::Widgets

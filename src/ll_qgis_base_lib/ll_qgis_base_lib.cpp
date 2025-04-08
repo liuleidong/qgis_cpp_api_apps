@@ -268,13 +268,8 @@ void ll_qgis_base_lib::initStatusbarWidget()
 
 QgsMapLayer *ll_qgis_base_lib::addVectorLayer(const QString &uri, const QString &baseName, const QString &provider)
 {
-    QgsMapLayer *layer = ll_qgis_base_lib_layerhandling::addVectorLayer( uri, baseName, provider );
-    if ( layer )
-    {
-        mLayersList << layer;
-        return layer;
-    }
-    return nullptr;
+    const QList<QgsVectorLayer *> layers { ll_qgis_base_lib_layerhandling::addVectorLayer( uri, baseName, provider ) };
+    return layers.isEmpty() ? nullptr : layers.first();
 }
 
 QList<QgsMapLayer *> ll_qgis_base_lib::addOgrVectorLayers(const QString &uri, const QString &baseName, const QString &provider)
@@ -288,13 +283,8 @@ QList<QgsMapLayer *> ll_qgis_base_lib::addOgrVectorLayers(const QString &uri, co
 
 QgsMapLayer *ll_qgis_base_lib::addRasterLayer(const QString &uri, const QString &baseName, const QString &provider)
 {
-    QgsMapLayer *layer = ll_qgis_base_lib_layerhandling::addRasterLayer( uri, baseName, provider );
-    if ( layer )
-    {
-        mLayersList << layer;
-        return layer;
-    }
-    return nullptr;
+    const QList<QgsRasterLayer *> layers { ll_qgis_base_lib_layerhandling::addRasterLayer( uri, baseName, provider ) };
+    return layers.isEmpty() ? nullptr : layers.first();
 }
 
 QgsMapLayer *ll_qgis_base_lib::addWmsLayer(const QString &uri, const QString &baseName)

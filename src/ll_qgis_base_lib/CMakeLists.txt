@@ -26,12 +26,23 @@ add_library(ll_qgis_base_lib SHARED
   image.qrc
 )
 if(WIN32)
+  if(MSYS OR MINGW)
+    target_link_libraries(ll_qgis_base_lib PRIVATE
+        Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Xml
+        qgis_core
+        qgis_gui
+        qgis_analysis
+        -lstdc++
+        )
+  else()
     target_link_libraries(ll_qgis_base_lib PRIVATE
         Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Xml
         qgis_core.lib
         qgis_gui.lib
         qgis_analysis.lib
         )
+  ENDIF()
+
 ELSEIF(UNIX)
     target_link_libraries(ll_qgis_base_lib PRIVATE
         Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Xml

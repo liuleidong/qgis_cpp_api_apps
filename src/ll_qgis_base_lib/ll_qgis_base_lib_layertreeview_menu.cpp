@@ -90,7 +90,7 @@ QMenu *ll_qgis_base_layertreeview_menu::createContextMenu()
                 QAction *zoomToNative = menu->addAction( QIcon( QString( ":/images/themes/default/mActionZoomActual.png" ) ), tr( "Zoom to Nat&ive Resolution (100%)" ), ll_qgis_base_lib::Instance(), &ll_qgis_base_lib::legendLayerZoomNative );
                 zoomToNative->setEnabled( rlayer->isValid() );
 
-                if ( rlayer->rasterType() != QgsRasterLayer::Palette )
+                if ( rlayer->rasterType() != Qgis::RasterLayerType::Palette )
                 {
                     QAction *stretch = menu->addAction( tr( "&Stretch Using Current Extent" ), ll_qgis_base_lib::Instance(), &ll_qgis_base_lib::legendLayerStretchUsingCurrentExtent );
                     stretch->setEnabled( rlayer->isValid() );
