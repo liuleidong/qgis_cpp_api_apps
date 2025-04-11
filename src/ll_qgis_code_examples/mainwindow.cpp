@@ -492,6 +492,9 @@ void MainWindow::addShpSlot()
     }
     QgsProject::instance()->addMapLayer(vecLayer);
     zoomToFirstLayer<QgsVectorLayer*>();
+
+
+
 }
 void MainWindow::addGpxSlot()
 {
@@ -2726,7 +2729,16 @@ void MainWindow::getFeaturesSlot()
 
     mVectorDataDockWidget->show();
     mVectorDataDockWidget->plainTextEdit()->clear();
-#if 0
+#if 1
+    layer->startEditing();
+    layer->beginEditCommand( tr( "Attribute changed" ) );
+    layer->changeAttributeValue( 0, 3, "654321");
+    layer->endEditCommand();
+
+    // layer->undoStack()->undo();
+
+    layer->commitChanges();
+
     QgsFeatureIterator it = layer->getFeatures();
     QgsFeature f;
     while(it.nextFeature(f))
