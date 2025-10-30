@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../../inc/qss/AMOLED.qss</file>
+        <file>../../inc/qss/Aqua.qss</file>
+        <file>../../inc/qss/ConsoleStyle.qss</file>
+        <file>../../inc/qss/ElegantDark.qss</file>
+        <file>../../inc/qss/MacOS.qss</file>
+        <file>../../inc/qss/ManjaroMix.qss</file>
+        <file>../../inc/qss/MaterialDark.qss</file>
+        <file>../../inc/qss/NeonButtons.qss</file>
+        <file>../../inc/qss/Ubuntu.qss</file>
+        <file>../../inc/qss/QSS_IMG/go-down-symbolic.symbolic.png</file>
+        <file>../../inc/qss/QSS_IMG/go-next-symbolic.symbolic.png</file>
+        <file>../../inc/qss/QSS_IMG/go-previous-symbolic.symbolic.png</file>
+        <file>../../inc/qss/QSS_IMG/go-up-symbolic.symbolic.png</file>
+        <file>../../inc/qss/QSS_IMG/object-select-symbolic.symbolic.png</file>
+    </qresource>
+</RCC>
