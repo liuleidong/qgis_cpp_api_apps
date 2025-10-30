@@ -62,3 +62,16 @@ ELSEIF(UNIX)
         qgis_gui.so
         qgis_analysis.so)
 ENDIF()
+
+set (WITH_BINDINGS TRUE CACHE BOOL "Determines whether Python bindings should be built")
+
+if (WITH_BINDINGS)
+  target_link_libraries(ll_qgis_process qgispython)
+  add_definitions(-DWITH_BINDINGS)
+endif()
+
+if (WITH_BINDINGS)
+  find_package(Python ${MIN_PYTHON_VERSION} REQUIRED COMPONENTS Interpreter Development)
+else()
+  find_package(Python ${MIN_PYTHON_VERSION} REQUIRED COMPONENTS Interpreter)
+endif()

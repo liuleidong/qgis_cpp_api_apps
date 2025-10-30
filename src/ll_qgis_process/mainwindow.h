@@ -7,6 +7,11 @@
 #include "paramdockwidget.h"
 #include "ld_symbol_property.h"
 
+#ifdef WITH_BINDINGS
+#include "qgspythonrunner.h"
+#include "qgspythonutils.h"
+#endif
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -22,6 +27,12 @@ public:
 
 private slots:
     void setParamsSlot(SParams params);
+
+private:
+#ifdef WITH_BINDINGS
+    std::unique_ptr< QgsPythonUtils > mPythonUtils;
+    std::unique_ptr<QgsPythonUtils> loadPythonSupport();
+#endif
 
 private:
     Ui::MainWindow *ui;

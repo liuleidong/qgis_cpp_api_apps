@@ -4,18 +4,18 @@
 #include <QGridLayout>
 #include <QTimer>
 #include <QRandomGenerator>
+#include <QLibrary>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
 #include "qgsmapcanvas.h"
 #include "qgsmarkersymbollayer.h"
+#include "qgsapplication.h"
 
-#include "ld_geometry.h"
-//0. 模拟无人机/车 发送经纬度以及设备信息
-//1. 根据经纬度，添加设备或者移动设备
-//2. 设置参数：是否显示轨迹，设置设备图标，设备大小,设备是中心点，是否闪烁
-//根据两点设置rotation
-//setCenter flashFeatureIds
+#include "qgsproviderregistry.h"
+#include "qgsprocessingregistry.h"
+#include "qgsnativealgorithms.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -47,6 +47,17 @@ void MainWindow::initialize()
 
     connect(mParamDockWidget,&ParamDockWidget::setParamsSignal,this,&MainWindow::setParamsSlot);
 
+    // core providers
+    QgsApplication::processingRegistry()->addProvider( new QgsNativeAlgorithms( QgsApplication::processingRegistry() ) );
+
+#ifdef WITH_BINDINGS
+      // give Python plugins a chance to load providers
+      mPythonUtils = loadPythonSupport();
+      if ( !mPythonUtils )
+      {
+        //MessageBox
+      }
+#endif
 }
 
 
@@ -69,3 +80,49 @@ void MainWindow::setParamsSlot(SParams params)
         svgMarker.angle = QString("%1").arg(mParams.angle);
     }
 }
+
+#ifdef WITH_BINDINGS
+std::unique_ptr<QgsPythonUtils> MainWindow::loadPythonSupport()
+{
+    QString pythonlibName( QStringLiteral( "qgispython" ) );
+    #if defined(Q_OS_UNIX) && !defined(Q_OS_ANDROID)
+    pythonlibName.prepend( QgsApplication::libraryPath() );
+    #endif
+    #ifdef __MINGW32__
+    pythonlibName.prepend( "lib" );
+    #endif
+    QString version = QStringLiteral( "%1.%2.%3" ).arg( Qgis::versionInt() / 10000 ).arg( Qgis::versionInt() / 100 % 100 ).arg( Qgis::versionInt() % 100 );
+    QgsDebugMsgLevel( QStringLiteral( "load library %1 (%2)" ).arg( pythonlibName, version ), 1 );
+    QLibrary pythonlib( pythonlibName, version );
+    // It's necessary to set these two load hints, otherwise Python library won't work correctly
+    // see http://lists.kde.org/?l=pykde&m=117190116820758&w=2
+    pythonlib.setLoadHints( QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint );
+    if ( !pythonlib.load() )
+    {
+      pythonlib.setFileName( pythonlibName );
+      if ( !pythonlib.load() )
+      {
+        std::cerr << QStringLiteral( "Couldn't load Python support library: %1\n" ).arg( pythonlib.errorString() ).toLocal8Bit().constData();
+        return nullptr;
+      }
+    }
+
+    typedef QgsPythonUtils*( *inst )();
+    inst pythonlib_inst = reinterpret_cast< inst >( cast_to_fptr( pythonlib.resolve( "instance" ) ) );
+    if ( !pythonlib_inst )
+    {
+      //using stderr on purpose because we want end users to see this [TS]
+      std::cerr << "Couldn't resolve Python support library's instance() symbol.\n";
+      return nullptr;
+    }
+
+    std::unique_ptr< QgsPythonUtils > pythonUtils( pythonlib_inst() );
+    if ( pythonUtils )
+    {
+      pythonUtils->initPython( nullptr, false );
+    }
+
+    return pythonUtils;
+
+}
+#endif

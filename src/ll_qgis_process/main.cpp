@@ -7,7 +7,7 @@
 #include "qgsapplication.h"
 #include "qgsproviderregistry.h"
 #include "qgsprocessingregistry.h"
-#include "qgsnativealgorithms.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -21,21 +21,10 @@ int main(int argc, char *argv[])
     }
     qssFile.close();
 
-    //proj的配置目录，坐标映射相关 proj.db
-    QString strProjDir = strAppDir + QString("/share/proj/");
-    qputenv("PROJ_LIB",strProjDir.toStdString().c_str());
-    //Alters prefix path - used by 3rd party apps.
-    QgsApplication::setPrefixPath( strAppDir, false );
-    QString strPluginDir = strAppDir + QString("/plugins/");
-    QgsApplication::setPluginPath(strPluginDir);
-    QString strPkgDir = strAppDir + QString("/share/qgis");
-    QgsApplication::setPkgDataPath(strPkgDir);
-    //loads providers
+    QgsApplication::init();
     QgsApplication::initQgis();
-    //使用process toolbox 需要初始化
-    QgsApplication::processingRegistry()->addProvider( new QgsNativeAlgorithms( QgsApplication::processingRegistry() ) );
-
-    qDebug() << QgsApplication::qmlImportPath();
+    QgsProviderRegistry::instance( QgsApplication::pluginPath() );
+    ( void ) QgsApplication::resolvePkgPath(); // trigger storing of application path in QgsApplication
 
     MainWindow w;
     w.initialize();
