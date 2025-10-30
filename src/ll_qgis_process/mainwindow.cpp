@@ -58,6 +58,8 @@ void MainWindow::initialize()
         //MessageBox
       }
 #endif
+
+      loadPlugins();
 }
 
 
@@ -79,6 +81,39 @@ void MainWindow::setParamsSlot(SParams params)
         svgMarker.size = QString("%1").arg(mParams.size);
         svgMarker.angle = QString("%1").arg(mParams.angle);
     }
+}
+
+void MainWindow::loadPlugins()
+{
+#ifdef WITH_BINDINGS
+  if ( !mPythonUtils )
+    return;
+
+  QgsSettings settings;
+  // load plugins
+  const QStringList plugins = mPythonUtils->pluginList();
+  for ( const QString &plugin : plugins )
+  {
+    if ( plugin == QLatin1String( "processing" ) || ( mPythonUtils->isPluginEnabled( plugin ) && mPythonUtils->pluginHasProcessingProvider( plugin ) ) )
+    {
+      if ( !mPythonUtils->loadPlugin( plugin ) )
+      {
+        std::cerr << "error loading plugin: " << plugin.toLocal8Bit().constData() << "\n\n";
+      }
+      else if ( !mPythonUtils->startProcessingPlugin( plugin ) )
+      {
+        std::cerr << "error starting plugin: " << plugin.toLocal8Bit().constData() << "\n\n";
+      }
+    }
+  }
+
+  if ( !mPythonUtils->finalizeProcessingStartup() )
+  {
+    std::cerr << "error finalizing Processing plugin startup\n\n";
+  }
+
+#endif
+
 }
 
 #ifdef WITH_BINDINGS

@@ -29,6 +29,7 @@ private slots:
     void setParamsSlot(SParams params);
 
 private:
+    void loadPlugins();
 #ifdef WITH_BINDINGS
     std::unique_ptr< QgsPythonUtils > mPythonUtils;
     std::unique_ptr<QgsPythonUtils> loadPythonSupport();
