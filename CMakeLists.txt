@@ -21,6 +21,7 @@ ELSEIF(UNIX)
     include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/qgis)
     include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/qgis_app)
     include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/ui)
+    include_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/include/external)
     link_directories(${PROJECT_SOURCE_DIR}/thirdparty/linux/qgis/lib/) # 指定库搜索路径
 ENDIF()
 

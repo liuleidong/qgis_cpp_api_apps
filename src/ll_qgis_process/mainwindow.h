@@ -11,6 +11,8 @@
 #include "qgspythonrunner.h"
 #include "qgspythonutils.h"
 #endif
+#include "qgsprocessingalgorithm.h"
+#include "qgsprocessingprovider.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +23,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum class Flag
+    {
+      UseJson = 1 << 0,
+      SkipPython = 1 << 1,
+      SkipLoadingPlugins = 1 << 2,
+    };
+    Q_DECLARE_FLAGS( Flags, Flag )
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void initialize();
@@ -30,6 +40,12 @@ private slots:
 
 private:
     void loadPlugins();
+    void listAlgorithms();
+
+    void addVersionInformation( QVariantMap &json );
+    void addAlgorithmInformation( QVariantMap &json, const QgsProcessingAlgorithm *algorithm );
+    void addProviderInformation( QVariantMap &json, QgsProcessingProvider *provider );
+
 #ifdef WITH_BINDINGS
     std::unique_ptr< QgsPythonUtils > mPythonUtils;
     std::unique_ptr<QgsPythonUtils> loadPythonSupport();
@@ -37,7 +53,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
-
+    Flags mFlags;
     ll_qgis_base_lib *mApp = nullptr;
     ParamDockWidget *mParamDockWidget = nullptr;
     SParams mParams;

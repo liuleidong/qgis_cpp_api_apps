@@ -16,6 +16,9 @@
 #include "qgsprocessingregistry.h"
 #include "qgsnativealgorithms.h"
 
+#include "qgsjsonutils.h"
+
+#include <nlohmann/json.hpp>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,8 +61,10 @@ void MainWindow::initialize()
         //MessageBox
       }
 #endif
+    mFlags = Flag::UseJson;
+    loadPlugins();
 
-      loadPlugins();
+    listAlgorithms();
 }
 
 
@@ -114,6 +119,120 @@ void MainWindow::loadPlugins()
 
 #endif
 
+}
+
+void MainWindow::listAlgorithms()
+{
+    QVariantMap json;
+    if ( !( mFlags & Flag::UseJson ) )
+    {
+      std::cout << "Available algorithms\n\n";
+    }
+    else
+    {
+      addVersionInformation( json );
+    }
+
+    const QList<QgsProcessingProvider *> providers = QgsApplication::processingRegistry()->providers();
+    QVariantMap jsonProviders;
+    for ( QgsProcessingProvider *provider : providers )
+    {
+      QVariantMap providerJson;
+
+      if ( !( mFlags & Flag::UseJson ) )
+      {
+        std::cout << provider->name().toLocal8Bit().constData() << "\n";
+      }
+      else
+      {
+        addProviderInformation( providerJson, provider );
+      }
+      QVariantMap algorithmsJson;
+      const QList<const QgsProcessingAlgorithm *> algorithms = provider->algorithms();
+      for ( const QgsProcessingAlgorithm *algorithm : algorithms )
+      {
+        if ( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::NotAvailableInStandaloneTool )
+          continue;
+
+        if ( !( mFlags & Flag::UseJson ) )
+        {
+          if ( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::Deprecated )
+            continue;
+          std::cout << "\t" << algorithm->id().toLocal8Bit().constData() << "\t" << algorithm->displayName().toLocal8Bit().constData() << "\n";
+        }
+        else
+        {
+          QVariantMap algorithmJson;
+          addAlgorithmInformation( algorithmJson, algorithm );
+          algorithmsJson.insert( algorithm->id(), algorithmJson );
+        }
+      }
+
+      if ( !( mFlags & Flag::UseJson ) )
+      {
+        std::cout << "\n";
+      }
+      else
+      {
+        providerJson.insert( QStringLiteral( "algorithms" ), algorithmsJson );
+        jsonProviders.insert( provider->id(), providerJson );
+      }
+    }
+
+    if ( mFlags & Flag::UseJson )
+    {
+      json.insert( QStringLiteral( "providers" ), jsonProviders );
+      std::cout << QgsJsonUtils::jsonFromVariant( json ).dump( 2 );
+    }
+}
+
+void MainWindow::addVersionInformation(QVariantMap &json)
+{
+    json.insert( QStringLiteral( "qgis_version" ), Qgis::version() );
+    if ( QString( Qgis::devVersion() ) != QLatin1String( "exported" ) )
+    {
+      json.insert( QStringLiteral( "qgis_code_revision" ), Qgis::devVersion() );
+    }
+    json.insert( QStringLiteral( "qt_version" ), qVersion() );
+    json.insert( QStringLiteral( "python_version" ), PYTHON_VERSION );
+//    json.insert( QStringLiteral( "gdal_version" ), GDALVersionInfo( "RELEASE_NAME" ) );
+//    json.insert( QStringLiteral( "geos_version" ), GEOSversion() );
+
+//    PJ_INFO info = proj_info();
+//    json.insert( QStringLiteral( "proj_version" ), info.release );
+}
+
+void MainWindow::addAlgorithmInformation(QVariantMap &algorithmJson, const QgsProcessingAlgorithm *algorithm)
+{
+    algorithmJson.insert( QStringLiteral( "name" ), algorithm->displayName() );
+    algorithmJson.insert( QStringLiteral( "short_description" ), algorithm->shortDescription() );
+    algorithmJson.insert( QStringLiteral( "tags" ), algorithm->tags() );
+    algorithmJson.insert( QStringLiteral( "help_url" ), algorithm->helpUrl() );
+    algorithmJson.insert( QStringLiteral( "group" ), algorithm->group() );
+    algorithmJson.insert( QStringLiteral( "can_cancel" ), bool( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::CanCancel ) );
+    algorithmJson.insert( QStringLiteral( "requires_matching_crs" ), bool( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::RequiresMatchingCrs ) );
+    algorithmJson.insert( QStringLiteral( "has_known_issues" ), bool( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::KnownIssues ) );
+    algorithmJson.insert( QStringLiteral( "deprecated" ), bool( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::Deprecated ) );
+
+}
+
+void MainWindow::addProviderInformation(QVariantMap &providerJson, QgsProcessingProvider *provider)
+{
+    providerJson.insert( QStringLiteral( "name" ), provider->name() );
+    providerJson.insert( QStringLiteral( "long_name" ), provider->longName() );
+    providerJson.insert( QStringLiteral( "version" ), provider->versionInfo() );
+    providerJson.insert( QStringLiteral( "can_be_activated" ), provider->canBeActivated() );
+    if ( !provider->warningMessage().isEmpty() )
+    {
+      providerJson.insert( QStringLiteral( "warning" ), provider->warningMessage() );
+    }
+    providerJson.insert( QStringLiteral( "is_active" ), provider->isActive() );
+    providerJson.insert( QStringLiteral( "supported_output_raster_extensions" ), provider->supportedOutputRasterLayerExtensions() );
+    providerJson.insert( QStringLiteral( "supported_output_vector_extensions" ), provider->supportedOutputVectorLayerExtensions() );
+    providerJson.insert( QStringLiteral( "supported_output_table_extensions" ), provider->supportedOutputTableExtensions() );
+    providerJson.insert( QStringLiteral( "default_vector_file_extension" ), provider->defaultVectorFileExtension() );
+    providerJson.insert( QStringLiteral( "default_raster_file_extension" ), provider->defaultRasterFileExtension() );
+    providerJson.insert( QStringLiteral( "supports_non_file_based_output" ), provider->supportsNonFileBasedOutput() );
 }
 
 #ifdef WITH_BINDINGS

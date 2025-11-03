@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         paramdockwidget.h paramdockwidget.cpp paramdockwidget.ui
+        ${PROJECT_SOURCE_DIR}/../../thirdparty/linux/qgis/include/external/nlohmann/json_fwd.hpp
 )
 
 add_executable(ll_qgis_process ${PROJECT_SOURCES})
