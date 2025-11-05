@@ -6,6 +6,7 @@
 #include <QRandomGenerator>
 #include <QLibrary>
 #include <QJsonArray>
+#include <QTextBrowser>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
@@ -64,8 +65,14 @@ void MainWindow::initialize()
 #endif
     mFlags = Flag::UseJson;
     loadPlugins();
-
     listAlgorithms();
+
+    connect(mParamDockWidget,&ParamDockWidget::showAlgHelp,this,&MainWindow::showAlgHelp);
+}
+
+void MainWindow::showAlgHelp(const QString &id)
+{
+    showAlgorithmHelp(id);
 }
 
 void MainWindow::loadPlugins()
@@ -471,6 +478,9 @@ int MainWindow::showAlgorithmHelp(const QString &inputId)
       json.insert( QStringLiteral( "parameters" ), parametersJson );
       json.insert( QStringLiteral( "outputs" ), outputsJson );
       std::cout << QgsJsonUtils::jsonFromVariant( json ).dump( 2 );
+      QString jsonString = QString::fromStdString(QgsJsonUtils::jsonFromVariant(json).dump(2));
+      mParamDockWidget->detailBrowser()->clear();
+      mParamDockWidget->detailBrowser()->setText(jsonString);
     }
 
     return 0;

@@ -14,13 +14,18 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QMenu>
+#include <QAction>
 
 ParamDockWidget::ParamDockWidget(QWidget *parent) :
     QDockWidget(parent),
     ui(new Ui::ParamDockWidget),
     m_treeWidget(nullptr),
     m_detailBrowser(nullptr),
-    m_searchEdit(nullptr)
+    m_searchEdit(nullptr),
+    m_contextMenu(nullptr),
+    m_runAlgorithmAction(nullptr),
+    m_showHelpAction(nullptr)
 {
     ui->setupUi(this);
     setWindowTitle("算法浏览器");
@@ -92,6 +97,20 @@ void ParamDockWidget::setupAlgorithmTree()
             this, &ParamDockWidget::onSearchTextChanged);
     connect(m_treeWidget, &QTreeWidget::customContextMenuRequested,
             this, &ParamDockWidget::onTreeWidgetCustomContextMenuRequested);
+
+    // 创建右键菜单
+    m_contextMenu = new QMenu(this);
+
+    // 创建菜单项
+    m_runAlgorithmAction = new QAction("运行算法", this);
+    m_showHelpAction = new QAction("查看算法帮助", this);
+
+    // 设置图标
+    m_runAlgorithmAction->setIcon(QIcon::fromTheme("system-run"));
+    m_showHelpAction->setIcon(QIcon::fromTheme("help-contents"));
+
+    connect(m_runAlgorithmAction, &QAction::triggered, this, &ParamDockWidget::onRunAlgorithm);
+    connect(m_showHelpAction, &QAction::triggered, this, &ParamDockWidget::onShowAlgorithmHelp);
 }
 
 void ParamDockWidget::setAlgorithmsData(const QJsonObject& data)
@@ -245,7 +264,20 @@ void ParamDockWidget::onTreeWidgetCustomContextMenuRequested(const QPoint &pos)
     if (!item) {
         return; // 没有选中项，不显示菜单
     }
-    qDebug() << item->text(0);
+    m_contextMenu = new QMenu(m_treeWidget);
+    m_contextMenu->addAction(m_runAlgorithmAction);
+    m_contextMenu->addAction(m_showHelpAction);
+    m_contextMenu->exec(QCursor::pos());
+}
+
+void ParamDockWidget::onRunAlgorithm()
+{
+
+}
+
+void ParamDockWidget::onShowAlgorithmHelp()
+{
+    emit showAlgHelp(m_currentSelectedItem->text(0));
 }
 
 void ParamDockWidget::filterAlgorithms(const QString& filterText)
@@ -300,4 +332,9 @@ void ParamDockWidget::filterAlgorithms(const QString& filterText)
             providerItem->setExpanded(true);
         }
     }
+}
+
+QTextBrowser *ParamDockWidget::detailBrowser() const
+{
+    return m_detailBrowser;
 }

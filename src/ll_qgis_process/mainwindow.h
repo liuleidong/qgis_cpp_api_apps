@@ -35,6 +35,8 @@ public:
     ~MainWindow();
     void initialize();
 
+private slots:
+    void showAlgHelp(const QString &id);
 
 private:
     void loadPlugins();
