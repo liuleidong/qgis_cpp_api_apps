@@ -60,6 +60,8 @@ void ParamDockWidget::setupAlgorithmTree()
     m_treeWidget->setColumnCount(3);
     m_treeWidget->setSortingEnabled(true);
     m_treeWidget->sortByColumn(0, Qt::AscendingOrder);
+    m_treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+
 
     leftLayout->addWidget(m_treeWidget);
 
@@ -88,6 +90,8 @@ void ParamDockWidget::setupAlgorithmTree()
             this, &ParamDockWidget::onAlgorithmItemClicked);
     connect(m_searchEdit, &QLineEdit::textChanged,
             this, &ParamDockWidget::onSearchTextChanged);
+    connect(m_treeWidget, &QTreeWidget::customContextMenuRequested,
+            this, &ParamDockWidget::onTreeWidgetCustomContextMenuRequested);
 }
 
 void ParamDockWidget::setAlgorithmsData(const QJsonObject& data)
@@ -124,7 +128,7 @@ void ParamDockWidget::populateAlgorithmTree(const QJsonObject& data)
             QJsonObject algoObj = algoIt.value().toObject();
 
             QTreeWidgetItem* algoItem = new QTreeWidgetItem(providerItem);
-            algoItem->setText(0, algoObj.value("name").toString());
+            algoItem->setText(0, algoObj.value("id").toString());
             algoItem->setText(1, algoObj.value("group").toString());
 
             // 状态信息
@@ -231,6 +235,17 @@ void ParamDockWidget::showAlgorithmDetails(const QJsonObject& algorithmData)
 void ParamDockWidget::onSearchTextChanged(const QString& text)
 {
     filterAlgorithms(text);
+}
+
+void ParamDockWidget::onTreeWidgetCustomContextMenuRequested(const QPoint &pos)
+{
+    QTreeWidgetItem* item = m_treeWidget->itemAt(pos);
+    m_currentSelectedItem = item;
+
+    if (!item) {
+        return; // 没有选中项，不显示菜单
+    }
+    qDebug() << item->text(0);
 }
 
 void ParamDockWidget::filterAlgorithms(const QString& filterText)

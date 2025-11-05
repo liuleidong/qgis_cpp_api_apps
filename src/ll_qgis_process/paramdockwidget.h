@@ -27,6 +27,7 @@ public:
 private slots:
     void onAlgorithmItemClicked(QTreeWidgetItem* item, int column);
     void onSearchTextChanged(const QString& text);
+    void onTreeWidgetCustomContextMenuRequested(const QPoint &pos);
 
 private:
     void setupAlgorithmTree();
@@ -41,6 +42,7 @@ private:
     QLineEdit* m_searchEdit;
 
     QJsonObject m_algorithmsData; // 存储原始数据
+    QTreeWidgetItem* m_currentSelectedItem;
 };
 
 #endif // PARAMDOCKWIDGET_H

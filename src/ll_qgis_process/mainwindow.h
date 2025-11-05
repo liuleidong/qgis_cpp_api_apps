@@ -39,6 +39,7 @@ public:
 private:
     void loadPlugins();
     void listAlgorithms();
+    int showAlgorithmHelp( const QString &id );
 
     void addVersionInformation( QVariantMap &json );
     void addAlgorithmInformation( QVariantMap &json, const QgsProcessingAlgorithm *algorithm );

@@ -16,6 +16,8 @@
 #include "qgsproviderregistry.h"
 #include "qgsprocessingregistry.h"
 #include "qgsnativealgorithms.h"
+#include "qgsprocessingparametertype.h"
+#include "qgsprocessingmodelalgorithm.h"
 
 #include "qgsjsonutils.h"
 
@@ -192,6 +194,7 @@ void MainWindow::listAlgorithms()
 
         QJsonObject algorithmData;
         algorithmData["name"] = algorithm->displayName();
+        algorithmData["id"] = algorithm->id();
         algorithmData["group"] = algorithm->group();
         algorithmData["short_description"] = algorithm->shortDescription();
         algorithmData["help_url"] = algorithm->helpUrl();
@@ -227,6 +230,251 @@ void MainWindow::listAlgorithms()
 
       mParamDockWidget->setAlgorithmsData(guiAlgorithmsData);
     }
+}
+
+int MainWindow::showAlgorithmHelp(const QString &inputId)
+{
+    QString id = inputId;
+
+    std::unique_ptr< QgsProcessingModelAlgorithm > model;
+    const QgsProcessingAlgorithm *alg = nullptr;
+    if ( QFile::exists( id ) && QFileInfo( id ).suffix() == QLatin1String( "model3" ) )
+    {
+      model = std::make_unique< QgsProcessingModelAlgorithm >();
+      if ( !model->fromFile( id ) )
+      {
+        std::cerr << QStringLiteral( "File %1 is not a valid Processing model!\n" ).arg( id ).toLocal8Bit().constData();
+        return 1;
+      }
+
+      alg = model.get();
+    }
+  #ifdef WITH_BINDINGS
+    else if ( mPythonUtils && QFile::exists( id ) && QFileInfo( id ).suffix() == QLatin1String( "py" ) )
+    {
+      QString res;
+      if ( !mPythonUtils->evalString( QStringLiteral( "qgis.utils.import_script_algorithm(\"%1\")" ).arg( id ), res ) || res.isEmpty() )
+      {
+        std::cerr << QStringLiteral( "File %1 is not a valid Processing script!\n" ).arg( id ).toLocal8Bit().constData();
+        return 1;
+      }
+
+      id = res;
+    }
+  #endif
+
+    if ( !alg )
+    {
+      alg = QgsApplication::processingRegistry()->algorithmById( id );
+      if ( ! alg )
+      {
+        std::cerr << QStringLiteral( "Algorithm %1 not found!\n" ).arg( id ).toLocal8Bit().constData();
+        return 1;
+      }
+    }
+
+    if ( alg->flags() & Qgis::ProcessingAlgorithmFlag::NotAvailableInStandaloneTool )
+    {
+      std::cerr << QStringLiteral( "The \"%1\" algorithm is not available for use outside of the QGIS desktop application\n" ).arg( id ).toLocal8Bit().constData();
+      return 1;
+    }
+
+    QVariantMap json;
+    if ( !( mFlags & Flag::UseJson ) )
+    {
+      std::cout << QStringLiteral( "%1 (%2)\n" ).arg( alg->displayName(), alg->id() ).toLocal8Bit().constData();
+
+      std::cout << "\n----------------\n";
+      std::cout << "Description\n";
+      std::cout << "----------------\n";
+
+      if ( const QgsProcessingModelAlgorithm *model = dynamic_cast< const QgsProcessingModelAlgorithm * >( alg ) )
+      {
+        // show finer help content for models
+        const QVariantMap help = model->helpContent();
+        std::cout << help.value( QStringLiteral( "ALG_DESC" ) ).toString().toLocal8Bit().constData() << '\n';
+
+        if ( !help.value( QStringLiteral( "ALG_CREATOR" ) ).toString().isEmpty() ||
+             !help.value( QStringLiteral( "ALG_VERSION" ) ).toString().isEmpty() )
+          std::cout << '\n';
+
+        if ( !help.value( QStringLiteral( "ALG_CREATOR" ) ).toString().isEmpty() )
+          std::cout << "Algorithm author:\t" << help.value( QStringLiteral( "ALG_CREATOR" ) ).toString().toLocal8Bit().constData() << '\n';
+        if ( !help.value( QStringLiteral( "ALG_VERSION" ) ).toString().isEmpty() )
+          std::cout << "Algorithm version:\t" << help.value( QStringLiteral( "ALG_VERSION" ) ).toString().toLocal8Bit().constData() << '\n';
+
+        if ( !help.value( QStringLiteral( "EXAMPLES" ) ).toString().isEmpty() )
+        {
+          std::cout << "\n----------------\n";
+          std::cout << "Examples\n";
+          std::cout << "----------------\n";
+          std::cout << help.value( QStringLiteral( "EXAMPLES" ) ).toString().toLocal8Bit().constData() << '\n';
+        }
+      }
+      else
+      {
+        if ( !alg->shortDescription().isEmpty() )
+          std::cout << alg->shortDescription().toLocal8Bit().constData() << '\n';
+        if ( !alg->shortHelpString().isEmpty() && alg->shortHelpString() != alg->shortDescription() )
+          std::cout << alg->shortHelpString().toLocal8Bit().constData() << '\n';
+      }
+
+      std::cout << "\n----------------\n";
+      std::cout << "Arguments\n";
+      std::cout << "----------------\n\n";
+    }
+    else
+    {
+      addVersionInformation( json );
+
+      QVariantMap algorithmDetails;
+      algorithmDetails.insert( QStringLiteral( "id" ), alg->id() );
+      addAlgorithmInformation( algorithmDetails, alg );
+      json.insert( QStringLiteral( "algorithm_details" ), algorithmDetails );
+      QVariantMap providerJson;
+      if ( alg->provider() )
+        addProviderInformation( providerJson, alg->provider() );
+      json.insert( QStringLiteral( "provider_details" ), providerJson );
+    }
+
+    QgsProcessingContext context;
+    QVariantMap parametersJson;
+    const QgsProcessingParameterDefinitions defs = alg->parameterDefinitions();
+    for ( const QgsProcessingParameterDefinition *p : defs )
+    {
+      if ( p->flags() & Qgis::ProcessingParameterFlag::Hidden )
+        continue;
+
+      QVariantMap parameterJson;
+
+      if ( !( mFlags & Flag::UseJson ) )
+      {
+        QString line = QStringLiteral( "%1: %2" ).arg( p->name(), p->description() );
+        if ( p->flags() & Qgis::ProcessingParameterFlag::Optional )
+          line += QLatin1String( " (optional)" );
+        std::cout << QStringLiteral( "%1\n" ).arg( line ).toLocal8Bit().constData();
+
+        if ( p->defaultValue().isValid() )
+        {
+          bool ok = false;
+          std::cout << QStringLiteral( "\tDefault value:\t%1\n" ).arg( p->valueAsString( p->defaultValue(), context, ok ) ).toLocal8Bit().constData();
+        }
+      }
+      else
+      {
+        parameterJson.insert( QStringLiteral( "name" ), p->name() );
+        parameterJson.insert( QStringLiteral( "description" ), p->description() );
+
+
+        if ( const QgsProcessingParameterType *type = QgsApplication::processingRegistry()->parameterType( p->type() ) )
+        {
+          QVariantMap typeDetails;
+          typeDetails.insert( QStringLiteral( "id" ), type->id() );
+          typeDetails.insert( QStringLiteral( "name" ), type->name() );
+          typeDetails.insert( QStringLiteral( "description" ), type->description() );
+          typeDetails.insert( QStringLiteral( "metadata" ), type->metadata() );
+          typeDetails.insert( QStringLiteral( "acceptable_values" ), type->acceptedStringValues() );
+
+          parameterJson.insert( QStringLiteral( "type" ), typeDetails );
+        }
+        else
+        {
+          parameterJson.insert( QStringLiteral( "type" ), p->type() );
+        }
+
+        parameterJson.insert( QStringLiteral( "is_destination" ), p->isDestination() );
+        parameterJson.insert( QStringLiteral( "default_value" ), p->defaultValue() );
+        parameterJson.insert( QStringLiteral( "optional" ), bool( p->flags() & Qgis::ProcessingParameterFlag::Optional ) );
+        parameterJson.insert( QStringLiteral( "is_advanced" ), bool( p->flags() & Qgis::ProcessingParameterFlag::Advanced ) );
+
+        parameterJson.insert( QStringLiteral( "raw_definition" ), p->toVariantMap() );
+      }
+
+      if ( ! p->help().isEmpty() )
+      {
+        if ( !( mFlags & Flag::UseJson ) )
+          std::cout << QStringLiteral( "\t%1\n" ).arg( p->help() ).toLocal8Bit().constData();
+        else
+          parameterJson.insert( QStringLiteral( "help" ), p->help() );
+      }
+      if ( !( mFlags & Flag::UseJson ) )
+        std::cout << QStringLiteral( "\tArgument type:\t%1\n" ).arg( p->type() ).toLocal8Bit().constData();
+
+      if ( p->type() == QgsProcessingParameterEnum::typeName() )
+      {
+        const QgsProcessingParameterEnum *enumParam = static_cast< const QgsProcessingParameterEnum * >( p );
+        QStringList options;
+        QVariantMap jsonOptions;
+        for ( int i = 0; i < enumParam->options().count(); ++i )
+        {
+          options << QStringLiteral( "\t\t- %1: %2" ).arg( i ).arg( enumParam->options().at( i ) );
+          jsonOptions.insert( QString::number( i ), enumParam->options().at( i ) );
+        }
+
+        if ( !( mFlags & Flag::UseJson ) )
+          std::cout << QStringLiteral( "\tAvailable values:\n%1\n" ).arg( options.join( '\n' ) ).toLocal8Bit().constData();
+        else
+          parameterJson.insert( QStringLiteral( "available_options" ), jsonOptions );
+      }
+
+      // acceptable command line values
+      if ( !( mFlags & Flag::UseJson ) )
+      {
+        if ( const QgsProcessingParameterType *type = QgsApplication::processingRegistry()->parameterType( p->type() ) )
+        {
+          const QStringList values = type->acceptedStringValues();
+          if ( !values.isEmpty() )
+          {
+            std::cout << "\tAcceptable values:\n";
+            for ( const QString &val : values )
+            {
+              std::cout << QStringLiteral( "\t\t- %1" ).arg( val ).toLocal8Bit().constData() << "\n";
+            }
+          }
+        }
+      }
+
+      parametersJson.insert( p->name(), parameterJson );
+    }
+
+    QVariantMap outputsJson;
+    if ( !( mFlags & Flag::UseJson ) )
+    {
+      std::cout << "\n----------------\n";
+      std::cout << "Outputs\n";
+      std::cout << "----------------\n\n";
+    }
+    const QgsProcessingOutputDefinitions outputs = alg->outputDefinitions();
+    for ( const QgsProcessingOutputDefinition *o : outputs )
+    {
+      QVariantMap outputJson;
+      if ( !( mFlags & Flag::UseJson ) )
+      {
+        std::cout << QStringLiteral( "%1: <%2>\n" ).arg( o->name(), o->type() ).toLocal8Bit().constData();
+        if ( !o->description().isEmpty() )
+          std::cout << "\t" << o->description().toLocal8Bit().constData() << '\n';
+      }
+      else
+      {
+        outputJson.insert( QStringLiteral( "description" ), o->description() );
+        outputJson.insert( QStringLiteral( "type" ), o->type() );
+        outputsJson.insert( o->name(), outputJson );
+      }
+    }
+
+    if ( !( mFlags & Flag::UseJson ) )
+    {
+      std::cout << "\n\n";
+    }
+    else
+    {
+      json.insert( QStringLiteral( "parameters" ), parametersJson );
+      json.insert( QStringLiteral( "outputs" ), outputsJson );
+      std::cout << QgsJsonUtils::jsonFromVariant( json ).dump( 2 );
+    }
+
+    return 0;
+
 }
 
 void MainWindow::addVersionInformation(QVariantMap &json)
