@@ -35,8 +35,6 @@ public:
     ~MainWindow();
     void initialize();
 
-private slots:
-    void setParamsSlot(SParams params);
 
 private:
     void loadPlugins();
@@ -56,6 +54,5 @@ private:
     Flags mFlags;
     ll_qgis_base_lib *mApp = nullptr;
     ParamDockWidget *mParamDockWidget = nullptr;
-    SParams mParams;
 };
 #endif // MAINWINDOW_H

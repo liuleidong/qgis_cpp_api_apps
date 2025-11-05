@@ -2,23 +2,16 @@
 #define PARAMDOCKWIDGET_H
 
 #include <QDockWidget>
+#include <QJsonObject>
+
+class QTreeWidget;
+class QTreeWidgetItem;
+class QTextBrowser;
+class QLineEdit;
 
 namespace Ui {
 class ParamDockWidget;
 }
-
-typedef struct SParams_
-{
-    int mode;   //符号 or Svg
-    QString shape;
-    QString svgPath;
-    QColor color;
-    double size;
-    bool showPath;
-    int pathLength;
-    bool centerShow;
-    double angle;
-}SParams;
 
 class ParamDockWidget : public QDockWidget
 {
@@ -27,24 +20,27 @@ class ParamDockWidget : public QDockWidget
 public:
     explicit ParamDockWidget(QWidget *parent = nullptr);
     ~ParamDockWidget();
-    void simpleOrSvgVisible(bool simpleVisible);
 
+    // 设置算法数据
+    void setAlgorithmsData(const QJsonObject& data);
 
-public slots:
-    void on_radioButton_simple_clicked(bool checked);
-    void on_radioButton_svg_clicked(bool checked);
-    void on_pushButton_selectSvg_clicked();
-    void on_pushButton_selectColor_clicked();
-    void on_pushButton_Set_clicked();
+private slots:
+    void onAlgorithmItemClicked(QTreeWidgetItem* item, int column);
+    void onSearchTextChanged(const QString& text);
 
-signals:
-    void setParamsSignal(SParams params);
+private:
+    void setupAlgorithmTree();
+    void populateAlgorithmTree(const QJsonObject& data);
+    void showAlgorithmDetails(const QJsonObject& algorithmData);
+    void filterAlgorithms(const QString& filterText);
 
 private:
     Ui::ParamDockWidget *ui;
-    int mMode = 0;
-    QColor mColor = "red";
-    double mSize;
+    QTreeWidget* m_treeWidget;
+    QTextBrowser* m_detailBrowser;
+    QLineEdit* m_searchEdit;
+
+    QJsonObject m_algorithmsData; // 存储原始数据
 };
 
 #endif // PARAMDOCKWIDGET_H

@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QRandomGenerator>
 #include <QLibrary>
+#include <QJsonArray>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
@@ -42,13 +43,11 @@ void MainWindow::initialize()
     centralWidget()->setLayout(gridLayout);
 
     addDockWidget(Qt::LeftDockWidgetArea,mApp->layerTreeDock());
-    //ui->menuParams->addAction(mApp->layerTreeDock()->toggleViewAction());
+    ui->menuParams->addAction(mApp->layerTreeDock()->toggleViewAction());
 
     mParamDockWidget = new ParamDockWidget(this);
     this->addDockWidget(Qt::LeftDockWidgetArea,mParamDockWidget);
-    //ui->menuParams->addAction(mParamDockWidget->toggleViewAction());
-
-    connect(mParamDockWidget,&ParamDockWidget::setParamsSignal,this,&MainWindow::setParamsSlot);
+    ui->menuParams->addAction(mParamDockWidget->toggleViewAction());
 
     // core providers
     QgsApplication::processingRegistry()->addProvider( new QgsNativeAlgorithms( QgsApplication::processingRegistry() ) );
@@ -65,27 +64,6 @@ void MainWindow::initialize()
     loadPlugins();
 
     listAlgorithms();
-}
-
-
-void MainWindow::setParamsSlot(SParams params)
-{
-    mParams = params;
-    if(mParams.mode == 0)
-    {
-        SMarkerSymbolSimple simpleMarker;
-        simpleMarker.name = mParams.shape;
-        simpleMarker.color = mParams.color.name();
-        simpleMarker.size = QString("%1").arg(mParams.size);
-    }
-    else if(mParams.mode == 1)
-    {
-        SMarkerSymbolSvg svgMarker;
-        svgMarker.name = mParams.svgPath;
-        svgMarker.color = mParams.color.name();
-        svgMarker.size = QString("%1").arg(mParams.size);
-        svgMarker.angle = QString("%1").arg(mParams.angle);
-    }
 }
 
 void MainWindow::loadPlugins()
@@ -135,6 +113,10 @@ void MainWindow::listAlgorithms()
 
     const QList<QgsProcessingProvider *> providers = QgsApplication::processingRegistry()->providers();
     QVariantMap jsonProviders;
+
+    // 用于GUI显示的数据结构
+    QJsonObject algorithmsData;
+
     for ( QgsProcessingProvider *provider : providers )
     {
       QVariantMap providerJson;
@@ -147,6 +129,7 @@ void MainWindow::listAlgorithms()
       {
         addProviderInformation( providerJson, provider );
       }
+
       QVariantMap algorithmsJson;
       const QList<const QgsProcessingAlgorithm *> algorithms = provider->algorithms();
       for ( const QgsProcessingAlgorithm *algorithm : algorithms )
@@ -177,12 +160,72 @@ void MainWindow::listAlgorithms()
         providerJson.insert( QStringLiteral( "algorithms" ), algorithmsJson );
         jsonProviders.insert( provider->id(), providerJson );
       }
+
+      // 构建GUI需要的数据结构（无论是否使用JSON都构建）
+      QJsonObject providerData;
+      providerData["name"] = provider->name();
+      providerData["long_name"] = provider->name(); // 如果没有长名称，使用短名称
+      providerData["is_active"] = provider->isActive();
+      providerData["can_be_activated"] = true; // 假设都可以激活
+      providerData["default_raster_file_extension"] = provider->defaultRasterFileExtension();
+      providerData["default_vector_file_extension"] = provider->defaultVectorFileExtension();
+      providerData["supports_non_file_based_output"] = true; // 假设支持
+      providerData["version"] = provider->versionInfo();
+
+      // 支持的扩展名列表（简化处理）
+      QStringList rasterExtensions, vectorExtensions, tableExtensions;
+      // 这里可以根据需要添加实际的扩展名支持
+      rasterExtensions << "tif" << "img" << "vrt";
+      vectorExtensions << "shp" << "gpkg" << "geojson";
+      tableExtensions << "csv" << "dbf" << "xlsx";
+
+      providerData["supported_output_raster_extensions"] = QJsonArray::fromStringList(rasterExtensions);
+      providerData["supported_output_vector_extensions"] = QJsonArray::fromStringList(vectorExtensions);
+      providerData["supported_output_table_extensions"] = QJsonArray::fromStringList(tableExtensions);
+
+      // 构建算法数据
+      QJsonObject algorithmsDataForProvider;
+      for ( const QgsProcessingAlgorithm *algorithm : algorithms )
+      {
+        if ( algorithm->flags() & Qgis::ProcessingAlgorithmFlag::NotAvailableInStandaloneTool )
+          continue;
+
+        QJsonObject algorithmData;
+        algorithmData["name"] = algorithm->displayName();
+        algorithmData["group"] = algorithm->group();
+        algorithmData["short_description"] = algorithm->shortDescription();
+        algorithmData["help_url"] = algorithm->helpUrl();
+        algorithmData["can_cancel"] = true; // 假设可以取消
+        bool isDeprecated = (algorithm->flags() & Qgis::ProcessingAlgorithmFlag::Deprecated);
+        algorithmData["deprecated"] = isDeprecated;
+        algorithmData["has_known_issues"] = false; // 需要根据实际情况设置
+        algorithmData["requires_matching_crs"] = false; // 需要根据实际情况设置
+
+        // 标签
+        QStringList tags;
+        tags << algorithm->groupId(); // 使用算法组ID作为标签
+        if (algorithm->tags().size() > 0) {
+          tags << algorithm->tags();
+        }
+        algorithmData["tags"] = QJsonArray::fromStringList(tags);
+
+        algorithmsDataForProvider[algorithm->id()] = algorithmData;
+      }
+
+      providerData["algorithms"] = algorithmsDataForProvider;
+      algorithmsData[provider->id()] = providerData;
     }
 
-    if ( mFlags & Flag::UseJson )
+    // 创建并显示算法面板（GUI模式）
+    if ((mFlags & Flag::UseJson))
     {
-      json.insert( QStringLiteral( "providers" ), jsonProviders );
-      std::cout << QgsJsonUtils::jsonFromVariant( json ).dump( 2 );
+      // 转换QVariantMap为QJsonObject
+      QJsonObject guiAlgorithmsData;
+      for (auto it = algorithmsData.begin(); it != algorithmsData.end(); ++it) {
+        guiAlgorithmsData[it.key()] = it.value();
+      }
+
+      mParamDockWidget->setAlgorithmsData(guiAlgorithmsData);
     }
 }
 

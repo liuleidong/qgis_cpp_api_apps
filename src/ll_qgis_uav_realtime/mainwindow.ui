@@ -25,7 +25,7 @@
    </property>
    <widget class="QMenu" name="menuParams">
     <property name="title">
-     <string>Params</string>
+     <string>Views</string>
     </property>
    </widget>
    <addaction name="menuParams"/>
