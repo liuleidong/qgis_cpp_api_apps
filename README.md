@@ -5,6 +5,7 @@
 | ll_qgis_code_examples | 包含大量示例代码：图层添加、地图符号化、MapCanvas使用、Gis算法调用等等 |
 | ll_qgis_realtime_uavs | 模拟收到经纬度后实时显示在高德地图上，可设置图标等参数 |
 | ll_qgis_hello | 最简单的qgis应用，调用QGis库，获取QGis的发行名称 |
+| ll_qgis_process | 调用qgis process算法示例，native:buffer (C++ 原生算法，用于创建缓冲区) qgis:basicstatisticsforfields (Python 算法，用于计算字段统计信息) gdal:aspect (GDAL/Python 算法，用于计算栅格坡向) |
 | 更多应用陆续添加中...... | |
 
 # 项目特性
