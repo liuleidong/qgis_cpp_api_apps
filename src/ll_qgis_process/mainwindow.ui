@@ -25,10 +25,16 @@
    </property>
    <widget class="QMenu" name="menuParams">
     <property name="title">
-     <string>Params</string>
+     <string>Views</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuProcessing">
+    <property name="title">
+     <string>Processing</string>
     </property>
    </widget>
    <addaction name="menuParams"/>
+   <addaction name="menuProcessing"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

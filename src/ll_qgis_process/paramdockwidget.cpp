@@ -170,7 +170,7 @@ void ParamDockWidget::populateAlgorithmTree(const QJsonObject& data)
             algoItem->setData(0, Qt::UserRole + 1, providerName);
         }
 
-        providerItem->setExpanded(true);
+        providerItem->setExpanded(false);
     }
 
     // 调整列宽
@@ -272,7 +272,7 @@ void ParamDockWidget::onTreeWidgetCustomContextMenuRequested(const QPoint &pos)
 
 void ParamDockWidget::onRunAlgorithm()
 {
-
+    emit algRun(m_currentSelectedItem->text(0));
 }
 
 void ParamDockWidget::onShowAlgorithmHelp()

@@ -37,6 +37,7 @@ public:
 
 private slots:
     void showAlgHelp(const QString &id);
+    void algRun(const QString &id);
 
 private:
     void loadPlugins();

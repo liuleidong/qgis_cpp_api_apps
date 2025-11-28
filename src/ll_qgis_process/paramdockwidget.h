@@ -29,6 +29,7 @@ public:
 
 signals:
     void showAlgHelp(QString id);
+    void algRun(QString id);
 
 private slots:
     void onAlgorithmItemClicked(QTreeWidgetItem* item, int column);

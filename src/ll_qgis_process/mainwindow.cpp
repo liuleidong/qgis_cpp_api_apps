@@ -7,6 +7,7 @@
 #include <QLibrary>
 #include <QJsonArray>
 #include <QTextBrowser>
+#include <QMessageBox>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
@@ -62,17 +63,100 @@ void MainWindow::initialize()
       {
         //MessageBox
       }
-#endif
+#endif    
     mFlags = Flag::UseJson;
     loadPlugins();
     listAlgorithms();
 
     connect(mParamDockWidget,&ParamDockWidget::showAlgHelp,this,&MainWindow::showAlgHelp);
+    connect(mParamDockWidget,&ParamDockWidget::algRun,this,&MainWindow::algRun);
 }
 
 void MainWindow::showAlgHelp(const QString &id)
 {
     showAlgorithmHelp(id);
+}
+
+
+void MainWindow::algRun(const QString &id)
+{
+    if(id.compare("qgis:basicstatisticsforfields") == 0)
+    {
+        //添加测试图层
+        QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+        QVariantMap conf;
+        conf.insert(QStringLiteral("INPUT_LAYER"),filename);//直接用路径
+        conf.insert(QStringLiteral("FIELD_NAME"),QStringLiteral("name"));
+        QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+        conf.insert(QStringLiteral("OUTPUT_HTML_FILE"),value);
+        auto algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+        QgsProcessingContext *context = new QgsProcessingContext;
+        context->setProject(QgsProject::instance());
+        QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+        QVariantMap runResults = algorithm->run(conf,*context,feedback);
+        runResults["OUTPUT_HTML_FILE"].toString();
+    }
+    else if(id.compare("native:buffer") == 0)
+    {
+        //添加测试图层
+        QString filename = QStringLiteral("maps/shapefile/myplaces.shp");
+        QFileInfo ff(filename);
+        QgsVectorLayer* layer = (QgsVectorLayer*)mApp->addVectorLayer(filename,ff.baseName());
+        QVariantMap conf;
+        conf.insert(QStringLiteral("INPUT"),layer->id());//使用layer id或者使用物理路径均可
+        conf.insert(QStringLiteral("DISTANCE"),"100");
+        QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+        conf.insert(QStringLiteral("OUTPUT"),value);
+        auto algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+        QgsProcessingContext *context = new QgsProcessingContext;
+        context->setProject(QgsProject::instance());
+        QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+        QVariantMap runResults = algorithm->run(conf,*context,feedback);
+        QgsMapLayer *tempLayer = context->getMapLayer(runResults["OUTPUT"].toString());
+        if(layer)
+        {
+            QgsProject::instance()->addMapLayer(tempLayer);
+        }
+    }
+    else if(id.compare("gdal:aspect") == 0)
+    {
+        QString filename = QStringLiteral("maps/raster/3420C_2010_327_RGB_LATLNG.tif");
+        QFileInfo ff(filename);
+        QgsRasterLayer* layer = (QgsRasterLayer*)mApp->addRasterLayer(filename,ff.baseName());
+
+        QVariantMap conf;
+        conf.insert(QStringLiteral("INPUT"), layer->id());
+        conf.insert(QStringLiteral("BAND"), 1);
+
+        QgsProcessingOutputLayerDefinition value( "TEMPORARY_OUTPUT" );
+        conf.insert(QStringLiteral("OUTPUT"), value);
+
+        auto algorithm = QgsApplication::processingRegistry()->createAlgorithmById(id,conf);
+        QgsProcessingContext *context = new QgsProcessingContext;
+        context->setProject(QgsProject::instance());
+        QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
+
+        QVariantMap runResults = algorithm->run(conf,*context,feedback);
+
+        QString tempFilename = runResults["OUTPUT"].toString();
+        QFileInfo t(tempFilename);
+        QgsRasterLayer* tempLayer = (QgsRasterLayer*)mApp->addRasterLayer(tempFilename,t.baseName());
+    }
+    else
+    {
+        QString message = QStringLiteral("当前尝试运行的算法 ID: **") + id + QStringLiteral("** 暂不支持。\n\n");
+        message += QStringLiteral("目前支持的算法包括：\n");
+        message += QStringLiteral("1. native:buffer (C++ 原生算法，用于创建缓冲区)\n");
+        message += QStringLiteral("2. qgis:basicstatisticsforfields (Python 算法，用于计算字段统计信息)\n");
+        message += QStringLiteral("3. gdal:aspect (GDAL/Python 算法，用于计算栅格坡向)\n\n");
+        message += QStringLiteral("欢迎补充更多算法的使用方法！https://gitee.com/richie12/qgis_cpp_api_apps");
+
+        QMessageBox::information(nullptr,
+                                 QStringLiteral("算法演示不支持"),
+                                 message,
+                                 QMessageBox::Ok);
+    }
+
 }
 
 void MainWindow::loadPlugins()
@@ -103,7 +187,6 @@ void MainWindow::loadPlugins()
   {
     std::cerr << "error finalizing Processing plugin startup\n\n";
   }
-
 #endif
 
 }
