@@ -41,11 +41,15 @@
 ## ll_qgis_process 
 ### 截图
 - 列出算法
+![输入图片说明](https://foruda.gitee.com/images/1764325854660717815/4717fc5d_1547275.png "屏幕截图")
 
 - 查看算法帮助信息
+![输入图片说明](https://foruda.gitee.com/images/1764325908186263459/40bfdf0a_1547275.png "屏幕截图")
 
 - 运行算法
-
+![输入图片说明](https://foruda.gitee.com/images/1764325948299344406/0d2a9605_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1764325955604671641/c6d9eb04_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1764325965918348131/fe0cd9d2_1547275.png "屏幕截图")
 
 ## ll_qgis_code_examples
 ### 截图
