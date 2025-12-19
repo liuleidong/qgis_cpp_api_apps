@@ -5,6 +5,7 @@
 | ll_qgis_code_examples | 包含大量示例代码：图层添加、地图符号化、MapCanvas使用、Gis算法调用等等 |
 | ll_qgis_realtime_uavs | 模拟收到经纬度后实时显示在高德地图上，可设置图标等参数 |
 | ll_qgis_hello | 最简单的qgis应用，调用QGis库，获取QGis的发行名称 |
+| ll_qgis_process | 调用qgis process算法示例，native:buffer (C++ 原生算法，用于创建缓冲区) qgis:basicstatisticsforfields (Python 算法，用于计算字段统计信息) gdal:aspect (GDAL/Python 算法，用于计算栅格坡向) |
 | 更多应用陆续添加中...... | |
 
 # 项目特性
@@ -37,6 +38,22 @@
   2. QGis二次开发项目实践一之技术实现
   3. QGis二次开发项目实践一之解决“无法定位程序输入点“
 # 源码说明
+## ll_qgis_process 
+### 截图
+- 列出算法
+
+![输入图片说明](https://foruda.gitee.com/images/1764325854660717815/4717fc5d_1547275.png "屏幕截图")
+
+- 查看算法帮助信息
+
+![输入图片说明](https://foruda.gitee.com/images/1764325908186263459/40bfdf0a_1547275.png "屏幕截图")
+
+- 运行算法
+
+![输入图片说明](https://foruda.gitee.com/images/1764325948299344406/0d2a9605_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1764325955604671641/c6d9eb04_1547275.png "屏幕截图")
+![输入图片说明](https://foruda.gitee.com/images/1764325965918348131/fe0cd9d2_1547275.png "屏幕截图")
+
 ## ll_qgis_code_examples
 ### 截图
 - 添加离线高德影像
