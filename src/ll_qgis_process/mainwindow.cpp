@@ -8,6 +8,7 @@
 #include <QJsonArray>
 #include <QTextBrowser>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "qgsdockwidget.h"
 #include "qgsproject.h"
@@ -94,7 +95,9 @@ void MainWindow::algRun(const QString &id)
         context->setProject(QgsProject::instance());
         QgsProcessingFeedback *feedback = new QgsProcessingFeedback(false);
         QVariantMap runResults = algorithm->run(conf,*context,feedback);
-        runResults["OUTPUT_HTML_FILE"].toString();
+        QString htmlFilePath = runResults["OUTPUT_HTML_FILE"].toString();
+        statusBar()->showMessage(QStringLiteral("统计结果文件路径: %1").arg(htmlFilePath), 10000);
+        QDesktopServices::openUrl(QUrl::fromLocalFile(htmlFilePath));
     }
     else if(id.compare("native:buffer") == 0)
     {

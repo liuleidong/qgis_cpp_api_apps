@@ -14,13 +14,14 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuParams">
@@ -28,15 +29,8 @@
      <string>Views</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuProcessing">
-    <property name="title">
-     <string>Processing</string>
-    </property>
-   </widget>
    <addaction name="menuParams"/>
-   <addaction name="menuProcessing"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
